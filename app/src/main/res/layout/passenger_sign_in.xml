@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_sign_in_flow"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/passenger_sign_in_Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/passenger_sign_in_Title_layout_marginTop"
+            android:layout_marginLeft="27dp"
+            android:layout_marginRight="27dp"
+            android:text="@string/passenger_sign_in"
+            android:textSize="48sp"
+            />
+        <LinearLayout
+            android:id="@+id/passenger_sign_in_phone_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:layout_marginTop="@dimen/passenger_sign_in_phone_number_layout_marginTop"
+            android:paddingLeft="26.75dp"
+            android:background="@drawable/shape_sign_in"
+            android:orientation="horizontal">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="19dp"
+                android:layout_marginTop="19dp"
+                android:inputType="phone"
+                android:hint="@string/phone_number"
+                android:textColorHint="#364F6B"
+                android:textSize="16sp"
+                android:drawableStart="@drawable/ic_id_cellphone_signinpage"
+                android:drawablePadding="17dp"
+                android:background="@android:color/transparent"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="25dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:paddingLeft="26.75dp"
+            android:background="@drawable/shape_sign_in"
+            android:orientation="horizontal">
+
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="19dp"
+                android:layout_marginTop="19dp"
+                android:inputType="numberPassword"
+                android:hint="@string/password"
+                android:textColorHint="#364F6B"
+                android:textSize="16sp"
+                android:drawableStart="@drawable/ic_password_signinpage"
+                android:drawablePadding="17dp"
+                android:background="@android:color/transparent"
+                />
+
+        </LinearLayout>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/btn_signin_disabled_signinpage"
+            android:background="?android:attr/selectableItemBackground"
+            />
+
+        <ImageButton
+            android:id="@+id/passenger_sign_in_ForgetPassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/passenger_sign_in_ForgetPassword_layout_marginBottom"
+            android:src="@drawable/btn_forget_password_signinpage"
+            android:background="?android:attr/selectableItemBackground"
+            />
+
+        <ImageButton
+            android:id="@+id/passenger_signin_signup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_signup_rightnow_signinpage"
+            android:background="?android:attr/selectableItemBackground"
+            />
+    </LinearLayout>
+</LinearLayout>

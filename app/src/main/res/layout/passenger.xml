@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_sign_in_flow"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/passenger_Layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/passenger_layout_marginTop"
+        >
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="49dp"
+            android:src="@drawable/btn_signin_pressed_signinpage"
+            android:background="?attr/selectableItemBackground"
+            android:onClick="sign_in"
+            />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="49dp"
+            android:src="@drawable/btn_signup_pressed_signuppage"
+            android:background="?attr/selectableItemBackground"
+            />
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/btn_send_new_password_pressed_fo"
+            android:background="?attr/selectableItemBackground"
+            />
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">TexiCall</string>
+    <string name="logo">Logo</string>
+    <string name="welcome">Welcome</string>
+    <string name="phone_number">請輸入手機號碼</string>
+    <string name="password">密碼</string>
+    <string name="passenger_sign_in">乘客登入</string>
+    <string name="passenger_sign_up">乘客註冊</string>
+    <string name="user_name">姓名</string>
+</resources>

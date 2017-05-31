@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="logo_layout_marginTop">150dp</dimen>
+    <dimen name="logo_layout_marginBottom">60dp</dimen>
+
+
+    <dimen name="passenger_layout_marginTop">250dp</dimen>
+
+
+    <dimen name="passenger_sign_in_Title_layout_marginTop">80dp</dimen>
+    <dimen name="passenger_sign_in_phone_number_layout_marginTop">65dp</dimen>
+    <dimen name="passenger_sign_in_ForgetPassword_layout_marginBottom">25dp</dimen>
+</resources>
