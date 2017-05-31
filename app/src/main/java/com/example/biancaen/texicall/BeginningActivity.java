@@ -14,7 +14,10 @@ import java.util.TimerTask;
 
 public class BeginningActivity extends AppCompatActivity {
     private ImageView logo ;
-    private Timer timer = new Timer();
+
+    private static final int TIME = 2000;
+    private Timer timer;
+    private boolean isExit = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,26 +31,49 @@ public class BeginningActivity extends AppCompatActivity {
         ImageView welcome = (ImageView) findViewById(R.id.welcome);
         logo.animate().alpha(1.0f).setDuration(6000);
         welcome.animate().alpha(1.0f).setDuration(6000);
-        timer.schedule(new MyTimerTask() , 3000 , 1000);
-
     }
 
-    private class MyTimerTask extends TimerTask{
+    @Override
+    public void onStart(){
+        super.onStart();
+        isExit = false;
+        startTimer();
+    }
 
-        @Override
-        public void run() {
-            //出現Can't create handler inside thread that has not called Looper.prepare() 利用執行緒
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    Intent it = new Intent(BeginningActivity.this, MainMenuActivity.class);
-                    startActivity(it , ActivityOptions.makeSceneTransitionAnimation(BeginningActivity.this,logo,"logo").toBundle());
-                    timer.cancel();
-                    timer = null;
-                    finish();
-                }
-            });
+    @Override
+    public void onStop(){
+        super.onStop();
+        isExit = true;
+        cancelTimer();
+    }
 
+    private void startTimer(){
+        cancelTimer();
+        timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!isExit) {
+                            Intent it = new Intent(BeginningActivity.this, MainMenuActivity.class);
+                            startActivity(it , ActivityOptions.makeSceneTransitionAnimation(BeginningActivity.this,logo,"logo").toBundle());
+                            timer.cancel();
+                            timer = null;
+                            finish();
+                        }
+                    }
+                });
+
+            }
+        }, TIME);
+    }
+
+    private void cancelTimer(){
+        if(timer != null){
+            timer.cancel();
+            timer = null;
         }
     }
 }
