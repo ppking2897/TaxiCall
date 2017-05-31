@@ -6,5 +6,11 @@
     <string name="password">密碼</string>
     <string name="passenger_sign_in">乘客登入</string>
     <string name="passenger_sign_up">乘客註冊</string>
-    <string name="user_name">姓名</string>
+
+    <string name="sign_up_user_name">姓名</string>
+    <string name="sign_up_phone">手機號碼</string>
+    <string name="sign_up_password">密碼</string>
+    <string name="sign_up_mail">信箱</string>
+
+    <string name="forgot_password">忘記密碼</string>
 </resources>

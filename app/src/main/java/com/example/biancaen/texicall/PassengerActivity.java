@@ -12,8 +12,16 @@ public class PassengerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.passenger);
     }
-    public void sign_in(View view){
+    public void passenger_sign_in(View view){
         Intent it = new Intent(this , Passenger_Sign_in.class);
+        startActivity(it);
+    }
+    public void passenger_sign_up(View view){
+        Intent it = new Intent(this , Passenger_Sign_Up.class);
+        startActivity(it);
+    }
+    public void passenger_send_new_password(View view){
+        Intent it = new Intent(this , ForgotPassword.class);
         startActivity(it);
     }
 }

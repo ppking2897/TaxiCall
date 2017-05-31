@@ -19,7 +19,7 @@
             android:layout_marginBottom="49dp"
             android:src="@drawable/btn_signin_pressed_signinpage"
             android:background="?attr/selectableItemBackground"
-            android:onClick="sign_in"
+            android:onClick="passenger_sign_in"
             />
 
         <ImageButton
@@ -28,6 +28,7 @@
             android:layout_marginBottom="49dp"
             android:src="@drawable/btn_signup_pressed_signuppage"
             android:background="?attr/selectableItemBackground"
+            android:onClick="passenger_sign_up"
             />
 
         <ImageButton
@@ -35,6 +36,7 @@
             android:layout_height="wrap_content"
             android:src="@drawable/btn_send_new_password_pressed_fo"
             android:background="?attr/selectableItemBackground"
+            android:onClick="passenger_send_new_password"
             />
 
     </LinearLayout>

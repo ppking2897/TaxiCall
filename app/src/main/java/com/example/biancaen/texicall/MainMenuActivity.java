@@ -14,7 +14,7 @@ public class MainMenuActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
-        getWindow().setEnterTransition(new Explode());
+        getWindow().setEnterTransition(new ChangeTransform());
         getWindow().setExitTransition(new ChangeTransform());
         setContentView(R.layout.mainmenu);
     }
