@@ -25,7 +25,7 @@ public class BeginningActivity extends AppCompatActivity {
         getWindow().requestFeature(Window.FEATURE_CONTENT_TRANSITIONS);
         getWindow().setEnterTransition(new Explode());
         getWindow().setExitTransition(new ChangeTransform());
-        setContentView(R.layout.beginning);
+        setContentView(R.layout.activity_beginning);
 
         logo = (ImageView)findViewById(R.id.logo);
         ImageView welcome = (ImageView) findViewById(R.id.welcome);

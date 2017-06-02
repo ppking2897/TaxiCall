@@ -79,6 +79,7 @@
             android:layout_gravity="center"
             android:src="@drawable/btn_signin_disabled_signinpage"
             android:background="?android:attr/selectableItemBackground"
+            android:onClick="sign_in_sign_in"
             />
 
         <ImageButton

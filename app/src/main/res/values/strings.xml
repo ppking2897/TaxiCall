@@ -13,4 +13,12 @@
     <string name="sign_up_mail">信箱</string>
 
     <string name="forgot_password">忘記密碼</string>
+
+    <string name="title_activity_passenger__menu_">帳戶主選單(暫訂)</string>
+    <string name="title_activity_passenger__info_">帳戶資訊</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
 </resources>

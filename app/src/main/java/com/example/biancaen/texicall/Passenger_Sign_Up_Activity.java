@@ -3,11 +3,11 @@ package com.example.biancaen.texicall;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class Passenger_Sign_Up extends AppCompatActivity {
+public class Passenger_Sign_Up_Activity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.passenger_sign_up);
+        setContentView(R.layout.activity_passenger_sign_up);
     }
 }

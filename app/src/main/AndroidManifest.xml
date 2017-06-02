@@ -18,9 +18,17 @@
         </activity>
         <activity android:name=".MainMenuActivity" />
         <activity android:name=".PassengerActivity" />
-        <activity android:name=".Passenger_Sign_in" />
-        <activity android:name=".Passenger_Sign_Up" />
-        <activity android:name=".ForgotPassword"></activity>
+        <activity android:name=".Passenger_Sign_in_Activity" />
+        <activity android:name=".Passenger_Sign_Up_Activity" />
+        <activity android:name=".ForgotPasswordActivity" />
+        <activity
+            android:name=".Passenger_Menu_Activity"
+            android:label="@string/title_activity_passenger__menu_"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".Passenger_Info_Activity"
+            android:label="@string/title_activity_passenger__info_"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
     </application>
 
 </manifest>
