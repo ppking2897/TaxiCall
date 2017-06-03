@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
-        <item
-            android:id="@+id/nav_camera"
-
+        <item 
+            android:id="@+id/nav_car_service"
+            android:icon="@drawable/ic_car_normal_side_drawer"
             android:title="派車服務" />
         <item
-            android:id="@+id/nav_gallery"
-
+            android:id="@+id/nav_sent_car_record"
+            android:icon="@drawable/ic_listing_selected_side_drawer"
             android:title="乘車記錄" />
         <item
-            android:id="@+id/nav_slideshow"
-
+            android:id="@+id/nav_customer_service"
+            android:icon="@drawable/ic_customer_selected_side_drawer"
             android:title="客服系統" />
         <item
-            android:id="@+id/nav_manage"
+            android:id="@+id/nav_account"
             android:icon="@drawable/ic_setting_selected_side_drawer"
             android:title="帳戶設定" />
     </group>

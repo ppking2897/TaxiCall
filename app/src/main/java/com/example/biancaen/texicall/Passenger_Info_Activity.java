@@ -1,5 +1,6 @@
 package com.example.biancaen.texicall;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -49,30 +50,39 @@ public class Passenger_Info_Activity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
-            // Handle the camera action
-        } else if (id == R.id.nav_gallery) {
+        if (id == R.id.nav_car_service) {
 
-        } else if (id == R.id.nav_slideshow) {
+        } else if (id == R.id.nav_sent_car_record) {
 
-        } else if (id == R.id.nav_manage) {
+            Intent it = new Intent(this , Passenger_Sent_Car_Activity.class);
+            startActivity(it);
+
+        } else if (id == R.id.nav_customer_service) {
+
+            Intent it = new Intent(this , Passenger_Customer_Activity.class);
+            startActivity(it);
+
+        } else if (id == R.id.nav_account) {
 
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_info);
         drawer.closeDrawer(GravityCompat.START);
-        return true;
+        return false;
     }
 
     public void passenger_edit_username(View view){
-
+        Intent it = new Intent(this , Passenger_Edit_Username_Activity.class);
+        startActivity(it);
     }
 
     public void passenger_edit_password(View view){
-
+        Intent it = new Intent(this , Passenger_Edit_Password_Activity.class);
+        startActivity(it);
     }
 
     public void passenger_edit_mail(View view){
-
+        Intent it = new Intent(this , Passenger_Edit_Mail_Activity.class);
+        startActivity(it);
     }
 }

@@ -29,6 +29,26 @@
             android:name=".Passenger_Info_Activity"
             android:label="@string/title_activity_passenger__info_"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".Passenger_Edit_Mail_Activity"
+            android:label="@string/title_activity_passenger__edit_mail"
+            android:parentActivityName=".Passenger_Info_Activity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".Passenger_Edit_Password_Activity"
+            android:label="@string/title_activity_passenger__edit_password"
+            android:parentActivityName=".Passenger_Info_Activity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".Passenger_Edit_Username_Activity"
+            android:label="@string/title_activity_passenger__edit_username"
+            android:parentActivityName=".Passenger_Info_Activity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".Passenger_Customer_Activity"
+            android:label="@string/title_activity_passenger__customer"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name=".Passenger_Sent_Car_Activity"></activity>
     </application>
 
 </manifest>

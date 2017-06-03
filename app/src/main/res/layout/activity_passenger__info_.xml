@@ -23,8 +23,8 @@
         app:itemTextColor="#A4AAB3"
         android:background="#ffffff"
         app:itemIconTint="#A4AAB3"
-        app:headerLayout="@layout/nav_header_passenger__menu_"
-        app:menu="@menu/activity_passenger__info__drawer"
+        app:headerLayout="@layout/nav_header_"
+        app:menu="@menu/activity__drawer"
         android:theme="@style/AppBarOverlay"
         />
 

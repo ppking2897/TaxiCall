@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/shpe_color"
+    >
+
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppBarOverlay"
+        >
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar_Edit_Mail"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="#276073"
+            />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="原信箱/XXXXXXXXXXXXXXXX"
+        android:textSize="18sp"
+        android:textColor="#FFFFFF"
+        android:drawableStart="@drawable/ic_mail_ori_change_email_page"
+        android:drawablePadding="17dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginLeft="43dp"
+        android:layout_marginRight="20dp"
+        android:background="@android:color/transparent"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:background="@drawable/shape_sign_up"
+        >
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:layout_marginBottom="14dp"
+            android:layout_marginLeft="24dp"
+            android:layout_marginRight="24dp"
+            android:hint="輸入新信箱"
+            android:textColorHint="#FFFFFF"
+            android:drawableStart="@drawable/ic_mail_signuppage"
+            android:drawablePadding="17dp"
+            android:background="@android:color/transparent"
+            />
+    </LinearLayout>
+
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="40dp"
+        android:layout_marginRight="21dp"
+        android:layout_marginLeft="19dp"
+        android:src="@drawable/btn_edited_settingflow"
+        android:background="?attr/selectableItemBackground"
+        android:onClick="edit_Mail"
+        />
+
+</LinearLayout>
