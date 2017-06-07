@@ -48,7 +48,19 @@
             android:name=".Passenger_Customer_Activity"
             android:label="@string/title_activity_passenger__customer"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".Passenger_Sent_Car_Activity"></activity>
+        <activity
+            android:name=".Passenger_Sent_Car_Record_Activity"
+            android:label="@string/title_activity_passenger__sent_car_record"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".Passenger_Car_Service_Activity"
+            android:label="@string/title_activity_passenger__car_service"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".Passenger_Fares_Activity"
+            android:label="@string/title_activity_passenger__fares"
+            android:parentActivityName=".Passenger_Info_Activity"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
     </application>
 
 </manifest>

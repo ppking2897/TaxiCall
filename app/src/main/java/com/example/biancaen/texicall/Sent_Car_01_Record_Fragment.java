@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class Sent_Car_01_Fragment extends Fragment {
+public class Sent_Car_01_Record_Fragment extends Fragment {
     private ArrayList<String> address_Record = new ArrayList<>();
     @Nullable
     @Override

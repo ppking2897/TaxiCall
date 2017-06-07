@@ -49,9 +49,12 @@ public class Passenger_Customer_Activity extends AppCompatActivity
 
         if (id == R.id.nav_car_service) {
 
+            Intent it = new Intent(this ,Passenger_Car_Service_Activity.class);
+            startActivity(it);
+
         } else if (id == R.id.nav_sent_car_record) {
 
-            Intent it = new Intent(this , Passenger_Sent_Car_Activity.class);
+            Intent it = new Intent(this , Passenger_Sent_Car_Record_Activity.class);
             startActivity(it);
 
         } else if (id == R.id.nav_customer_service) {

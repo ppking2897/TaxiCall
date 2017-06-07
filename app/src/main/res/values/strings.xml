@@ -20,6 +20,9 @@
     <string name="title_activity_passenger__edit_password">變更密碼</string>
     <string name="title_activity_passenger__edit_username">變更用戶名稱</string>
     <string name="title_activity_passenger__customer">客服系統</string>
+    <string name="title_activity_passenger__sent_car_record">乘車紀錄</string>
+    <string name="title_activity_passenger__car_service">派車服務</string>
+    <string name="title_activity_passenger__fares">車資試算</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>

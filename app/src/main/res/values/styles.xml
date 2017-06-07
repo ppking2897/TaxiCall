@@ -14,5 +14,10 @@
 
     <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
+    <style name="CustomDialog" parent="android:style/Theme.Dialog">
+        <!--是否去除标题 -->
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
 
 </resources>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_dialog_background"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#364F6B"
+        >
+
+        <TextView
+            android:layout_weight="1"
+            android:id="@+id/textViewDialog"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:paddingTop="15dp"
+            android:paddingBottom="15dp"
+            android:layout_marginLeft="16dp"
+            android:gravity="center_horizontal"
+            android:text="空趟通知"
+            android:textColor="#FFFFFF"
+            />
+
+        <ImageButton
+            android:id="@+id/closeDialog"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginRight="13dp"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/btn_exit_deadhead_notice"
+            android:background="?android:selectableItemBackground"
+
+            />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_marginBottom="32dp"
+        android:orientation="vertical"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            android:paddingStart="64dp"
+            android:paddingEnd="57dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="你有 "
+                android:textColor="#000000"
+                android:textSize="16sp"
+                />
+            <TextView
+                android:id="@+id/dialogEmptyCont"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFB400"
+                android:textSize="36sp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 筆空趟紀錄 "
+                android:textColor="#000000"
+                android:textSize="16sp"
+                />
+
+        </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="64dp"
+            android:paddingEnd="57dp"
+            android:layout_marginTop="10dp"
+            android:text="本趟車資將加收"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+
+            android:paddingStart="64dp"
+            android:paddingEnd="57dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="新台幣 "
+                android:textColor="#000000"
+                android:textSize="16sp"
+                />
+            <TextView
+                android:id="@+id/dialogEmptyTripPay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFB400"
+                android:textSize="36sp"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" 元整。 "
+                android:textColor="#000000"
+                android:textSize="16sp"
+                />
+        </LinearLayout>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/knowButton"
+        android:layout_width="260dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:background="@drawable/shape_i_know_button"
+        android:onClick="knowButton"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="我知道了"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            />
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class Sent_Car_02_Fragment extends Fragment {
+public class Sent_Car_02_Record_Fragment extends Fragment {
     private ArrayList<String> date = new ArrayList<>();
     private ArrayList<String> getOn = new ArrayList<>();
     private ArrayList<String> getOff = new ArrayList<>();

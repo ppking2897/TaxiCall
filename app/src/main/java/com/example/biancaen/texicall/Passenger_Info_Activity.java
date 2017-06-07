@@ -2,8 +2,6 @@ package com.example.biancaen.texicall;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -11,7 +9,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.MenuItem;
 
 public class Passenger_Info_Activity extends AppCompatActivity
@@ -52,9 +49,12 @@ public class Passenger_Info_Activity extends AppCompatActivity
 
         if (id == R.id.nav_car_service) {
 
+            Intent it = new Intent(this ,Passenger_Car_Service_Activity.class);
+            startActivity(it);
+
         } else if (id == R.id.nav_sent_car_record) {
 
-            Intent it = new Intent(this , Passenger_Sent_Car_Activity.class);
+            Intent it = new Intent(this , Passenger_Sent_Car_Record_Activity.class);
             startActivity(it);
 
         } else if (id == R.id.nav_customer_service) {
@@ -64,6 +64,8 @@ public class Passenger_Info_Activity extends AppCompatActivity
 
         } else if (id == R.id.nav_account) {
 
+            Intent it = new Intent(this , Passenger_Info_Activity.class);
+            startActivity(it);
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_info);

@@ -12,14 +12,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
 import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
-public class Passenger_Sent_Car_Activity extends AppCompatActivity
+public class Passenger_Sent_Car_Record_Activity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener{
 
     private ViewPager myViewPager;
@@ -28,7 +27,7 @@ public class Passenger_Sent_Car_Activity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_passenger__sent__car_);
+        setContentView(R.layout.activity_passenger__sent__car_record_);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_sent_car);
         setSupportActionBar(toolbar);
@@ -48,11 +47,11 @@ public class Passenger_Sent_Car_Activity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_sent_car);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Sent_Car_01_Fragment sent_car_01_fragment = new Sent_Car_01_Fragment();
-        Sent_Car_02_Fragment sent_car_02_fragment = new Sent_Car_02_Fragment();
+        Sent_Car_01_Record_Fragment sent_car_01_Record_fragment = new Sent_Car_01_Record_Fragment();
+        Sent_Car_02_Record_Fragment sent_car_02_Record_fragment = new Sent_Car_02_Record_Fragment();
 
-        views.add(sent_car_01_fragment);
-        views.add(sent_car_02_fragment);
+        views.add(sent_car_01_Record_fragment);
+        views.add(sent_car_02_Record_fragment);
 
 
         myViewPager.setAdapter(new MyFragmentAdapter(getSupportFragmentManager()));
@@ -88,9 +87,12 @@ public class Passenger_Sent_Car_Activity extends AppCompatActivity
 
         if (id == R.id.nav_car_service) {
 
+            Intent it = new Intent(this ,Passenger_Car_Service_Activity.class);
+            startActivity(it);
+
         } else if (id == R.id.nav_sent_car_record) {
 
-            Intent it = new Intent(this , Passenger_Sent_Car_Activity.class);
+            Intent it = new Intent(this , Passenger_Sent_Car_Record_Activity.class);
             startActivity(it);
 
         } else if (id == R.id.nav_customer_service) {
