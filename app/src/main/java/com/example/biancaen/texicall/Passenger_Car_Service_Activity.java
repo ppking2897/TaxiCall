@@ -17,6 +17,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,10 +28,11 @@ import static android.app.AlertDialog.THEME_DEVICE_DEFAULT_LIGHT;
 public class Passenger_Car_Service_Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
-    private int emptyTripCount = 0;
-    private int emptyTripPay = 0;
+    private int emptyTripCount = 1;
+    private int emptyTripPay = 60;
     private TextView passenger_Number;
     private int number = 1;
+    private EditText location , destination;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,9 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         passenger_Number = (TextView) findViewById(R.id.passenger_Number);
+        location = (EditText)findViewById(R.id.location);
+        destination = (EditText)findViewById(R.id.destination);
+
 
         //Todo 空趟的次數已及要加收的價格資料存放位置 emptyTripCount emptyTripPay
 

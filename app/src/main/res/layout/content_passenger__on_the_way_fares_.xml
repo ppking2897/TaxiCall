@@ -4,11 +4,63 @@
     android:layout_height="match_parent"
     android:background="@drawable/shape_color"
     >
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="#173540"
+            android:focusableInTouchMode="true"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="空趟紀錄次數 : "
+                android:textSize="14sp"
+                android:textColor="#FFFFFF"
+
+                />
+            <TextView
+                android:id="@+id/fares_Empty_Trip_Count_OnTheWay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="#BD9E41"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" ， 本趟車資需加收 "
+                android:textSize="14sp"
+                android:textColor="#FFFFFF"
+                />
+            <TextView
+                android:id="@+id/fares_Empty_Trip_ToPay_OnTheWay"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="14sp"
+                android:textColor="#BD9E41"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text=" 元。 "
+                android:textSize="14sp"
+                android:textColor="#FFFFFF"
+                />
+        </LinearLayout>
+
+
+
         <LinearLayout
             android:layout_width="330dp"
             android:layout_height="356dp"
@@ -44,7 +96,7 @@
                     android:textSize="18sp"
                     />
                 <TextView
-                    android:id="@+id/payTheMoney"
+                    android:id="@+id/payTheMoney_onTheWay"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="1238"
@@ -60,8 +112,6 @@
                     android:textColor="#000000"
                     android:textSize="18sp"
                     />
-
-
             </LinearLayout>
             <TextView
                 android:layout_width="wrap_content"
@@ -77,15 +127,13 @@
         </LinearLayout>
 
         <ImageView
-            android:id="@+id/callTheCar"
             android:layout_width="330dp"
             android:layout_height="60dp"
             android:layout_gravity="center"
             android:layout_marginTop="33dp"
             android:layout_marginBottom="26dp"
-            android:src="@drawable/btn_request_car"
+            android:src="@drawable/btn_request_car_disabled"
             android:background="?android:selectableItemBackground"
-            android:clickable="true"
             />
     </LinearLayout>
 </ScrollView>

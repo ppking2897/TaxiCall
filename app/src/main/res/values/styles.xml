@@ -14,10 +14,22 @@
 
     <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
+
     <style name="CustomDialog" parent="android:style/Theme.Dialog">
-        <!--是否去除标题 -->
         <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@drawable/shape_empty_dialog_background</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.4</item>
     </style>
 
-
+    <style name="CustomDialog02" parent="android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@drawable/shape_cancel_car_dialog_background</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.4</item>
+    </style>
 </resources>

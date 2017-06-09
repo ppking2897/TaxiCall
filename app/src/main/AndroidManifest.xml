@@ -61,6 +61,15 @@
             android:label="@string/title_activity_passenger__fares"
             android:parentActivityName=".Passenger_Info_Activity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".Passenger_On_The_Way_Activity"
+            android:label="@string/title_activity_passenger__on_the_way"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".Passenger_On_The_Way_Fares_Activity"
+            android:label="@string/title_activity_passenger__fares"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            />
     </application>
 
 </manifest>
