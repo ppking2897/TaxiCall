@@ -3,13 +3,15 @@ package com.example.biancaen.texicall.domain;
 import android.support.annotation.NonNull;
 
 import com.google.gson.Gson;
-import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
 import com.squareup.okhttp.Response;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.IOException;
 
@@ -39,30 +41,43 @@ public class Connect_API{
     private static Request request;
     private static RequestBody body;
 
-    /**
-     * 會員註冊
-     * @param  name
-     * @param password
-     * @param email
-     * @param phone
-     */
-    public static void isRegister(String name , String password , String email , String phone , Callback callback){
+    // 會員註冊
+    public interface OnRegisterListener{
+        void onRegisterSuccessListener(boolean isFail , String message);
+        void onRegisterFailListener(Exception e);
+    }
+    public static void register(String name , String password , String email , String phone ,@NonNull final OnRegisterListener listener){
         body = new FormEncodingBuilder()
                 .add("name" , name)
                 .add("password" , password)
                 .add("email" , email)
                 .add("phone" , phone).build();
         request = new Request.Builder().url(API_HOST+API_VERSION+REGISTER).post(body).build();
-        new OkHttpClient().newCall(request).enqueue(callback);
-        release();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                listener.onRegisterFailListener(e);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                String s = response.body().string();
+                try {
+                    JSONObject jsonObject = new JSONObject(s);
+                    listener.onRegisterSuccessListener(jsonObject.getBoolean("error"),jsonObject.getString("message"));
+                } catch (JSONException e) {
+                    listener.onRegisterFailListener(e);
+                }
+            }
+        });
     }
 
-    /**
-     * 登入
-     * @param phone
-     * @param password
-     * @return  true is OK*/
-    public static void login(String phone , String password , @NonNull final OnLoginListener l){
+     // 登入
+    public interface OnLoginListener {
+         void onLoginSuccess(UserData userData);
+         void onLoginFail(Exception e);
+     }
+    public static void login(String phone , String password , @NonNull final OnLoginListener listener){
         body = new FormEncodingBuilder()
                 .add("password" , password)
                 .add("phone" , phone).build();
@@ -71,83 +86,181 @@ public class Connect_API{
         new OkHttpClient().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, IOException e) {
-                l.onLoginFail(e);
+                listener.onLoginFail(e);
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
                 String body = response.body().string();
                 Gson gson = new Gson();
-                l.onLoginSuccess(gson.fromJson(body, UserData.class));
+                listener.onLoginSuccess(gson.fromJson(body, UserData.class));
             }
         });
-        release();
     }
 
-    /**
-     * 客戶端打開App
-     * @param phone*/
-    public static void getStatus(String phone , Callback callback){
+    //客戶端打開App
+    public interface  OnGetStatusListener{
+        void onFail(Exception e);
+        void onSuccess(String result , int status);
+    }
+    public static void getStatus(String phone , String apiKey , final OnGetStatusListener listener){
         body = new FormEncodingBuilder()
                 .add("phone" , phone)
                 .add("os" , "1").build();
-        request = new Request.Builder().url(API_HOST+API_VERSION+GET_STATUS).header("Authorization" ,""+ AppUtility.apiKey).post(body).build();
-        new OkHttpClient().newCall(request).enqueue(callback);
-        release();
+        request = new Request.Builder().url(API_HOST+API_VERSION+GET_STATUS).header("Authorization" ,""+ apiKey).post(body).build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                listener.onFail(e);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                String s = response.body().string();
+                try {
+                    JSONObject jsonObject = new JSONObject(s);
+                    listener.onSuccess(jsonObject.getString("result"),jsonObject.getInt("status"));
+
+                } catch (JSONException e) {
+                    listener.onFail(e);
+                }
+            }
+        });
     }
 
-    /**客戶端上傳狀態
-     *@param  phone
-     * status class自動載入*/
-    public static void putstatus(String phone ,Callback callback){
+    //客戶端上傳狀態
+    public interface OnPutStatusListener {
+        void onFail(Exception e);
+        void onSuccess(boolean isFail , String result);
+    }
+    public static void putstatus(String phone , String status, String apiKey, final OnPutStatusListener listener){
         body = new FormEncodingBuilder()
                 .add("phone" , phone)
-                .add("status" , String.valueOf(AppUtility.status)).build();
-        request = new Request.Builder().url(API_HOST+API_VERSION+PUT_STATUS).header("Authorization",AppUtility.apiKey).post(body).build();
-        new OkHttpClient().newCall(request).enqueue(callback);
-        release();
+                .add("status" , status).build();
+        request = new Request.Builder().url(API_HOST+API_VERSION+PUT_STATUS).header("Authorization",""+apiKey).post(body).build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                listener.onFail(e);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                String s = response.body().string();
+                try {
+                    JSONObject jsonObject = new JSONObject(s);
+                    listener.onSuccess(jsonObject.getBoolean("error"),jsonObject.getString("result"));
+                } catch (JSONException e) {
+                    listener.onFail(e);
+                }
+            }
+        });
     }
 
-    /**司機端打開App(更新)
-     * @param phone*/
-    public static void getdriverstatus(String phone , Callback callback){
+    //司機端打開App(更新)
+    public interface OnGetDriverStatusListener{
+        void onFail(Exception e);
+        void onSuccess(String result , int status);
+    }
+    public static void getdriverstatus(String phone ,String apiKey , final OnGetDriverStatusListener listener){
         body = new FormEncodingBuilder()
                 .add("phone" , phone)
                 .add("os" , "1").build();
-        request = new Request.Builder().url(API_HOST+API_VERSION+GET_DRIVER_STATUS).header("Authorization",AppUtility.apiKey).post(body).build();
-        new OkHttpClient().newCall(request).enqueue(callback);
-        release();
+        request = new Request.Builder().url(API_HOST+API_VERSION+GET_DRIVER_STATUS).header("Authorization",""+apiKey).post(body).build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                listener.onFail(e);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                String s = response.body().string();
+                try {
+                    JSONObject jsonObject = new JSONObject(s);
+                    listener.onSuccess(jsonObject.getString("result"),jsonObject.getInt("status"));
+                } catch (JSONException e) {
+                    listener.onFail(e);
+                }
+            }
+        });
     }
 
-    /**司機端上傳狀態
-        * @param phone*/
-    public static void putdriverstatus(String phone , Callback callback){
+
+    //司機端上傳狀態
+    public interface OnPutDriverStatusListener{
+        void onFail(Exception e);
+        void onSuccess(boolean isFail , String result);
+    }
+    public static void putdriverstatus(String phone , String status , String apiKey , final OnPutDriverStatusListener listener ){
         body = new FormEncodingBuilder()
                 .add("phone" , phone)
-                .add("os" , "1").build();
-        request = new Request.Builder().url(API_HOST+API_VERSION+PUT_DRIVER_STATUS).header("Authorization",AppUtility.apiKey).post(body).build();
-        new OkHttpClient().newCall(request).enqueue(callback);
-        release();
+                .add("status" , status).build();
+        request = new Request.Builder().url(API_HOST+API_VERSION+PUT_DRIVER_STATUS).header("Authorization",""+apiKey).post(body).build();
+
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                listener.onFail(e);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                String s = response.body().string();
+                try {
+                    JSONObject jsonObject = new JSONObject(s);
+                    listener.onSuccess(jsonObject.getBoolean("error"),jsonObject.getString("result"));
+                } catch (JSONException e) {
+                    listener.onFail(e);
+                }
+            }
+        });
     }
 
     //--------------------計費--------------------------
     /** 客戶發出派車試算需求
-     * @param start_lon
-     * @param start_lat
-     * @param end_lon
-     * @param end_lat
      * 起始經緯度及終點經緯度
      */
+    public interface OnRateListener{
+        void onFail(Exception e);
+        void onSuccess(String result, int price, int time, String distance);
+    }
     public static void rate(String start_lon , String start_lat,
-                            String end_lon , String end_lat , Callback callback){
+                            String end_lon , String end_lat , String apiKey , final OnRateListener listener){
         body = new FormEncodingBuilder()
                 .add("addr_start_lon" , start_lon)
                 .add("addr_start_lat" , start_lat)
                 .add("addr_end_lon" , end_lon)
                 .add("addr_end_lat" , end_lat).build();
-        request = new Request.Builder().url(API_HOST+API_VERSION+RATE).header("Authorization" , AppUtility.apiKey ).post(body).build();
-        new OkHttpClient().newCall(request).enqueue(callback);
-//        release();
+        request = new Request.Builder().url(API_HOST+API_VERSION+RATE).header("Authorization" , ""+ apiKey).post(body).build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                listener.onFail(e);
+            }
+
+            /*{
+    "distance": "0.5 km",
+    "time": 3,
+    "result": false,
+    "price": 40
+}*/
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                String s = response.body().string();
+                try {
+                    JSONObject jsonObject = new JSONObject(s);
+                    listener.onSuccess(
+                            jsonObject.getString("result"),
+                            jsonObject.getInt("price"),
+                            jsonObject.getInt("time"),
+                            jsonObject.getString("distance"));
+                } catch (JSONException e) {
+                    listener.onFail(e);
+                }
+            }
+        });
     }
 
     /**客戶發出派車需求
@@ -176,28 +289,27 @@ public class Connect_API{
                 .add("comment" , comment).build();
         request = new Request.Builder().url(API_HOST+API_VERSION+NEW_TASK).post(body).build();
         new OkHttpClient().newCall(request).enqueue(callback);
-        release();
     }
 
-    /**開始配對
-     * @param start_lon
-     * @param start_lat
-     * @param phone*/
-    public static void starttask(String start_lon , String start_lat ,
-                                 String phone , String tasknumber , Callback callback){
-        body = new FormEncodingBuilder( )
-                .add("addr_start_lon" , start_lon)
-                .add("addr_start_lat" , start_lat)
-                .add("phone" , phone)
-                .add("tasknumber" , tasknumber).build();
-        request = new Request.Builder().url(API_HOST+API_VERSION+GET_DRIVER_STATUS).header("Authorization",AppUtility.apiKey).post(body).build();
-        new OkHttpClient().newCall(request).enqueue(callback);
-        release();
-    }
-
-    private static void release(){
-        body = null;
-        request = null;
-        System.gc();
-    }
+//    /**開始配對
+//     * @param start_lon
+//     * @param start_lat
+//     * @param phone*/
+//    public static void starttask(String start_lon , String start_lat ,
+//                                 String phone , String tasknumber , Callback callback){
+//        body = new FormEncodingBuilder( )
+//                .add("addr_start_lon" , start_lon)
+//                .add("addr_start_lat" , start_lat)
+//                .add("phone" , phone)
+//                .add("tasknumber" , tasknumber).build();
+//        request = new Request.Builder().url(API_HOST+API_VERSION+GET_DRIVER_STATUS).header("Authorization",AppUtility.apiKey).post(body).build();
+//        new OkHttpClient().newCall(request).enqueue(callback);
+//        release();
+//    }
+//
+//    private static void release(){
+//        body = null;
+//        request = null;
+//        System.gc();
+//    }
 }
