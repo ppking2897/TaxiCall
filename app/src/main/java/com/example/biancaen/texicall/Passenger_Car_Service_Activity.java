@@ -14,7 +14,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
@@ -33,6 +35,8 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
     private TextView passenger_Number;
     private int number = 1;
     private EditText location , destination;
+    private NavigationView navigationView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,14 +45,18 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_car_service);
         setSupportActionBar(toolbar);
 
+        navigationView = (NavigationView) findViewById(R.id.nav_view_car_service);
+        navigationView.setCheckedItem(R.id.nav_car_service);
+        navigationView.setNavigationItemSelectedListener(this);
+
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_car_service);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle
+                (this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_car_service);
-        navigationView.setNavigationItemSelectedListener(this);
+
 
         passenger_Number = (TextView) findViewById(R.id.passenger_Number);
         location = (EditText)findViewById(R.id.location);
@@ -79,15 +87,14 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
         }
     }
 
+
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-
         if (id == R.id.nav_car_service) {
 
         } else if (id == R.id.nav_sent_car_record) {
-
             Intent it = new Intent(this , Passenger_Sent_Car_Record_Activity.class);
             startActivity(it);
 
@@ -104,7 +111,7 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_car_service);
         drawer.closeDrawer(GravityCompat.START);
-        return false;
+        return true;
     }
 
     public void btn_reduce(View view){
@@ -166,4 +173,5 @@ class Empty_Dialog{
         });
 
     }
+
 }

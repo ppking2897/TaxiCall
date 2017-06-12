@@ -13,7 +13,7 @@ public class Passenger_Sign_in_Activity extends AppCompatActivity {
         setContentView(R.layout.activity_passenger_sign_in);
     }
     public void sign_in_sign_in(View view){
-        Intent it = new Intent(this , Passenger_Menu_Activity.class);
+        Intent it = new Intent(this , Passenger_Car_Service_Activity.class);
         startActivity(it);
     }
     public void sign_in_sign_up(View view){

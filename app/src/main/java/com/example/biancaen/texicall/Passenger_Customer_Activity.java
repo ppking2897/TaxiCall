@@ -28,6 +28,7 @@ public class Passenger_Customer_Activity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_customer);
+        navigationView.setCheckedItem(R.id.nav_customer_service);
         navigationView.setNavigationItemSelectedListener(this);
     }
 

@@ -68,8 +68,17 @@
         <activity
             android:name=".Passenger_On_The_Way_Fares_Activity"
             android:label="@string/title_activity_passenger__fares"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+
+        <service
+            android:name=".MyService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".MyIntentService"
+            android:exported="false" />
+
+        <activity android:name=".Passenger_Driver_Arrived_Activity"></activity>
     </application>
 
 </manifest>

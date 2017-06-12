@@ -45,6 +45,7 @@ public class Passenger_Sent_Car_Record_Activity extends AppCompatActivity
         toggle.syncState();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_sent_car);
+        navigationView.setCheckedItem(R.id.nav_sent_car_record);
         navigationView.setNavigationItemSelectedListener(this);
 
         Sent_Car_01_Record_Fragment sent_car_01_Record_fragment = new Sent_Car_01_Record_Fragment();

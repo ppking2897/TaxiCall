@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/shape_color"
-    >
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/app_bar_passenger__on_the_way_fares"
+    tools:context="com.example.biancaen.texicall.Passenger_On_The_Way_Fares_Activity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:textColor="#BD9E41"
+                android:text="1"
                 />
             <TextView
                 android:layout_width="wrap_content"
@@ -49,6 +55,7 @@
                 android:layout_height="match_parent"
                 android:textSize="14sp"
                 android:textColor="#BD9E41"
+                android:text="60"
                 />
             <TextView
                 android:layout_width="wrap_content"
