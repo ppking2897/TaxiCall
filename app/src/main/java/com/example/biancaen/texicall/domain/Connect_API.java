@@ -1,11 +1,17 @@
 package com.example.biancaen.texicall.domain;
 
+import android.support.annotation.NonNull;
+
+import com.google.gson.Gson;
 import com.squareup.okhttp.Call;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.okhttp.Request;
 import com.squareup.okhttp.RequestBody;
+import com.squareup.okhttp.Response;
+
+import java.io.IOException;
 
 /**
  *2017/06/12  artlence created
@@ -56,13 +62,25 @@ public class Connect_API{
      * @param phone
      * @param password
      * @return  true is OK*/
-    public static void login(String phone , String password , Callback callback){
+    public static void login(String phone , String password , @NonNull final OnLoginListener l){
         body = new FormEncodingBuilder()
                 .add("password" , password)
                 .add("phone" , phone).build();
 
         request = new Request.Builder().url(API_HOST+API_VERSION+LOGIN).post(body).build();
-        new OkHttpClient().newCall(request).enqueue(callback);
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                l.onLoginFail(e);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                String body = response.body().string();
+                Gson gson = new Gson();
+                l.onLoginSuccess(gson.fromJson(body, UserData.class));
+            }
+        });
         release();
     }
 
