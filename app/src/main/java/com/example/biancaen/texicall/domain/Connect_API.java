@@ -32,11 +32,14 @@ public class Connect_API{
     private static final String PUT_STATUS = "/putstatus";
     private static final String GET_DRIVER_STATUS = "/getdriverstatus";
     private static final String PUT_DRIVER_STATUS = "/putdriverstatus";
+
+    //計費及派車
+    private static final String RATE = "/rate";
     private static final String NEW_TASK = "/newtask";
     private static final String START_TASK = "/starttask";
-
-    //客戶 計費
-    private static final String RATE = "/rate";
+    private static final String CANCEL_TASK = "/canceltask";
+    private static final String GET_PAIR_INFO = "/getpairinfo";
+    private static final String ACCEPT_TASK = "/accepttask";
 
     private static Request request;
     private static RequestBody body;
@@ -103,7 +106,7 @@ public class Connect_API{
         void onFail(Exception e);
         void onSuccess(String result , int status);
     }
-    public static void getStatus(String phone , String apiKey , final OnGetStatusListener listener){
+    public static void getStatus(String phone , String apiKey ,@NonNull final OnGetStatusListener listener){
         body = new FormEncodingBuilder()
                 .add("phone" , phone)
                 .add("os" , "1").build();
@@ -133,7 +136,7 @@ public class Connect_API{
         void onFail(Exception e);
         void onSuccess(boolean isFail , String result);
     }
-    public static void putstatus(String phone , String status, String apiKey, final OnPutStatusListener listener){
+    public static void putstatus(String phone , String status, String apiKey,@NonNull final OnPutStatusListener listener){
         body = new FormEncodingBuilder()
                 .add("phone" , phone)
                 .add("status" , status).build();
@@ -162,7 +165,7 @@ public class Connect_API{
         void onFail(Exception e);
         void onSuccess(String result , int status);
     }
-    public static void getdriverstatus(String phone ,String apiKey , final OnGetDriverStatusListener listener){
+    public static void getdriverstatus(String phone ,String apiKey ,@NonNull final OnGetDriverStatusListener listener){
         body = new FormEncodingBuilder()
                 .add("phone" , phone)
                 .add("os" , "1").build();
@@ -192,7 +195,7 @@ public class Connect_API{
         void onFail(Exception e);
         void onSuccess(boolean isFail , String result);
     }
-    public static void putdriverstatus(String phone , String status , String apiKey , final OnPutDriverStatusListener listener ){
+    public static void putdriverstatus(String phone , String status , String apiKey ,@NonNull final OnPutDriverStatusListener listener ){
         body = new FormEncodingBuilder()
                 .add("phone" , phone)
                 .add("status" , status).build();
@@ -218,15 +221,16 @@ public class Connect_API{
     }
 
     //--------------------計費--------------------------
-    /** 客戶發出派車試算需求
-     * 起始經緯度及終點經緯度
-     */
+    /*
+    客戶發出派車試算需求
+    起始經緯度及終點經緯度
+    */
     public interface OnRateListener{
         void onFail(Exception e);
         void onSuccess(String result, int price, int time, String distance);
     }
     public static void rate(String start_lon , String start_lat,
-                            String end_lon , String end_lat , String apiKey , final OnRateListener listener){
+                            String end_lon , String end_lat , String apiKey ,@NonNull final OnRateListener listener){
         body = new FormEncodingBuilder()
                 .add("addr_start_lon" , start_lon)
                 .add("addr_start_lat" , start_lat)
@@ -238,13 +242,6 @@ public class Connect_API{
             public void onFailure(Request request, IOException e) {
                 listener.onFail(e);
             }
-
-            /*{
-    "distance": "0.5 km",
-    "time": 3,
-    "result": false,
-    "price": 40
-}*/
 
             @Override
             public void onResponse(Response response) throws IOException {
@@ -263,20 +260,15 @@ public class Connect_API{
         });
     }
 
-    /**客戶發出派車需求
-     * @param start_lon
-     * @param start_lat
-     *  @param start_addr
-     * @param end_lon
-     * @param end_lat
-     * @param end_addr
-     * @param phone
-     * @param passenger_number
-     * @param comment*/
+    //客戶發出派車需求
+    public interface OnNewTaskListener{
+        void onFail(Exception e);
+        void onSuccess(boolean isFail, String message, String tasknumber);
+    }
     public static void newTask(String start_lon , String start_lat , String start_addr ,
                                String end_lon , String end_lat , String end_addr ,
                                String phone , String passenger_number , String comment ,
-                               Callback callback){
+                               String apiKey ,@NonNull final OnNewTaskListener listener){
         body = new FormEncodingBuilder()
                 .add("addr_start_lon" , start_lon)
                 .add("addr_start_lat" , start_lat)
@@ -287,29 +279,149 @@ public class Connect_API{
                 .add("phone" , phone)
                 .add("passenger_number" , passenger_number)
                 .add("comment" , comment).build();
-        request = new Request.Builder().url(API_HOST+API_VERSION+NEW_TASK).post(body).build();
-        new OkHttpClient().newCall(request).enqueue(callback);
+        request = new Request.Builder().url(API_HOST+API_VERSION+NEW_TASK).header("Authorization" , ""+ apiKey).post(body).build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                listener.onFail(e);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                String s = response.body().string();
+                try {
+                    JSONObject jsonObject = new JSONObject(s);
+                    listener.onSuccess(jsonObject.getBoolean("error"),jsonObject.getString("message"),jsonObject.getString("tasknumber"));
+                } catch (JSONException e) {
+                    listener.onFail(e);
+                }
+            }
+        });
     }
 
-//    /**開始配對
-//     * @param start_lon
-//     * @param start_lat
-//     * @param phone*/
-//    public static void starttask(String start_lon , String start_lat ,
-//                                 String phone , String tasknumber , Callback callback){
-//        body = new FormEncodingBuilder( )
-//                .add("addr_start_lon" , start_lon)
-//                .add("addr_start_lat" , start_lat)
-//                .add("phone" , phone)
-//                .add("tasknumber" , tasknumber).build();
-//        request = new Request.Builder().url(API_HOST+API_VERSION+GET_DRIVER_STATUS).header("Authorization",AppUtility.apiKey).post(body).build();
-//        new OkHttpClient().newCall(request).enqueue(callback);
-//        release();
-//    }
-//
-//    private static void release(){
-//        body = null;
-//        request = null;
-//        System.gc();
-//    }
+    //開始配對
+    public interface OnStartTaskListener{
+        void onFail(Exception e);
+        void onSuccess(boolean isFail, String message);
+    }
+    public static void starttask(String start_lon , String start_lat ,
+                                 String phone , String tasknumber , String apiKey ,
+                                 @NonNull final OnStartTaskListener listener){
+        body = new FormEncodingBuilder( )
+                .add("addr_start_lon" , start_lon)
+                .add("addr_start_lat" , start_lat)
+                .add("phone" , phone)
+                .add("tasknumber" , tasknumber).build();
+        request = new Request.Builder().url(API_HOST+API_VERSION+START_TASK).header("Authorization",apiKey).post(body).build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                listener.onFail(e);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                String s = response.body().string();
+                try {
+                    JSONObject jsonObject = new JSONObject(s);
+                    listener.onSuccess(jsonObject.getBoolean("error"),jsonObject.getString("message"));
+                } catch (JSONException e) {
+                    listener.onFail(e);
+                }
+            }
+        });
+    }
+
+    //取消配對
+    public interface OnCancelTaskListener{
+        void onFail(Exception e);
+        void onSuccess(boolean isFail, String message);
+    }
+    public static void cancelTask(String tasknumber , String apiKey ,@NonNull final OnCancelTaskListener listener){
+        body = new FormEncodingBuilder().add("tasknumber" ,tasknumber).build();
+        request = new Request.Builder().url(API_HOST+API_VERSION+CANCEL_TASK).header("Authorization",apiKey).post(body).build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                listener.onFail(e);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                String s = response.body().string();
+                try {
+                    JSONObject jsonObject = new JSONObject(s);
+                    listener.onSuccess(jsonObject.getBoolean("error"),jsonObject.getString("message"));
+                } catch (JSONException e) {
+                    listener.onFail(e);
+                }
+            }
+        });
+    }
+
+    //取得結果
+    public interface OnGetPairInfoListener{
+        void onFail(Exception e);
+        void onSuccessGetPairInfo(PairInfo pairInfo);
+        void onWaiting(boolean isError , String message);
+    }
+    public void getpairinfo(String tasknumber ,String apiKey ,@NonNull final OnGetPairInfoListener listener){
+        body = new FormEncodingBuilder().add("tasknumber" ,tasknumber).build();
+        request = new Request.Builder().url(API_HOST+API_VERSION+GET_PAIR_INFO).header("Authorization",apiKey).post(body).build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                listener.onFail(e);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                String s = response.body().string();
+                try {
+                    JSONObject jsonObject = new JSONObject(s);
+                    try {
+                        if (jsonObject.getString("driver").contains("09")) {
+                            Gson gson = new Gson();
+                            listener.onSuccessGetPairInfo(gson.fromJson(s, PairInfo.class));
+                        }
+                    }catch (NullPointerException npe){
+                        listener.onWaiting(jsonObject.getBoolean("error"),jsonObject.getString("message"));
+                    }
+                } catch (JSONException e) {
+                    listener.onFail(e);
+                }
+            }
+        });
+    }
+
+    //接受任務
+    public interface OnAcceptTaskListener{
+        void onFail(Exception e);
+        void onSuccess(boolean isError ,String message);
+    }
+    public static void accepttask(String tasknumber , String phone , String apiKey ,@NonNull final OnAcceptTaskListener listener){
+        body = new FormEncodingBuilder()
+                .add("phone" ,phone)
+                .add("tasknumber" ,tasknumber)
+                .build();
+        request = new Request.Builder().url(API_HOST+API_VERSION+ACCEPT_TASK).header("Authorization",apiKey).post(body).build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, IOException e) {
+                listener.onFail(e);
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                String s = response.body().string();
+                try {
+                    JSONObject jsonObject = new JSONObject(s);
+                    listener.onSuccess(jsonObject.getBoolean("error"),jsonObject.getString("message"));
+                } catch (JSONException e) {
+                    listener.onFail(e);
+                }
+            }
+        });
+    }
+
 }
