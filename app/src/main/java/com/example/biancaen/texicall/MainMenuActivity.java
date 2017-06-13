@@ -9,8 +9,8 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 
-import com.example.biancaen.texicall.domain.Connect_API;
-import com.example.biancaen.texicall.domain.UserData;
+import com.example.biancaen.texicall.connectapi.Connect_API;
+import com.example.biancaen.texicall.connectapi.UserData;
 
 public class MainMenuActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.example.biancaen.texicall.domain;
+package com.example.biancaen.texicall.connectapi;
 
 import java.io.Serializable;
 

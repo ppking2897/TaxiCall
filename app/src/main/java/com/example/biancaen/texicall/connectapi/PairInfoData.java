@@ -1,4 +1,4 @@
-package com.example.biancaen.texicall.domain;
+package com.example.biancaen.texicall.connectapi;
 
 import java.io.Serializable;
 
@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by artlenceNB on 2017/6/12.
  */
 
-public class PairInfo implements Serializable {
+public class PairInfoData implements Serializable {
 
     private String driver;
     private String name;
