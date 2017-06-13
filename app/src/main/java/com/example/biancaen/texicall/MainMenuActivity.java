@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 
-
 import com.example.biancaen.texicall.Passenger_Sign_Menu.PassengerActivity;
 
 public class MainMenuActivity extends AppCompatActivity {
