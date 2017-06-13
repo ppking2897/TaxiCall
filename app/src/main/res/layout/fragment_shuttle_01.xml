@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_color"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/inShuttle"
+        >
+
+        <ImageView
+            android:layout_width="110dp"
+            android:layout_height="111dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="136dp"
+            android:src="@drawable/ic_waiting_passenger_is_taking_c"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:text="乘客接送中"
+            android:textSize="24sp"
+            android:gravity="center"
+            />
+        <Button
+            android:id="@+id/goal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="測試到達目的地"
+            android:onClick="goal"
+            />
+    </LinearLayout>
+</ScrollView>

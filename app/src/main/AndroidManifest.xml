@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.biancaen.texicall">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
         android:allowBackup="true"
@@ -10,77 +12,87 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.NoActionBar">
-        <activity android:name=".BeginningActivity">
+        android:theme="@style/Theme.AppCompat.NoActionBar"
+        >
+        <activity android:name=".Beginning.BeginningActivity"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+                <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainMenuActivity" />
-        <activity android:name=".PassengerActivity" />
-        <activity android:name=".Passenger_Sign_in_Activity" />
-        <activity android:name=".Passenger_Sign_Up_Activity" />
-        <activity android:name=".ForgotPasswordActivity" />
+        <activity android:name=".MainMenuActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Passenger_Sign_Menu.PassengerActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".Passenger_Sign_Menu.Passenger_Sign_in_Activity" android:screenOrientation="portrait"/>
+        <activity android:name=".Passenger_Sign_Menu.Passenger_Sign_Up_Activity" android:screenOrientation="portrait"/>
+        <activity android:name=".Passenger_Sign_Menu.ForgotPasswordActivity" android:screenOrientation="portrait"/>
         <activity
-            android:name=".Passenger_Menu_Activity"
-            android:label="@string/title_activity_passenger__menu_"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity
-            android:name=".Passenger_Info_Activity"
+            android:name=".Passenger_Edit.Passenger_Info_Activity"
             android:label="@string/title_activity_passenger__info_"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".Passenger_Edit_Mail_Activity"
+            android:name=".Passenger_Edit.Passenger_Edit_Mail_Activity"
             android:label="@string/title_activity_passenger__edit_mail"
-            android:parentActivityName=".Passenger_Info_Activity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:parentActivityName=".Passenger_Edit.Passenger_Info_Activity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".Passenger_Edit_Password_Activity"
+            android:name=".Passenger_Edit.Passenger_Edit_Password_Activity"
             android:label="@string/title_activity_passenger__edit_password"
-            android:parentActivityName=".Passenger_Info_Activity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:parentActivityName=".Passenger_Edit.Passenger_Info_Activity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".Passenger_Edit_Username_Activity"
+            android:name=".Passenger_Edit.Passenger_Edit_Username_Activity"
             android:label="@string/title_activity_passenger__edit_username"
-            android:parentActivityName=".Passenger_Info_Activity"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:parentActivityName=".Passenger_Edit.Passenger_Info_Activity"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
             android:name=".Passenger_Customer_Activity"
             android:label="@string/title_activity_passenger__customer"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".Passenger_Sent_Car_Record_Activity"
+            android:name=".Passenger_Sent_Car_Record.Passenger_Sent_Car_Record_Activity"
             android:label="@string/title_activity_passenger__sent_car_record"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".Passenger_Car_Service_Activity"
+            android:name=".Passenger_Car_Service.Passenger_Car_Service_Activity"
             android:label="@string/title_activity_passenger__car_service"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".Passenger_Fares_Activity"
+            android:name=".Passenger_Rates.Passenger_Rates_Activity"
             android:label="@string/title_activity_passenger__fares"
-            android:parentActivityName=".Passenger_Info_Activity"
+            android:parentActivityName=".Passenger_Edit.Passenger_Info_Activity"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".Passenger_On_The_Way_Activity"
+            android:name=".Passenger_On_The_Way.Passenger_On_The_Way_Activity"
             android:label="@string/title_activity_passenger__on_the_way"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait"/>
         <activity
-            android:name=".Passenger_On_The_Way_Fares_Activity"
+            android:name=".Passenger_On_The_Way.Passenger_On_The_Way_Rates_Activity"
             android:label="@string/title_activity_passenger__fares"
-            android:theme="@style/Theme.AppCompat.NoActionBar" />
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Passenger_Driver_Arrived.Passenger_Driver_Arrived_Activity"
+            android:label="@string/title_activity_passenger__contact_driver"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Passenger_In_The_Shuttle.Passenger_In_The_Shuttle_Activity"
+            android:label="@string/title_activity_passenger__in_the_shuttle"
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:screenOrientation="portrait"/>
 
-        <service
-            android:name=".MyService"
-            android:enabled="true"
-            android:exported="true" />
-        <service
-            android:name=".MyIntentService"
-            android:exported="false" />
-
-        <activity android:name=".Passenger_Driver_Arrived_Activity"></activity>
     </application>
 
 </manifest>

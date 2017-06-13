@@ -32,6 +32,7 @@
             android:orientation="horizontal">
 
             <EditText
+                android:id="@+id/sign_In_Phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="19dp"
@@ -58,6 +59,7 @@
             android:orientation="horizontal">
 
             <EditText
+                android:id="@+id/sign_In_Password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="19dp"

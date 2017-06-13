@@ -24,9 +24,13 @@
     <string name="title_activity_passenger__car_service">派車服務</string>
     <string name="title_activity_passenger__fares">車資試算</string>
     <string name="title_activity_passenger__on_the_way">派車中</string>
+    <string name="title_activity_passenger__contact_driver">司機已抵達</string>
+    <string name="title_activity_passenger__in_the_shuttle">載送中</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="title_activity_maps">Map</string>
+
 </resources>

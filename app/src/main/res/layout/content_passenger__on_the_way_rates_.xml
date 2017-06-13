@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_color"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/app_bar_passenger__on_the_way_fares"
+    tools:context="com.example.biancaen.texicall.Passenger_On_The_Way.Passenger_On_The_Way_Rates_Activity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="12dp"
+            android:paddingBottom="12dp"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:background="#173540"
+            android:focusableInTouchMode="true"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="空趟紀錄次數 : "
+                android:textSize="14sp"
+                android:textColor="#FFFFFF"
+
+                />
+            <TextView
+                android:id="@+id/fares_Empty_Trip_Count_OnTheWay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:textColor="#BD9E41"
+                android:text="1"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=" ， 本趟車資需加收 "
+                android:textSize="14sp"
+                android:textColor="#FFFFFF"
+                />
+            <TextView
+                android:id="@+id/fares_Empty_Trip_ToPay_OnTheWay"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="14sp"
+                android:textColor="#BD9E41"
+                android:text="60"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text=" 元。 "
+                android:textSize="14sp"
+                android:textColor="#FFFFFF"
+                />
+        </LinearLayout>
+
+
+
+        <LinearLayout
+            android:layout_width="330dp"
+            android:layout_height="356dp"
+            android:background="#FFFFFF"
+            android:orientation="vertical"
+            android:layout_gravity="center"
+            android:layout_marginTop="33dp"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:text="本次車程預估車資為 : "
+                android:textColor="#000000"
+                android:textSize="18sp"
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="67dp"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="24dp"
+                    android:text="新台幣 "
+                    android:textColor="#000000"
+                    android:textSize="18sp"
+                    />
+                <TextView
+                    android:id="@+id/payTheMoney_onTheWay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1238"
+                    android:textSize="80sp"
+                    android:textColor="#FFB400"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="元整"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:textColor="#000000"
+                    android:textSize="18sp"
+                    />
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="53dp"
+                android:text="* 已包含空趟紀錄需加收金額"
+                android:paddingStart="15dp"
+                android:paddingEnd="15dp"
+                android:textSize="18sp"
+                android:textColor="#000000"
+                />
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="330dp"
+            android:layout_height="60dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="33dp"
+            android:layout_marginBottom="26dp"
+            android:src="@drawable/btn_request_car_disabled"
+            android:background="?android:selectableItemBackground"
+            />
+    </LinearLayout>
+</ScrollView>

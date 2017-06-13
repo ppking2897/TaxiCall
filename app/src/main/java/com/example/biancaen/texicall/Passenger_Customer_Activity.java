@@ -11,6 +11,10 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
+import com.example.biancaen.texicall.Passenger_Car_Service.Passenger_Car_Service_Activity;
+import com.example.biancaen.texicall.Passenger_Edit.Passenger_Info_Activity;
+import com.example.biancaen.texicall.Passenger_Sent_Car_Record.Passenger_Sent_Car_Record_Activity;
+
 public class Passenger_Customer_Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -68,6 +72,6 @@ public class Passenger_Customer_Activity extends AppCompatActivity
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_customer);
         drawer.closeDrawer(GravityCompat.START);
-        return false;
+        return true;
     }
 }

@@ -7,4 +7,6 @@
     <color name="colorGray">#888888</color>
     <color name="itemColor">#A4AAB3</color>
     <color name="itemColorSelector">#3FC1C9</color>
+    <color name="topToolBarColor">#364F6B</color>
+    <color name="colorBlack">#000000</color>
 </resources>

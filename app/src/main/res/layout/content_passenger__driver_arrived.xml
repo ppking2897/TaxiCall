@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/shape_color"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.biancaen.texicall.Passenger_Driver_Arrived_Activity"
+    tools:context="com.example.biancaen.texicall.Passenger_Driver_Arrived.Passenger_Driver_Arrived_Activity"
     tools:showIn="@layout/app_bar_passenger__driver_arrived_"
     >
     <LinearLayout
@@ -23,7 +23,6 @@
             android:layout_marginBottom="39dp"
             android:layout_marginLeft="58dp"
             android:layout_marginRight="62dp"
-
             android:src="@drawable/img_driver_arrived_arrivedpage" />
 
         <TextView
@@ -62,5 +61,16 @@
             android:src="@drawable/btn_contact_driver_arrivedpage"
             android:layout_gravity="center"
             />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:text="測試已接送"
+            android:background="@color/colorPrimary"
+            android:onClick="testArrive"
+            />
     </LinearLayout>
+
+
 </ScrollView>
