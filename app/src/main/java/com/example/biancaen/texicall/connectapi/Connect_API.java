@@ -227,7 +227,7 @@ public class Connect_API{
 
     public interface OnRateListener{
         void onFail(Exception e);
-        void onSuccess(String result, int price, int time, String distance);
+        void onSuccess(boolean isErrorResult, int price, int time, String distance);
     }
     /**
      客戶發出派車試算需求
@@ -253,7 +253,7 @@ public class Connect_API{
                 try {
                     JSONObject jsonObject = new JSONObject(s);
                     listener.onSuccess(
-                            jsonObject.getString("result"),
+                            jsonObject.getBoolean("result"),
                             jsonObject.getInt("price"),
                             jsonObject.getInt("time"),
                             jsonObject.getString("distance"));
