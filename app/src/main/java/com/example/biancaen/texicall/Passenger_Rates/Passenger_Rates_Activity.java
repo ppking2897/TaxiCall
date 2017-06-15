@@ -163,7 +163,6 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
             }
         }, TIME , TimeArrive);
     }
-
     private void cancelTimer(){
         if(countEndTimer != null){
             countEndTimer.cancel();
@@ -174,11 +173,8 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
             matchEndTimer = null;
         }
     }
-
-
     //Todo 藉由此方法配斷是否配對成功
     public void isSystemMatchEnd (boolean systemMatchEnd){
         this.systemMatchEnd = systemMatchEnd;
     }
-
 }

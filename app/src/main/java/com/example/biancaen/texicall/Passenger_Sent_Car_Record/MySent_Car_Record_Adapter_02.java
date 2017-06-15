@@ -19,7 +19,10 @@ class MySent_Car_Record_Adapter_02 extends RecyclerView.Adapter<MySent_Car_Recor
     private ArrayList<String> getOff;
     private ArrayList<String> time;
 
-    public MySent_Car_Record_Adapter_02(Context context , ArrayList<String> date , ArrayList<String> getOn , ArrayList<String> getOff , ArrayList<String> time){
+    public MySent_Car_Record_Adapter_02(
+            Context context , ArrayList<String> date , ArrayList<String> getOn ,
+            ArrayList<String> getOff , ArrayList<String> time){
+
         this.context = context;
         this.date = date;
         this.getOn = getOn;

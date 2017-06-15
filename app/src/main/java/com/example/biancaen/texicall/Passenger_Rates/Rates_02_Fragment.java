@@ -22,7 +22,6 @@ public class Rates_02_Fragment extends Fragment {
 
         activity = (Passenger_Rates_Activity)getActivity();
 
-
         Bundle bundle = activity.getIntent().getExtras();
         int price = bundle.getInt("price");
 
@@ -47,10 +46,7 @@ public class Rates_02_Fragment extends Fragment {
                 activity.isSystemMatchEnd(true);
             }
         });
-
         return view;
     }
-
-
 
 }

@@ -47,14 +47,11 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
         navigationView.setCheckedItem(R.id.nav_car_service);
         navigationView.setNavigationItemSelectedListener(this);
 
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_car_service);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle
                 (this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
         toggle.syncState();
-
-
 
         passenger_Number = (TextView) findViewById(R.id.passenger_Number);
         location = (EditText)findViewById(R.id.location);
@@ -85,7 +82,6 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
             super.onBackPressed();
         }
     }
-
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
@@ -187,4 +183,3 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
         });
     }
 }
-

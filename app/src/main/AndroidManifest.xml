@@ -3,7 +3,7 @@
     package="com.example.biancaen.texicall">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <application
@@ -12,60 +12,69 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.NoActionBar"
-        >
-        <activity android:name=".Beginning.BeginningActivity"
-            android:screenOrientation="portrait"
-            >
+        android:theme="@style/Theme.AppCompat.NoActionBar">
+        <activity
+            android:name=".Beginning.BeginningActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainMenuActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".Passenger_Sign_Menu.PassengerActivity" android:screenOrientation="portrait"/>
-        <activity android:name=".Passenger_Sign_Menu.Passenger_Sign_in_Activity" android:screenOrientation="portrait"/>
-        <activity android:name=".Passenger_Sign_Menu.Passenger_Sign_Up_Activity" android:screenOrientation="portrait"/>
-        <activity android:name=".Passenger_Sign_Menu.ForgotPasswordActivity" android:screenOrientation="portrait"/>
+        <activity
+            android:name=".MainMenuActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Passenger_Sign_Menu.PassengerActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Passenger_Sign_Menu.Passenger_Sign_in_Activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Passenger_Sign_Menu.Passenger_Sign_Up_Activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Passenger_Sign_Menu.ForgotPasswordActivity"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".Passenger_Edit.Passenger_Info_Activity"
             android:label="@string/title_activity_passenger__info_"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".Passenger_Edit.Passenger_Edit_Mail_Activity"
             android:label="@string/title_activity_passenger__edit_mail"
             android:parentActivityName=".Passenger_Edit.Passenger_Info_Activity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".Passenger_Edit.Passenger_Edit_Password_Activity"
             android:label="@string/title_activity_passenger__edit_password"
             android:parentActivityName=".Passenger_Edit.Passenger_Info_Activity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".Passenger_Edit.Passenger_Edit_Username_Activity"
             android:label="@string/title_activity_passenger__edit_username"
             android:parentActivityName=".Passenger_Edit.Passenger_Info_Activity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".Passenger_Customer_Activity"
             android:label="@string/title_activity_passenger__customer"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".Passenger_Sent_Car_Record.Passenger_Sent_Car_Record_Activity"
             android:label="@string/title_activity_passenger__sent_car_record"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".Passenger_Car_Service.Passenger_Car_Service_Activity"
             android:label="@string/title_activity_passenger__car_service"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".Passenger_Rates.Passenger_Rates_Activity"
             android:label="@string/title_activity_passenger__fares"
@@ -75,24 +84,57 @@
         <activity
             android:name=".Passenger_On_The_Way.Passenger_On_The_Way_Activity"
             android:label="@string/title_activity_passenger__on_the_way"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".Passenger_On_The_Way.Passenger_On_The_Way_Rates_Activity"
             android:label="@string/title_activity_passenger__fares"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".Passenger_Driver_Arrived.Passenger_Driver_Arrived_Activity"
             android:label="@string/title_activity_passenger__contact_driver"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
             android:name=".Passenger_In_The_Shuttle.Passenger_In_The_Shuttle_Activity"
             android:label="@string/title_activity_passenger__in_the_shuttle"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".Driver_Sign_Menu.Driver_Login_Activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Driver_Sign_Menu.Driver_ForgotPassword_Activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Driver_Sign_Menu.DriverActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Driver_Main_Menu_Activity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".Driver_Travel_Record.Driver_Travel_Record_Activity"
+            android:label="@string/title_activity_driver__travel_record"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".Driver_Point_Record.Driver_Point_Record_Activity"
+            android:label="@string/title_activity_driver__point_record"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".Driver_Info.Driver_Info_Activity"
+            android:label="@string/title_activity_driver__info"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".Driver_Info.Driver_Info_Edit_Activity"
+            android:label="@string/title_activity_driver__info"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:screenOrientation="portrait"/>
-
+            />
+        
     </application>
 
 </manifest>

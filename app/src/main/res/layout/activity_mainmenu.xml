@@ -33,6 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="?android:attr/selectableItemBackground"
+            android:onClick="driver"
             android:src="@drawable/btn_driver_signin_normal" />
     </LinearLayout>
 </LinearLayout>

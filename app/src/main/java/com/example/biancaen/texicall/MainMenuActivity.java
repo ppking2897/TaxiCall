@@ -6,8 +6,8 @@ import android.os.Bundle;
 import android.transition.ChangeTransform;
 import android.view.View;
 import android.view.Window;
-import android.widget.ImageView;
 
+import com.example.biancaen.texicall.Driver_Sign_Menu.DriverActivity;
 import com.example.biancaen.texicall.Passenger_Sign_Menu.PassengerActivity;
 
 public class MainMenuActivity extends AppCompatActivity {
@@ -19,19 +19,14 @@ public class MainMenuActivity extends AppCompatActivity {
         getWindow().setEnterTransition(new ChangeTransform());
         getWindow().setExitTransition(new ChangeTransform());
         setContentView(R.layout.activity_mainmenu);
-
-        //測試用可須同步移除
-        ImageView imageButton = (ImageView) findViewById(R.id.imageButton);
-        imageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });
     }
 
     public void passenger(View view) {
         Intent it = new Intent(this, PassengerActivity.class);
+        startActivity(it);
+    }
+    public void driver(View view){
+        Intent it = new Intent(this , DriverActivity.class);
         startActivity(it);
     }
 }
