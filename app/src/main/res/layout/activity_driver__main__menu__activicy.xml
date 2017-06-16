@@ -28,6 +28,7 @@
         android:orientation="horizontal"
         android:layout_gravity="center"
         android:background="@drawable/shape_online_driver"
+        android:onClick="driverOnline"
         >
         <ImageView
             android:layout_width="40dp"
@@ -88,7 +89,7 @@
             android:layout_marginTop="24dp"
             android:background="@drawable/shape_circle"
             android:orientation="vertical"
-            android:onClick="diver_point_record"
+            android:onClick="driver_point_record"
             >
             <ImageView
                 android:layout_width="30dp"
@@ -121,7 +122,7 @@
             android:layout_marginTop="24dp"
             android:background="@drawable/shape_circle"
             android:orientation="vertical"
-            android:onClick="dirver_info"
+            android:onClick="driver_info"
             >
             <ImageView
                 android:layout_width="30dp"

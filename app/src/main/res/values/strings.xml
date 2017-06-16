@@ -29,6 +29,7 @@
     <string name="title_activity_driver__travel_record">行程紀錄</string>
     <string name="title_activity_driver__point_record">點數紀錄</string>
     <string name="title_activity_driver__info">帳號資訊</string>
+    <string name="title_activity_driver__passenger_request">乘客需求</string>
 
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -37,6 +38,6 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_driver__travel__record_">Driver_Travel_Record_Activity</string>
-    <string name="title_activity_testtt">TESTTTActivity</string>
+
 
 </resources>

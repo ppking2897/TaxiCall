@@ -5,7 +5,7 @@
     android:background="@drawable/shape_over_time_dialog_background"
     >
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="15dp"
@@ -23,13 +23,14 @@
             />
         <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:text="派車已取消通知"
-            android:gravity="center_vertical"
+            android:gravity="center"
+            android:layout_centerInParent="true"
             android:textColor="@color/colorWhite"
             android:textSize="16sp"
             />
-    </LinearLayout>
+    </RelativeLayout>
 
     <TextView
         android:layout_width="match_parent"

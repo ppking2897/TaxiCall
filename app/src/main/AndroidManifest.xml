@@ -111,7 +111,7 @@
             android:name=".Driver_Sign_Menu.DriverActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".Driver_Main_Menu_Activity"
+            android:name=".Driver_Main_Menu.Driver_Main_Menu_Activity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".Driver_Travel_Record.Driver_Travel_Record_Activity"
@@ -132,9 +132,17 @@
             android:name=".Driver_Info.Driver_Info_Edit_Activity"
             android:label="@string/title_activity_driver__info"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            />
-        
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".Driver_Match.Driver_WaitMatch_Activity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".Driver_Passenger_Request.Driver_Passenger_Request_Activity"
+            android:label="@string/title_activity_driver__passenger_request"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity android:name=".Driver_On_The_Way_Activity"></activity>
     </application>
 
 </manifest>

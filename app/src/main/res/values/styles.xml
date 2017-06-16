@@ -14,6 +14,11 @@
 
     <style name="PopupOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
+    <style name="Theme.ToolBar.Base" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="actionMenuTextColor">@android:color/holo_orange_light</item>
+    </style>
+
+
 
     <style name="CustomDialog" parent="android:style/Theme.Dialog">
         <item name="android:windowNoTitle">true</item>
@@ -37,6 +42,24 @@
         <item name="android:windowNoTitle">true</item>
         <item name="android:windowFrame">@null</item>
         <item name="android:windowBackground">@drawable/shape_cancel_car_dialog_background</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.9</item>
+    </style>
+
+    <style name="Driver_MainMenu_Dialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@drawable/shape_main_menu_point_dialog_background</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.9</item>
+    </style>
+
+    <style name="Driver_Match_Dialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@drawable/shape_driver_matched_dialog_background</item>
         <item name="android:windowIsFloating">true</item>
         <item name="android:backgroundDimEnabled">true</item>
         <item name="android:backgroundDimAmount">0.9</item>

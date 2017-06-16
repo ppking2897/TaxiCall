@@ -9,4 +9,6 @@
     <color name="itemColorSelector">#3FC1C9</color>
     <color name="topToolBarColor">#364F6B</color>
     <color name="colorBlack">#000000</color>
+    <color name="colorOrange">#FFB400</color>
+    <color name="colorMatchColor">#E7E7E9</color>
 </resources>

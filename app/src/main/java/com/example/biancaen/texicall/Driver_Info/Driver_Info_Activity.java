@@ -71,13 +71,11 @@ public class Driver_Info_Activity extends AppCompatActivity implements Navigatio
 
         int id = item.getItemId();
 
-        if (id == R.id.nav_offLine) {
-
-        } else if (id == R.id.nav_view_driver_travel_record) {
+        if (id == R.id.nav_driver_travel_record) {
             Intent it = new Intent(this , Driver_Travel_Record_Activity.class);
             startActivity(it);
 
-        } else if (id == R.id.driver_point_list) {
+        } else if (id == R.id.nav_driver_point_list) {
             Intent it = new Intent(this , Driver_Point_Record_Activity.class);
             startActivity(it);
 

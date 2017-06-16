@@ -11,7 +11,11 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
+import com.example.biancaen.texicall.Driver_Info.Driver_Info_Activity;
+import com.example.biancaen.texicall.Driver_Point_Record.Driver_Point_Record_Activity;
 import com.example.biancaen.texicall.R;
 
 import java.util.ArrayList;
@@ -41,6 +45,10 @@ public class Driver_Travel_Record_Activity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_driver_travel_record);
         navigationView.setNavigationItemSelectedListener(this);
 
+        //todo 改變滑頁header textView
+//        View header = navigationView.getHeaderView(0);
+//        TextView textView = (TextView)header.findViewById(R.id.header_state);
+//        textView.setText(123456+"");
 
         //ToDo 司機紀錄上車 下車 時間  金額 資料位置
         date.add("2017-04-20");
@@ -84,16 +92,17 @@ public class Driver_Travel_Record_Activity extends AppCompatActivity
 
         int id = item.getItemId();
 
-        if (id == R.id.nav_offLine) {
-
-        } else if (id == R.id.nav_view_driver_travel_record) {
-
+        if (id == R.id.nav_driver_travel_record) {
             Intent it = new Intent(this , Driver_Travel_Record_Activity.class);
             startActivity(it);
 
-        } else if (id == R.id.driver_point_list) {
+        } else if (id == R.id.nav_driver_point_list) {
+            Intent it = new Intent(this , Driver_Point_Record_Activity.class);
+            startActivity(it);
 
         } else if (id == R.id.nav_id__info) {
+            Intent it = new Intent(this , Driver_Info_Activity.class);
+            startActivity(it);
 
         } else if (id == R.id.nav_home) {
 

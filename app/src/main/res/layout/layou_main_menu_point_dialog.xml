@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_main_menu_point_dialog_background"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#364F6B"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="剩餘點數"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            />
+
+        <ImageView
+            android:id="@+id/closeDialog"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/btn_exit_deadhead_notice"
+            android:background="?android:selectableItemBackground"
+            />
+
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="54dp"
+        android:layout_marginBottom="54dp"
+        android:layout_marginStart="14dp"
+        android:layout_marginEnd="14dp"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="剩餘可用點數 : "
+            android:layout_marginEnd="20dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            />
+        <TextView
+            android:id="@+id/dialogMainmeu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#FFB400"
+            android:textSize="36sp"
+            android:text="1238"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=" 點。 "
+            android:layout_marginStart="20dp"
+            android:textColor="#000000"
+            android:textSize="16sp"
+            />
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/knowButton"
+        android:layout_width="260dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:background="@drawable/shape_i_know_button"
+        android:onClick="knowButton"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="我知道了"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            />
+    </LinearLayout>
+
+
+</LinearLayout>

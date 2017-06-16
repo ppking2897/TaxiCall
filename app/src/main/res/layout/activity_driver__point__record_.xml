@@ -23,7 +23,7 @@
         android:background="#ffffff"
         app:itemIconTint="@drawable/nav_view_driveritem_textcolor"
         app:itemBackground="@android:color/transparent"
-        app:headerLayout="@layout/nav_header_"
+        app:headerLayout="@layout/nav_header_driver__travel__record_"
         app:menu="@menu/activity_driver__travel__record__drawer"
         android:theme="@style/AppBarOverlay" />
 
