@@ -19,7 +19,7 @@ public class TaskInfoData implements Serializable {
     private String addr_start_lon;
     private String addr_end_lat;
     private String addr_end_lon;
-    private boolean error;
+    private String error;
 
     public String getMessage() {
         return message;
@@ -61,7 +61,7 @@ public class TaskInfoData implements Serializable {
         return addr_end_lon;
     }
 
-    public boolean isError() {
+    public String isError() {
         return error;
     }
 }
