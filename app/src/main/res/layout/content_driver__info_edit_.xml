@@ -8,7 +8,7 @@
     android:background="#515E71"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tool:showIn="@layout/app_bar_driver_info_edit"
-    tool:context=".Driver_Info.Driver_Info_Edit_Activity"
+    tool:context=".Driver.Driver_Info.Driver_Info_Edit_Activity"
     >
     <LinearLayout
         android:layout_width="match_parent"

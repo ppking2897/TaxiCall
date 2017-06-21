@@ -80,7 +80,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:src="@drawable/btn_signin_disabled_signinpage"
-            android:background="?android:attr/selectableItemBackground"
+            android:background="@drawable/ripple"
             android:onClick="driver_sign_in_sign_in"
             />
 

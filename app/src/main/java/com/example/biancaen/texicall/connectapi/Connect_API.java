@@ -254,7 +254,7 @@ public class Connect_API{
         /**@param  status
                 *1->非任務中
                 *2->任務中*/
-        void onSuccess(boolean isFail, String result, int status ,int misscatch_time, int misscatch_price);
+        void onSuccess(boolean isFail, String result, int status, int misscatch_time, int misscatch_price);
     }
     /**客戶端打開App*/
     public static void getStatus(@NonNull final Activity activity, String phone , String apiKey , @NonNull final OnGetStatusListener listener){

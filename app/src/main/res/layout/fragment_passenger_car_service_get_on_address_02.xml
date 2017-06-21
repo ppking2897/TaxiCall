@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aigestudio="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.aigestudio.wheelpicker.WheelPicker
+        android:id="@+id/record_picker_get_on"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="10dp"
+        android:background="#CCFFFFFF"
+        aigestudio:wheel_indicator="true"
+        aigestudio:wheel_indicator_color="#000"
+        aigestudio:wheel_indicator_size="1dp"
+        aigestudio:wheel_atmospheric="false"
+        aigestudio:wheel_curved="false"
+        aigestudio:wheel_cyclic="true"
+        aigestudio:wheel_item_text_size="14sp"
+        aigestudio:wheel_selected_item_text_color="@color/topToolBarColor"
+        aigestudio:wheel_visible_item_count="3" />
+
+</LinearLayout>

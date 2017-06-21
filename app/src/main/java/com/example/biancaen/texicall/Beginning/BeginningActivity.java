@@ -9,7 +9,6 @@ import android.transition.Explode;
 import android.view.Window;
 import android.widget.ImageView;
 
-import com.example.biancaen.texicall.MainMenuActivity;
 import com.example.biancaen.texicall.R;
 
 import java.util.Timer;

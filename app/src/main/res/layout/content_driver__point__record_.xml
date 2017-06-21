@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.biancaen.texicall.Driver_Point_Record.Driver_Point_Record_Activity"
+    tools:context=".Driver.Driver_Point_Record.Driver_Point_Record_Activity"
     tools:showIn="@layout/app_bar_driver_point__record_"
     android:background="#515E71"
     android:orientation="vertical"

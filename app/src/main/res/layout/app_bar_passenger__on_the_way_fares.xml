@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.biancaen.texicall.Passenger_On_The_Way.Passenger_On_The_Way_Rates_Activity">
+    tools:context=".Passenger.Passenger_On_The_Way.Passenger_On_The_Way_Rates_Activity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

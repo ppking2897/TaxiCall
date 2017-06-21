@@ -8,7 +8,7 @@
     android:background="@drawable/shape_color"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/app_bar_passenger__car_service_"
-    tools:context="com.example.biancaen.texicall.Passenger_Car_Service.Passenger_Car_Service_Activity">
+    tools:context=".Passenger.Passenger_Car_Service.Passenger_Car_Service_Activity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -70,62 +70,119 @@
             >
             <ImageView
                 android:layout_width="24dp"
-                android:layout_height="match_parent"
-                android:layout_marginLeft="16dp"
-                android:layout_marginRight="4dp"
-                android:src="@drawable/ic_depart_to_arrive"
+                android:layout_height="150dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="4dp"
+                android:src="@drawable/ic_depart_to_arrive_passenger"
                 />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 >
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="上車地點 (所在地)"
-                    android:textColor="@color/colorWhite"
-                    />
-                <EditText
-                    android:id="@+id/location"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="上車地點 (所在地)"
+                        android:textColor="@color/colorWhite"
+                        />
+                    <RadioGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:id="@+id/onClickRadio"
+                        android:layout_gravity="center"
+                        >
+                        <RadioButton
+                            android:id="@+id/radioButton01"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="34dp"
+                            android:text="輸入地址"
+                            android:textSize="12sp"
+                            android:button="@null"
+                            android:drawableStart="@drawable/selector_radio_button"
+                            android:drawablePadding="5dp"
+                            />
+                        <RadioButton
+                            android:id="@+id/radioButton02"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="使用常用地址"
+                            android:textSize="12sp"
+                            android:button="@null"
+                            android:drawableStart="@drawable/selector_radio_button"
+                            android:drawablePadding="5dp"
+                            />
+
+                    </RadioGroup>
+
+                </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/fragment01"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="11dp"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginStart="4dp"
-                    android:paddingLeft="13dp"
-                    android:paddingRight="17dp"
-                    android:paddingTop="24dp"
-                    android:paddingBottom="24dp"
-                    android:background="@drawable/shape_address"
-                    android:hint="請輸入您的上車地點"
-                    android:textColorHint="#364F6B"
-                    android:textSize="16sp"
-                    android:textColor="#364F6B"
-                    />
-                <TextView
+                    >
+
+                </FrameLayout>
+
+
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="下車地點 (目的地)"
-                    android:textColor="@color/colorWhite"
-                    />
-                <EditText
-                    android:id="@+id/destination"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="下車地點 (目的地)"
+                        android:textColor="@color/colorWhite"
+                        />
+                    <RadioGroup
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:id="@+id/onClickRadio02"
+                        android:layout_gravity="center"
+                        >
+                        <RadioButton
+                            android:id="@+id/radioButton03"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="34dp"
+                            android:text="輸入地址"
+                            android:textSize="12sp"
+                            android:button="@null"
+                            android:drawableStart="@drawable/selector_radio_button"
+                            android:drawablePadding="5dp"
+                            />
+                        <RadioButton
+                            android:id="@+id/radioButton04"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="11dp"
+                            android:text="使用常用地址"
+                            android:textSize="12sp"
+                            android:button="@null"
+                            android:drawableStart="@drawable/selector_radio_button"
+                            android:drawablePadding="5dp"
+                            />
+
+                    </RadioGroup>
+                </LinearLayout>
+                <FrameLayout
+                    android:id="@+id/fragment02"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginStart="4dp"
-                    android:paddingLeft="13dp"
-                    android:paddingRight="17dp"
-                    android:paddingTop="24dp"
-                    android:paddingBottom="24dp"
-                    android:background="@drawable/shape_address"
-                    android:hint="請輸入您的下車地點"
-                    android:textColorHint="#364F6B"
-                    android:textSize="16sp"
-                    android:textColor="#364F6B"
                     />
             </LinearLayout>
         </LinearLayout>
@@ -154,7 +211,7 @@
                     android:layout_height="24dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="9dp"
-                    android:src="@drawable/ic_the_number_of_passengers"
+                    android:src="@drawable/ic_the_number_of_passengers_passenger"
                     />
                 <TextView
                     android:layout_width="wrap_content"
@@ -222,7 +279,7 @@
                     android:layout_height="24dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginRight="9dp"
-                    android:src="@drawable/ic_remarks_column"
+                    android:src="@drawable/ic_remarks_column_passenger"
                     />
                 <TextView
                     android:layout_width="wrap_content"
@@ -273,7 +330,7 @@
             android:layout_gravity="center"
             android:src="@drawable/btn_estimated_fare"
             android:background="?attr/selectableItemBackground"
-            android:onClick="fares"
+            android:onClick="rates"
             />
 
 

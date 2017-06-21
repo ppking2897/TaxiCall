@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+        <Spinner
+            android:id="@+id/citySpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@style/Spinner"
+            >
+        </Spinner>
+        <Spinner
+            android:id="@+id/areaSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:theme="@style/Spinner"
+            >
+        </Spinner>
+    </LinearLayout>
+    <EditText
+        android:id="@+id/location"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="11dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginStart="4dp"
+        android:padding="8dp"
+        android:background="@drawable/shape_address"
+        android:hint="請輸入您的上車地點"
+        android:textColorHint="#364F6B"
+        android:textSize="16sp"
+        android:textColor="#364F6B"
+        />
+</LinearLayout>

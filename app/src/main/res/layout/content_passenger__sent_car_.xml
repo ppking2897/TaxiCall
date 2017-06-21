@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/shape_color"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.biancaen.texicall.Passenger_Sent_Car_Record.Passenger_Sent_Car_Record_Activity"
+    tools:context=".Passenger.Passenger_Sent_Car_Record.Passenger_Sent_Car_Record_Activity"
     tools:showIn="@layout/app_bar_passenger__sent_car_record_"
     android:orientation="vertical"
     >

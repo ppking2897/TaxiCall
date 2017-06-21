@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:showIn="@layout/app_bar_driver_arrived"
+    tools:context=".Driver.Driver_On_The_Way_Activity"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    android:background="#515E71"
+    >
+    <LinearLayout
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:background="@drawable/img_countdown"
+        android:layout_gravity="center"
+        android:layout_marginTop="22dp"
+        >
+        <TextView
+            android:id="@+id/countDown"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="10"
+            android:textColor="#FC5185"
+            android:textSize="100sp"
+            android:gravity="center"
+            android:layout_gravity="center"
+            />
+    </LinearLayout>
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:text="若10分鐘後乘客依舊未到達\n請點選取消鍵取消此筆叫車\n系統將自動計算為空趟紀錄"
+        android:textSize="14sp"
+        android:lineSpacingExtra="5dp"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="25dp"
+        android:background="#F5F4F6"
+        />
+
+    <TextView
+        android:layout_width="320dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/shape_driver_on_the_way_arrived"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="取消此筆叫車"
+        android:textColor="@color/colorWhite"
+        android:textSize="18sp"
+        />
+    <TextView
+        android:layout_width="320dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="42dp"
+        android:background="@drawable/shape_driver_on_the_way_arrived"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="乘客已上車"
+        android:textColor="@color/colorWhite"
+        android:textSize="18sp"
+        android:onClick="getIn"
+        />
+</LinearLayout>

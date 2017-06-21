@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/shape_color"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="com.example.biancaen.texicall.Passenger_Edit.Passenger_Info_Activity"
+    tools:context=".Passenger.Passenger_Edit.Passenger_Info_Activity"
     tools:showIn="@layout/app_bar_passenger__info_"
     android:orientation="vertical"
     >

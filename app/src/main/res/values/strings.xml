@@ -30,6 +30,9 @@
     <string name="title_activity_driver__point_record">點數紀錄</string>
     <string name="title_activity_driver__info">帳號資訊</string>
     <string name="title_activity_driver__passenger_request">乘客需求</string>
+    <string name="title_activity_driver__on_the_way">前往中</string>
+    <string name="title_activity_driver__arrived">已抵達上車地點</string>
+    <string name="title_activity_driver__trip_done">行程已完成</string>
 
 
     <string name="navigation_drawer_open">Open navigation drawer</string>

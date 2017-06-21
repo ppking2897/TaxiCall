@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.biancaen.texicall.Driver_Travel_Record.Driver_Travel_Record_Activity">
+    tools:context=".Driver.Driver_Travel_Record.Driver_Travel_Record_Activity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

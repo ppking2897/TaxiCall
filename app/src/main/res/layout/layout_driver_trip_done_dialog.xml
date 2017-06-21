@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#364F6B"
+        >
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30dp"
+                android:text="結算明細"
+                android:textSize="20sp"
+                android:gravity="center"
+                />
+            <ImageView
+                android:id="@+id/closeDialog"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/btn_exit_deadhead_notice"
+                android:background="?android:selectableItemBackground"
+                />
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/driverDoneDate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="33dp"
+            android:text="2017-04-20 XX : XX : XX"
+            android:textSize="14sp"
+            android:gravity="center"
+            />
+    </LinearLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="@drawable/shape_driver_trip_done_dialog_background"
+            >
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="10dp"
+                android:text="上車地點 : "
+                android:textSize="14sp"
+                android:textColor="@color/topToolBarColor"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="15dp"
+                android:padding="16dp"
+                android:text="新北市永和區中正路710號"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:textColor="@color/topToolBarColor"
+                android:background="@drawable/shape_trip_done_textview_background"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginStart="10dp"
+                android:text="下車地點 : "
+                android:textSize="14sp"
+                android:textColor="@color/topToolBarColor"
+                />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginTop="15dp"
+                android:padding="16dp"
+                android:text="新北市板橋區中正路二段542巷18弄64之7號"
+                android:textSize="16sp"
+                android:gravity="center"
+                android:textColor="@color/topToolBarColor"
+                android:background="@drawable/shape_trip_done_textview_background"
+                />
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="20dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+
+                >
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="20dp"
+
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:text="乘車時間 : "
+                        android:textColor="@color/topToolBarColor"
+                        />
+                    <TextView
+                        android:layout_width="140dp"
+                        android:layout_height="30dp"
+                        android:paddingEnd="16dp"
+                        android:paddingStart="16dp"
+                        android:background="@drawable/shape_trip_done_textview_background"
+                        android:text="18  分"
+                        android:gravity="end|center_vertical"
+                        android:textColor="@color/topToolBarColor"
+                        />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="20dp"
+                    android:layout_alignParentEnd="true"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="15dp"
+                        android:text="金額 : "
+                        android:textColor="@color/topToolBarColor"
+                        />
+                    <TextView
+                        android:layout_width="140dp"
+                        android:layout_height="30dp"
+                        android:paddingEnd="16dp"
+                        android:paddingStart="16dp"
+                        android:background="@drawable/shape_trip_done_textview_background"
+                        android:text="18  分"
+                        android:gravity="end|center_vertical"
+                        android:textColor="@color/topToolBarColor"
+                        />
+                </LinearLayout>
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="20dp"
+                android:background="#C0BDC0"
+                />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                >
+                <TextView
+                    android:id="@+id/offLine"
+                    android:layout_width="130dp"
+                    android:layout_height="50dp"
+                    android:text="結束下線"
+                    android:background="@drawable/shape_driver_trip_done_off_line"
+                    android:gravity="center"
+                    />
+
+                <TextView
+                    android:id="@+id/continueCarService"
+                    android:layout_width="130dp"
+                    android:layout_height="50dp"
+                    android:layout_marginStart="20dp"
+                    android:text="繼續載客"
+                    android:background="@drawable/shape_driver_trip_done_off_line"
+                    android:gravity="center"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
