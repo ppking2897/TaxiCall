@@ -4,14 +4,14 @@ import java.io.Serializable;
 
 public class UserData implements Serializable {
 
-    private boolean error;
+    private String error;
     private String account;
     private String email;
     private String apiKey;
     private int status;
     private String createdAt;
 
-    public boolean isError() {
+    public String isError() {
         return error;
     }
 

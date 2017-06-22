@@ -1,3 +1,6 @@
+/*2017/06/22 全部替換部分
+* error值型別全變更為String
+* 這部分更動會記錄在此 */
 package com.example.biancaen.texicall.connectapi;
 
 import android.app.Activity;
@@ -15,6 +18,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,6 +37,7 @@ public class Connect_API{
     //註冊及會員相關
     private static final String REGISTER = "/register";
     private static final String LOGIN = "/login";
+    private static final String FORGOT = "/forget";
     private static final String LOGIN_OUT = "/loginout";
     private static final String MODIFY = "/modify";
     private static final String GET_STATUS = "/getstatus";
@@ -66,7 +71,7 @@ public class Connect_API{
     private static final String REAL_PRICE = "/realprice";
 
     public interface OnRegisterListener{
-        void onRegisterSuccessListener(boolean isFail, String message);
+        void onRegisterSuccessListener(String isFail, String message);
         void onRegisterFailListener(Exception e);
     }
     /** 會員註冊*/
@@ -96,7 +101,7 @@ public class Connect_API{
                     public void run() {
                         try {
                             JSONObject jsonObject = new JSONObject(s);
-                            listener.onRegisterSuccessListener(jsonObject.getBoolean("error"),jsonObject.getString("message"));
+                            listener.onRegisterSuccessListener(jsonObject.getString("error"),jsonObject.getString("message"));
                         } catch (JSONException e) {
                             listener.onRegisterFailListener(e);
                         }
@@ -109,12 +114,12 @@ public class Connect_API{
 
     public interface OnUserLoginListener {
          void onLoginSuccess(UserData userData);
-         void onLoginFail(boolean isFail, String msg);
+         void onLoginFail(String isFail, String msg);
          void onFail(Exception e);
      }
      /**乘客登入2017/06/19 更動*/
     public static void userLogin(@NonNull final Activity activity, String phone , String password , @NonNull final OnUserLoginListener listener){
-        final RequestBody body = new FormEncodingBuilder()
+        RequestBody body = new FormEncodingBuilder()
                 .add("password" , password)
                 .add("phone" , phone).build();
 
@@ -139,7 +144,7 @@ public class Connect_API{
                         try {
                             JSONObject object = new JSONObject(body);
                             if (object.getBoolean("error")){
-                                listener.onLoginFail(object.getBoolean("error"),object.getString("message"));
+                                listener.onLoginFail(object.getString("error"),object.getString("message"));
                             }else {
                                 Gson gson = new Gson();
                                 listener.onLoginSuccess(gson.fromJson(body, UserData.class));
@@ -154,9 +159,47 @@ public class Connect_API{
     }
 
 
+    public interface OnForgotPasswordPassnegerListener{
+        void onSuccess(String isError, String message);
+        void onFail(Exception e);
+    }
+    /**忘記密碼(乘客端) 2017/06/22 新增*/
+    public static void passengerFogot(@NonNull final Activity activity, String phone, String apiKey, @NonNull final OnForgotPasswordPassnegerListener listener){
+        RequestBody body = new FormEncodingBuilder().add("phone" , phone).build();
+        Request request = new Request.Builder().url(API_HOST+API_VERSION+FORGOT).header("Authorization" ,""+ apiKey).post(body).build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, final IOException e) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        listener.onFail(e);
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                final String result = response.body().string();
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject object = new JSONObject(result);
+                            listener.onSuccess(object.getString("error"),object.getString("message"));
+                        } catch (JSONException e) {
+                            listener.onFail(e);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+
     public interface OnDriverLoginListener {
         void onLoginSuccess(DriverData driverData);
-        void onLoginFail(boolean isFail, String msg);
+        void onLoginFail(String isFail, String msg);
         void onFail(Exception e);
     }
     /**駕駛登入 2017/06/19 更動*/
@@ -188,7 +231,7 @@ public class Connect_API{
                         try {
                             JSONObject object = new JSONObject(body);
                             if (object.getBoolean("error")){
-                                listener.onLoginFail(object.getBoolean("error"),object.getString("message"));
+                                listener.onLoginFail(object.getString("error"),object.getString("message"));
                             }else {
                                 listener.onLoginSuccess(gson.fromJson(body, DriverData.class));
                             }
@@ -204,7 +247,7 @@ public class Connect_API{
 
 
     public interface OnModifyChangeListener{
-        void onSuccess(boolean isFail, String msg);
+        void onSuccess(String isFail, String msg);
         void onFail(Exception e);
     }
     /**會員資料修改 2017/06/19 更動*/
@@ -236,7 +279,7 @@ public class Connect_API{
                     public void run() {
                         try {
                             JSONObject jsonObject = new JSONObject(s);
-                            listener.onSuccess(jsonObject.getBoolean("error"),jsonObject.getString("message"));
+                            listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("message"));
 
                         } catch (JSONException e) {
                             listener.onFail(e);
@@ -254,13 +297,14 @@ public class Connect_API{
         /**@param  status
                 *1->非任務中
                 *2->任務中*/
-        void onSuccess(boolean isFail, String result, int status, int misscatch_time, int misscatch_price);
+        void onSuccess(String isError, String result, int status, String tasknumber, int misscatch_time, int misscatch_price);
     }
-    /**客戶端打開App*/
-    public static void getStatus(@NonNull final Activity activity, String phone , String apiKey , @NonNull final OnGetStatusListener listener){
+    /**客戶端打開App 2017/06/22 修改*/
+    public static void getStatus(@NonNull final Activity activity, String phone, String fireBaseToken, String apiKey , @NonNull final OnGetStatusListener listener){
         RequestBody body = new FormEncodingBuilder()
                 .add("phone" , phone)
-                .add("os" , "1").build();
+                .add("os" , "1")
+                .add("token",fireBaseToken).build();
         Request request = new Request.Builder().url(API_HOST+API_VERSION+GET_STATUS).header("Authorization" ,""+ apiKey).post(body).build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
             @Override
@@ -281,9 +325,17 @@ public class Connect_API{
                     public void run() {
                         try {
                             JSONObject jsonObject = new JSONObject(s);
-                            listener.onSuccess(jsonObject.getBoolean("error"),jsonObject.getString("result"),jsonObject.getInt("status"),
-                                    jsonObject.getInt("misscatch_time"),jsonObject.getInt("misscatch_price"));
-
+                            String error = jsonObject.getString("error");
+                            String result = jsonObject.getString("result");
+                            int status = jsonObject.getInt("status");
+                            int misscatch_time = jsonObject.getInt("misscatch_time");
+                            int misscatch_price = jsonObject.getInt("misscatch_price");
+                            if (status == 2){
+                                String tasknumber = jsonObject.getString("tasknumber");
+                                listener.onSuccess(error,result,status,tasknumber,misscatch_time,misscatch_price);
+                                return;
+                            }
+                            listener.onSuccess(error,result,status,null,misscatch_time,misscatch_price);
                         } catch (JSONException e) {
                             listener.onFail(e);
                         }
@@ -296,7 +348,7 @@ public class Connect_API{
 
     public interface OnPutStatusListener {
         void onFail(Exception e);
-        void onSuccess(boolean isError, String result);
+        void onSuccess(String isError, String result);
     }
     /**客戶端上傳狀態
      * @param  status
@@ -327,7 +379,7 @@ public class Connect_API{
                     public void run() {
                         try {
                             JSONObject jsonObject = new JSONObject(s);
-                            listener.onSuccess(jsonObject.getBoolean("error"),jsonObject.getString("result"));
+                            listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("result"));
                         } catch (JSONException e) {
                             listener.onFail(e);
                         }
@@ -344,13 +396,14 @@ public class Connect_API{
                 *1->下線
                 * 2->上線
                 * 3->任務中*/
-        void onSuccess(boolean isError, String result, String status);
+        void onSuccess(String isError, String result, String status, String tasknumber, String carshow, String carnumber);
     }
-    /**司機端打開App(更新)*/
-    public static void getdriverstatus(@NonNull final Activity activity, String phone , String apiKey , @NonNull final OnGetDriverStatusListener listener){
+    /**司機端打開App(更新)  2017/06/22 再更新*/
+    public static void getdriverstatus(@NonNull final Activity activity, String phone, String fireBaseToken, String apiKey , @NonNull final OnGetDriverStatusListener listener){
         RequestBody body = new FormEncodingBuilder()
                 .add("phone" , phone)
-                .add("os" , "1").build();
+                .add("os" , "1")
+                .add("token",fireBaseToken).build();
         Request request = new Request.Builder().url(API_HOST+API_VERSION+GET_DRIVER_STATUS).header("Authorization",""+apiKey).post(body).build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
             @Override
@@ -365,13 +418,23 @@ public class Connect_API{
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
-                            listener.onSuccess(jsonObject.getBoolean("error"),jsonObject.getString("result"),jsonObject.getString("status"));
+                            JSONObject jsonObject = new JSONObject(body);
+                            String isError = jsonObject.getString("error");
+                            String result = jsonObject.getString("result");
+                            String status = jsonObject.getString("status");
+                            String carshow = jsonObject.getString("carshow");
+                            String carnumber = jsonObject.getString("carnumber");
+                            if (status.equals("3")){
+                                String tasknumber = jsonObject.getString("status");
+                                listener.onSuccess(isError,result,status,tasknumber,carshow,carnumber);
+                                return;
+                            }
+                            listener.onSuccess(isError,result,status,null,carshow,carnumber);
                         } catch (JSONException e) {
                             listener.onFail(e);
                         }
@@ -385,7 +448,7 @@ public class Connect_API{
 
     public interface OnPutDriverStatusListener{
         void onFail(Exception e);
-        void onSuccess(boolean isFail, String result);
+        void onSuccess(String isError, String result);
     }
     /**司機端上傳狀態
      * @param  status
@@ -418,7 +481,7 @@ public class Connect_API{
                     public void run() {
                         try {
                             JSONObject jsonObject = new JSONObject(s);
-                            listener.onSuccess(jsonObject.getBoolean("error"),jsonObject.getString("result"));
+                            listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("result"));
                         } catch (JSONException e) {
                             listener.onFail(e);
                         }
@@ -431,19 +494,20 @@ public class Connect_API{
 
     public interface OnRateListener{
         void onFail(Exception e);
-        void onSuccess(boolean isErrorResult, int price, int time, String distance);
+        void onSuccess(String isErrorResult, int price, int time, String distance);
     }
     /**
      客戶發出派車試算需求
      起始經緯度及終點經緯度
-     */
+     2017/06/22 更新*/
     public static void rate(@NonNull final Activity activity, String start_lon , String start_lat,
-                            String end_lon , String end_lat , String apiKey , @NonNull final OnRateListener listener){
+                            String end_lon, String end_lat, String phone, String apiKey , @NonNull final OnRateListener listener){
         RequestBody body = new FormEncodingBuilder()
                 .add("addr_start_lon" , start_lon)
                 .add("addr_start_lat" , start_lat)
                 .add("addr_end_lon" , end_lon)
-                .add("addr_end_lat" , end_lat).build();
+                .add("addr_end_lat" , end_lat)
+                .add("phone" , phone).build();
         Request request = new Request.Builder().url(API_HOST+API_VERSION+RATE).header("Authorization" , ""+ apiKey).post(body).build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
             @Override
@@ -465,7 +529,7 @@ public class Connect_API{
                         try {
                             JSONObject jsonObject = new JSONObject(s);
                             listener.onSuccess(
-                                    jsonObject.getBoolean("result"),
+                                    jsonObject.getString("result"),
                                     jsonObject.getInt("price"),
                                     jsonObject.getInt("time"),
                                     jsonObject.getString("distance"));
@@ -481,7 +545,7 @@ public class Connect_API{
 
     public interface OnNewTaskListener{
         void onFail(Exception e);
-        void onSuccess(boolean isFail, String message, String tasknumber);
+        void onSuccess(String isError, String message, String tasknumber);
     }
     /**客戶發出派車需求*/
     public static void newTask(@NonNull final Activity activity,
@@ -519,7 +583,7 @@ public class Connect_API{
                     public void run() {
                         try {
                             JSONObject jsonObject = new JSONObject(s);
-                            listener.onSuccess(jsonObject.getBoolean("error"),jsonObject.getString("message"),jsonObject.getString("tasknumber"));
+                            listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("message"),jsonObject.getString("tasknumber"));
                         } catch (JSONException e) {
                             listener.onFail(e);
                         }
@@ -532,7 +596,7 @@ public class Connect_API{
 
     public interface OnStartTaskListener{
         void onFail(Exception e);
-        void onSuccess(boolean isFail, String message);
+        void onSuccess(String isError, String message);
     }
     /**開始配對*/
     public static void starttask(@NonNull final Activity activity, String start_lon , String start_lat ,
@@ -563,7 +627,7 @@ public class Connect_API{
                     public void run() {
                         try {
                             JSONObject jsonObject = new JSONObject(s);
-                            listener.onSuccess(jsonObject.getBoolean("error"),jsonObject.getString("message"));
+                            listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("message"));
                         } catch (JSONException e) {
                             listener.onFail(e);
                         }
@@ -576,7 +640,7 @@ public class Connect_API{
 
     public interface OnCancelTaskListener{
         void onFail(Exception e);
-        void onSuccess(boolean isFail, String message);
+        void onSuccess(String isError, String message);
     }
     /**取消配對*/
     public static void cancelTask(@NonNull final Activity activity, String tasknumber , String apiKey , @NonNull final OnCancelTaskListener listener){
@@ -601,7 +665,7 @@ public class Connect_API{
                     public void run() {
                         try {
                             JSONObject jsonObject = new JSONObject(s);
-                            listener.onSuccess(jsonObject.getBoolean("error"),jsonObject.getString("message"));
+                            listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("message"));
                         } catch (JSONException e) {
                             listener.onFail(e);
                         }
@@ -615,7 +679,7 @@ public class Connect_API{
     public interface OnGetPairInfoListener{
         void onFail(Exception e);
         void onSuccessGetPairInfo(PairInfoData pairInfoData);
-        void onWaiting(boolean isError, String message);
+        void onWaiting(String isError, String message);
     }
     /**取得結果*/
     public void getpairinfo(@NonNull final Activity activity, String tasknumber , String apiKey , @NonNull final OnGetPairInfoListener listener){
@@ -641,7 +705,7 @@ public class Connect_API{
                         try {
                             JSONObject object = new JSONObject(body);
                             if (object.getBoolean("error")){
-                                listener.onWaiting(object.getBoolean("error"),object.getString("message"));
+                                listener.onWaiting(object.getString("error"),object.getString("message"));
                             }else {
                                 Gson gson = new Gson();
                                 listener.onSuccessGetPairInfo(gson.fromJson(body, PairInfoData.class));
@@ -658,7 +722,7 @@ public class Connect_API{
 
     public interface OnAcceptTaskListener{
         void onFail(Exception e);
-        void onSuccess(boolean isError, String message);
+        void onSuccess(String isError, String message);
     }
     /**接受任務(司機端)*/
     public static void accepttask(@NonNull final Activity activity, String tasknumber , String phone , String apiKey , @NonNull final OnAcceptTaskListener listener){
@@ -686,7 +750,7 @@ public class Connect_API{
                     public void run() {
                         try {
                             JSONObject jsonObject = new JSONObject(s);
-                            listener.onSuccess(jsonObject.getBoolean("error"),jsonObject.getString("message"));
+                            listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("message"));
                         } catch (JSONException e) {
                             listener.onFail(e);
                         }
@@ -739,7 +803,7 @@ public class Connect_API{
 
     public interface OnUpdateLocationListener{
         void onFail(Exception e);
-        void onSuccess(boolean isError, String message);
+        void onSuccess(String isError, String message);
     }
     /**即時更新司機座標(司機端)
      * 皆放入司機端訊息*/
@@ -770,7 +834,7 @@ public class Connect_API{
                     public void run() {
                         try {
                             JSONObject jsonObject = new JSONObject(s);
-                            listener.onSuccess(jsonObject.getBoolean("error"),jsonObject.getString("message"));
+                            listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("message"));
                         } catch (JSONException e) {
                             listener.onFail(e);
                         }
@@ -822,7 +886,7 @@ public class Connect_API{
 
     public interface OnTerminatePassengerListener{
         void onFail(Exception e);
-        void onSuccess(String isFail, String msg);
+        void onSuccess(String isError, String msg);
     }
     /**客戶取消任務*/
     public static void terminateByPassenger(@NonNull final Activity activity, String tasknumber, String apiKey, final OnTerminatePassengerListener listener){
@@ -860,7 +924,7 @@ public class Connect_API{
 
     public interface OnTerminateDriverListener{
         void onFail(Exception e);
-        void onSuccess(String isFail, String msg);
+        void onSuccess(String isError, String msg);
     }
     /**司機取消任務*/
     public static void terminateByDriver(@NonNull final Activity activity, String tasknumber, String apiKey, @NonNull final OnTerminateDriverListener listener){
@@ -1276,4 +1340,11 @@ public class Connect_API{
             }
         });
     }
+
+    //*********************-----------2017/06/22 更新新項目--------------****************************
+
+
+
+
+
 }

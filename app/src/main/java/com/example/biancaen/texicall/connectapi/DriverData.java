@@ -8,7 +8,7 @@ import java.io.Serializable;
 
 public class DriverData implements Serializable {
 
-    private boolean error;
+    private String error;
     private String type;
     private String account;
     private String email;
@@ -17,7 +17,7 @@ public class DriverData implements Serializable {
     private String createdAt;
     private int savings;
 
-    public boolean isError() {
+    public String isError() {
         return error;
     }
 

@@ -16,7 +16,7 @@ public class PairInfoData implements Serializable {
     private String carnshow;
     private String estimated_arrive_time;
     private String message;
-    private boolean error;
+    private String error;
 
     public String getDriver() {
         return driver;
@@ -50,7 +50,7 @@ public class PairInfoData implements Serializable {
         return message;
     }
 
-    public boolean isError() {
+    public String isError() {
         return error;
     }
 }
