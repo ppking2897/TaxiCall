@@ -1,6 +1,9 @@
 /*2017/06/22 全部替換部分
 * error值型別全變更為String
-* 這部分更動會記錄在此 */
+* 這部分更動會記錄在此
+* 所有 onFail() 的方法後面新增通知用字串
+* 非型別轉換錯誤的屬於API問題
+* 屬於型別錯誤可以取出來原型字串數據*/
 package com.example.biancaen.texicall.connectapi;
 
 import android.app.Activity;
@@ -28,7 +31,9 @@ import java.util.List;
  */
 public class Connect_API{
 
-//    private static String debugTag = Connect_API.class.getName();
+    private static String debugTag = Connect_API.class.getName();
+    private static String debugTAG_ValueType = "JSON轉換型別異常 => ";
+    private static String debugTAG_NOT_ValueType = "非型別錯誤，API連線產生的IO例外錯誤";
     //HOST位置
     private static final String API_HOST = "http://188.166.213.209/hb";
     //應該是版本
@@ -72,7 +77,7 @@ public class Connect_API{
 
     public interface OnRegisterListener{
         void onRegisterSuccessListener(String isFail, String message);
-        void onRegisterFailListener(Exception e);
+        void onRegisterFailListener(Exception e , String jsonError);
     }
     /** 會員註冊*/
     public static void register(@NonNull final Activity activity, String name , String password , String email , String phone , @NonNull final OnRegisterListener listener){
@@ -88,22 +93,23 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onRegisterFailListener(e);
+                        listener.onRegisterFailListener(e , debugTAG_NOT_ValueType);
                     }
                 });
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             listener.onRegisterSuccessListener(jsonObject.getString("error"),jsonObject.getString("message"));
                         } catch (JSONException e) {
-                            listener.onRegisterFailListener(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onRegisterFailListener(e , jsonError);
                         }
                     }
                 });
@@ -115,7 +121,7 @@ public class Connect_API{
     public interface OnUserLoginListener {
          void onLoginSuccess(UserData userData);
          void onLoginFail(String isFail, String msg);
-         void onFail(Exception e);
+         void onFail(Exception e , String jsonError);
      }
      /**乘客登入2017/06/19 更動*/
     public static void userLogin(@NonNull final Activity activity, String phone , String password , @NonNull final OnUserLoginListener listener){
@@ -130,7 +136,7 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
             }
@@ -150,7 +156,8 @@ public class Connect_API{
                                 listener.onLoginSuccess(gson.fromJson(body, UserData.class));
                             }
                         } catch (JSONException e) {
-                            e.printStackTrace();
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -161,7 +168,7 @@ public class Connect_API{
 
     public interface OnForgotPasswordPassnegerListener{
         void onSuccess(String isError, String message);
-        void onFail(Exception e);
+        void onFail(Exception e , String jsonError);
     }
     /**忘記密碼(乘客端) 2017/06/22 新增*/
     public static void passengerFogot(@NonNull final Activity activity, String phone, String apiKey, @NonNull final OnForgotPasswordPassnegerListener listener){
@@ -173,22 +180,23 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e , debugTAG_NOT_ValueType);
                     }
                 });
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String result = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject object = new JSONObject(result);
+                            JSONObject object = new JSONObject(body);
                             listener.onSuccess(object.getString("error"),object.getString("message"));
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -200,7 +208,7 @@ public class Connect_API{
     public interface OnDriverLoginListener {
         void onLoginSuccess(DriverData driverData);
         void onLoginFail(String isFail, String msg);
-        void onFail(Exception e);
+        void onFail(Exception e , String jsonError);
     }
     /**駕駛登入 2017/06/19 更動*/
     public static void driverLogin(@NonNull final Activity activity, String phone , String password , @NonNull final OnDriverLoginListener listener){
@@ -215,7 +223,7 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
 
@@ -236,7 +244,8 @@ public class Connect_API{
                                 listener.onLoginSuccess(gson.fromJson(body, DriverData.class));
                             }
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -248,7 +257,7 @@ public class Connect_API{
 
     public interface OnModifyChangeListener{
         void onSuccess(String isFail, String msg);
-        void onFail(Exception e);
+        void onFail(Exception e , String jsonError);
     }
     /**會員資料修改 2017/06/19 更動*/
     public static void modifyChange(@NonNull final Activity activity, String email, String phone, String oldpassword, String password,
@@ -266,23 +275,24 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("message"));
 
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -293,7 +303,7 @@ public class Connect_API{
 
 
     public interface  OnGetStatusListener{
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         /**@param  status
                 *1->非任務中
                 *2->任務中*/
@@ -312,19 +322,19 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             String error = jsonObject.getString("error");
                             String result = jsonObject.getString("result");
                             int status = jsonObject.getInt("status");
@@ -337,7 +347,8 @@ public class Connect_API{
                             }
                             listener.onSuccess(error,result,status,null,misscatch_time,misscatch_price);
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -347,7 +358,7 @@ public class Connect_API{
 
 
     public interface OnPutStatusListener {
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         void onSuccess(String isError, String result);
     }
     /**客戶端上傳狀態
@@ -366,22 +377,23 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("result"));
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -391,7 +403,7 @@ public class Connect_API{
 
 
     public interface OnGetDriverStatusListener{
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         /**@param  status
                 *1->下線
                 * 2->上線
@@ -411,7 +423,7 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
             }
@@ -436,7 +448,8 @@ public class Connect_API{
                             }
                             listener.onSuccess(isError,result,status,null,carshow,carnumber);
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -447,7 +460,7 @@ public class Connect_API{
 
 
     public interface OnPutDriverStatusListener{
-        void onFail(Exception e);
+        void onFail(Exception e , String jsonError);
         void onSuccess(String isError, String result);
     }
     /**司機端上傳狀態
@@ -468,22 +481,23 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("result"));
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -493,7 +507,7 @@ public class Connect_API{
 
 
     public interface OnRateListener{
-        void onFail(Exception e);
+        void onFail(Exception e , String jsonError);
         void onSuccess(String isErrorResult, int price, int time, String distance);
     }
     /**
@@ -515,26 +529,27 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             listener.onSuccess(
                                     jsonObject.getString("result"),
                                     jsonObject.getInt("price"),
                                     jsonObject.getInt("time"),
                                     jsonObject.getString("distance"));
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -544,7 +559,7 @@ public class Connect_API{
 
 
     public interface OnNewTaskListener{
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         void onSuccess(String isError, String message, String tasknumber);
     }
     /**客戶發出派車需求*/
@@ -570,22 +585,23 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("message"),jsonObject.getString("tasknumber"));
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -595,7 +611,7 @@ public class Connect_API{
 
 
     public interface OnStartTaskListener{
-        void onFail(Exception e);
+        void onFail(Exception e , String jsonError);
         void onSuccess(String isError, String message);
     }
     /**開始配對*/
@@ -614,22 +630,23 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("message"));
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -639,7 +656,7 @@ public class Connect_API{
 
 
     public interface OnCancelTaskListener{
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         void onSuccess(String isError, String message);
     }
     /**取消配對*/
@@ -652,22 +669,23 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("message"));
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -677,7 +695,7 @@ public class Connect_API{
 
 
     public interface OnGetPairInfoListener{
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         void onSuccessGetPairInfo(PairInfoData pairInfoData);
         void onWaiting(String isError, String message);
     }
@@ -691,7 +709,7 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
             }
@@ -711,7 +729,8 @@ public class Connect_API{
                                 listener.onSuccessGetPairInfo(gson.fromJson(body, PairInfoData.class));
                             }
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -721,7 +740,7 @@ public class Connect_API{
 
 
     public interface OnAcceptTaskListener{
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         void onSuccess(String isError, String message);
     }
     /**接受任務(司機端)*/
@@ -737,22 +756,23 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("message"));
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -762,7 +782,7 @@ public class Connect_API{
 
 
     public interface OnTaskInfoListener{
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         void onSuccess(TaskInfoData taskInfoData);
     }
     /**司機端取得任務詳細資料*/
@@ -777,7 +797,7 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
             }
@@ -792,7 +812,8 @@ public class Connect_API{
                             Gson gson = new Gson();
                             listener.onSuccess(gson.fromJson(body,TaskInfoData.class));
                         }catch (Exception e){
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -802,7 +823,7 @@ public class Connect_API{
 
 
     public interface OnUpdateLocationListener{
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         void onSuccess(String isError, String message);
     }
     /**即時更新司機座標(司機端)
@@ -820,7 +841,7 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
 
@@ -828,15 +849,16 @@ public class Connect_API{
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("message"));
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -847,7 +869,7 @@ public class Connect_API{
 
 
     public interface OnWaitTimeListener{
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         void onSuccess(String isError, String task_status, String distance, int time);
     }
     /**客戶等待司機抵達*/
@@ -860,22 +882,23 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("task_status"),jsonObject.getString("distance"),jsonObject.getInt("time"));
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -885,7 +908,7 @@ public class Connect_API{
 
 
     public interface OnTerminatePassengerListener{
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         void onSuccess(String isError, String msg);
     }
     /**客戶取消任務*/
@@ -898,22 +921,23 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("message"));
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -923,7 +947,7 @@ public class Connect_API{
 
 
     public interface OnTerminateDriverListener{
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         void onSuccess(String isError, String msg);
     }
     /**司機取消任務*/
@@ -936,22 +960,23 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("message"));
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -961,7 +986,7 @@ public class Connect_API{
 
 
     public interface OnPickupListener{
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         void onSuccess(String isError, String message);
     }
     /**司機已抵達*/
@@ -974,22 +999,23 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
             }
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("message"));
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -999,7 +1025,7 @@ public class Connect_API{
 
 
     public interface OnTakeRideListener{
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         void onSuccess(String isError, String message);
     }
     /**乘客已上車*/
@@ -1012,7 +1038,7 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
 
@@ -1020,15 +1046,16 @@ public class Connect_API{
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("message"));
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -1039,7 +1066,7 @@ public class Connect_API{
 
 
     public interface OnRealPriceListener{
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         void onSuccess(String isError, String message, String distance);
     }
     /**乘客搭乘途中,實際距離和時間計算*/
@@ -1052,7 +1079,7 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
 
@@ -1060,15 +1087,16 @@ public class Connect_API{
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             listener.onSuccess(jsonObject.getString("error"), jsonObject.getString("message"), jsonObject.getString("distance"));
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -1080,7 +1108,7 @@ public class Connect_API{
     //TODO ======================== 2017/06/19 更新=============================
 
     public interface OnCheckOutListener{
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         void onSuccess(String isError, String message, String distance, String time, String price);
     }
     /**結算*/
@@ -1095,7 +1123,7 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
 
@@ -1103,17 +1131,18 @@ public class Connect_API{
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             listener.onSuccess(jsonObject.getString("error"),
                                     jsonObject.getString("message"), jsonObject.getString("distance"),
                                     jsonObject.getString("time"),jsonObject.getString("price"));
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -1124,7 +1153,7 @@ public class Connect_API{
 
 
     public interface OnRecordListListener{
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         void onSuccess(String isError, String msg, List<RecordPassengerData> data);
     }
     /**乘客任務紀錄*/
@@ -1137,7 +1166,7 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
 
@@ -1145,12 +1174,12 @@ public class Connect_API{
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             JSONArray jsonArray = jsonObject.getJSONArray("data");
                             List<RecordPassengerData> datas = new ArrayList<>();
                             Gson gson = new Gson();
@@ -1159,7 +1188,8 @@ public class Connect_API{
                             }
                              listener.onSuccess(jsonObject.getString("error"), jsonObject.getString("message"), datas);
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -1170,7 +1200,7 @@ public class Connect_API{
 
 
     public interface OnRecordListDriverListener{
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         void onSuccess(String isError, String msg, List<RecordDriverData> data);
     }
     /**司機任務紀錄*/
@@ -1183,7 +1213,7 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
 
@@ -1191,12 +1221,12 @@ public class Connect_API{
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             JSONArray jsonArray = jsonObject.getJSONArray("data");
                             List<RecordDriverData> datas = new ArrayList<>();
                             Gson gson = new Gson();
@@ -1205,7 +1235,8 @@ public class Connect_API{
                             }
                             listener.onSuccess(jsonObject.getString("error"), jsonObject.getString("message"), datas);
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -1216,7 +1247,7 @@ public class Connect_API{
 
 
     public interface OnPointRecordListener{
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         void onSuccess(String isError, String message, String name, String savings, double sum, List<PointData> data);
     }
     /**司機點數紀錄*/
@@ -1229,7 +1260,7 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
 
@@ -1237,12 +1268,12 @@ public class Connect_API{
 
             @Override
             public void onResponse(Response response) throws IOException {
-                final String s = response.body().string();
+                final String body = response.body().string();
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(s);
+                            JSONObject jsonObject = new JSONObject(body);
                             JSONArray jsonArray = jsonObject.getJSONArray("data");
                             List<PointData> datas = new ArrayList<>();
                             Gson gson = new Gson();
@@ -1252,7 +1283,8 @@ public class Connect_API{
                             listener.onSuccess(jsonObject.getString("error"), jsonObject.getString("message"), jsonObject.getString("name"),
                                     jsonObject.getString("savings"), jsonObject.getDouble("sum"), datas);
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -1263,7 +1295,7 @@ public class Connect_API{
 
 
     public interface OnGetFullInfoListener{
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         void onSuccess(TaskInfoFullData data);
     }
     /**任務詳細資訊(乘客端和司機端共用)*/
@@ -1276,7 +1308,7 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
 
@@ -1292,7 +1324,8 @@ public class Connect_API{
                             Gson gson = new Gson();
                             listener.onSuccess(gson.fromJson(body,TaskInfoFullData.class));
                         } catch (Exception e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
@@ -1303,7 +1336,7 @@ public class Connect_API{
 
 
     public interface OnLoginOutListener{
-        void onFail(Exception e);
+        void onFail(Exception e, String jsonError);
         void onSuccess(boolean isError, String message);
     }
     /**會員登出(更新)*/
@@ -1316,7 +1349,7 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        listener.onFail(e);
+                        listener.onFail(e,debugTAG_NOT_ValueType);
                     }
                 });
 
@@ -1332,7 +1365,8 @@ public class Connect_API{
                             JSONObject jsonObject = new JSONObject(body);
                             listener.onSuccess(jsonObject.getBoolean("error"),jsonObject.getString("message"));
                         } catch (JSONException e) {
-                            listener.onFail(e);
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
                         }
                     }
                 });
