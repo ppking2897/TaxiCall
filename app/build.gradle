@@ -30,7 +30,12 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:25.3.1'
     compile 'com.squareup.okhttp:okhttp:2.0.0'
     compile 'com.google.code.gson:gson:2.8.0'
-    compile 'com.google.android.gms:play-services-maps:10.2.4'
-    testCompile 'junit:junit:4.12'
+    compile 'com.google.android.gms:play-services-maps:11.0.1'
     compile 'cn.aigestudio.wheelpicker:WheelPicker:1.1.2'
+    compile 'com.google.firebase:firebase-core:11.0.1'
+    compile 'com.google.firebase:firebase-messaging:11.0.1'
+    testCompile 'junit:junit:4.12'
 }
+
+
+apply plugin: 'com.google.gms.google-services'

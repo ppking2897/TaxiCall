@@ -35,16 +35,16 @@ public class Passenger_Sign_Up_Activity extends AppCompatActivity {
 
             Connect_API.register(this ,nameString, passwordString, mailString, phoneString, new Connect_API.OnRegisterListener() {
                 @Override
-                public void onRegisterSuccessListener(boolean isFail, String message) {
+                public void onRegisterSuccessListener(String isFail, String message) {
                     Log.v("ppking" , " onRegisterSuccess  :  " + message);
                     Log.v("ppking" , " onRegisterSuccess  :  " + isFail);
 
-                    Success(isFail , message);
+                    Success(isFail.equals("false") , message);
                 }
-                @Override
-                public void onRegisterFailListener(Exception e) {
-                    Log.v("ppking" , " onRegisterFail  :  " + e);
 
+                @Override
+                public void onRegisterFailListener(Exception e, String jsonError) {
+                    Log.v("ppking" , " onRegisterFail  :  " + e);
                 }
             });
 

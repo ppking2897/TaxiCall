@@ -1,0 +1,62 @@
+{
+  "project_info": {
+    "project_number": "980644632149",
+    "firebase_url": "https://hb-carrent.firebaseio.com",
+    "project_id": "hb-carrent",
+    "storage_bucket": "hb-carrent.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:980644632149:android:7da78fdaf6e3dd4a",
+        "android_client_info": {
+          "package_name": "com.example.biancaen.texicall"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "980644632149-vh7jubm7lej67h1puip5r44vjt9vi6f9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.biancaen.texicall",
+            "certificate_hash": "68188035210efba53cca194e9fb45506ad4aae14"
+          }
+        },
+        {
+          "client_id": "980644632149-5a9rm2b83pqe7hdl3e13ta1psb8ohp8l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqoS9aZM2Iyt1uZNW_WfhZK3WHPkjw940"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "980644632149-jjks0h5o7kj179ofieh118hl6u367f23.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "Wework.com.tw.HBCarRent"
+              }
+            },
+            {
+              "client_id": "980644632149-5a9rm2b83pqe7hdl3e13ta1psb8ohp8l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

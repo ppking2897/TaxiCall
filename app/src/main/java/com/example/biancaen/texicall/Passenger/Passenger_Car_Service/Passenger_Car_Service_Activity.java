@@ -154,25 +154,26 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
             String apiKey = getBundle.getString("apiKey");
 
 
-            Connect_API.rate(this,startLat.toString(), startLng.toString(), endLat.toString(), endLng.toString(), apiKey, new Connect_API.OnRateListener() {
+            Connect_API.rate(this,startLat.toString(), startLng.toString(), endLat.toString(), endLng.toString(),null, apiKey, new Connect_API.OnRateListener() {
                 @Override
-                public void onFail(Exception e) {
+                public void onFail(Exception e, String jsonError) {
                     Log.v("ppking" , "onFail : " + e.getMessage());
                 }
 
                 @Override
-                public void onSuccess(boolean isErrorResult, int price, int time, String distance) {
+                public void onSuccess(String isErrorResult, int price, int time, String distance) {
                     Log.v("ppking" , " onSuccess  result : "+ isErrorResult);
                     Log.v("ppking" , " onSuccess  price : "+ price);
                     Log.v("ppking" , " onSuccess  time : "+ time);
                     Log.v("ppking" , " onSuccess  distance : "+ distance);
-                    if (!isErrorResult){
+                    if (isErrorResult.equals("false")){
                         DataIntent(price , time);
                     }else {
                         Toast.makeText(Passenger_Car_Service_Activity.this,"試算結果錯誤，請確認地址是否正確!!",Toast.LENGTH_SHORT).show();
                     }
 
                 }
+
             });
 
         }else {

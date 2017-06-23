@@ -9,6 +9,7 @@ package com.example.biancaen.texicall.connectapi;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
 import com.squareup.okhttp.Callback;
 import com.squareup.okhttp.FormEncodingBuilder;
@@ -124,7 +125,7 @@ public class Connect_API{
          void onFail(Exception e , String jsonError);
      }
      /**乘客登入2017/06/19 更動*/
-    public static void userLogin(@NonNull final Activity activity, String phone , String password , @NonNull final OnUserLoginListener listener){
+    public static void userLogin(@NonNull final Activity activity, final String phone , String password , @NonNull final OnUserLoginListener listener){
         RequestBody body = new FormEncodingBuilder()
                 .add("password" , password)
                 .add("phone" , phone).build();
@@ -149,7 +150,7 @@ public class Connect_API{
                     public void run() {
                         try {
                             JSONObject object = new JSONObject(body);
-                            if (object.getBoolean("error")){
+                            if (object.getString("error").equals("true")){
                                 listener.onLoginFail(object.getString("error"),object.getString("message"));
                             }else {
                                 Gson gson = new Gson();
@@ -310,11 +311,11 @@ public class Connect_API{
         void onSuccess(String isError, String result, int status, String tasknumber, int misscatch_time, int misscatch_price);
     }
     /**客戶端打開App 2017/06/22 修改*/
-    public static void getStatus(@NonNull final Activity activity, String phone, String fireBaseToken, String apiKey , @NonNull final OnGetStatusListener listener){
+    public static void getStatus(@NonNull final Activity activity, String phone, String apiKey , @NonNull final OnGetStatusListener listener){
         RequestBody body = new FormEncodingBuilder()
                 .add("phone" , phone)
                 .add("os" , "1")
-                .add("token",fireBaseToken).build();
+                .add("token", FirebaseInstanceId.getInstance().getToken()).build();
         Request request = new Request.Builder().url(API_HOST+API_VERSION+GET_STATUS).header("Authorization" ,""+ apiKey).post(body).build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
             @Override
@@ -411,11 +412,11 @@ public class Connect_API{
         void onSuccess(String isError, String result, String status, String tasknumber, String carshow, String carnumber);
     }
     /**司機端打開App(更新)  2017/06/22 再更新*/
-    public static void getdriverstatus(@NonNull final Activity activity, String phone, String fireBaseToken, String apiKey , @NonNull final OnGetDriverStatusListener listener){
+    public static void getdriverstatus(@NonNull final Activity activity, String phone, String apiKey , @NonNull final OnGetDriverStatusListener listener){
         RequestBody body = new FormEncodingBuilder()
                 .add("phone" , phone)
                 .add("os" , "1")
-                .add("token",fireBaseToken).build();
+                .add("token",FirebaseInstanceId.getInstance().getToken()).build();
         Request request = new Request.Builder().url(API_HOST+API_VERSION+GET_DRIVER_STATUS).header("Authorization",""+apiKey).post(body).build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
             @Override
