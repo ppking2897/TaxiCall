@@ -172,10 +172,11 @@ public class Connect_API{
         void onSuccess(String isError, String message);
         void onFail(Exception e , String jsonError);
     }
-    /**忘記密碼(乘客端) 2017/06/22 新增*/
+    /**忘記密碼(乘客端) 2017/06/22 新增
+	2017*06/26 修正*/
     public static void passengerFogot(@NonNull final Activity activity, String phone, @NonNull final OnForgotPasswordPassnegerListener listener){
         RequestBody body = new FormEncodingBuilder().add("phone" , phone).build();
-        Request request = new Request.Builder().url(API_HOST+API_VERSION+FORGOT).header("Authorization" ,""+ apiKey).post(body).build();
+        Request request = new Request.Builder().url(API_HOST+API_VERSION+FORGOT).post(body).build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, final IOException e) {
