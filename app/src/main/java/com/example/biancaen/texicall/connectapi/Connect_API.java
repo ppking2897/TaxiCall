@@ -520,10 +520,10 @@ public class Connect_API{
     public static void rate(@NonNull final Activity activity, String start_lon , String start_lat,
                             String end_lon, String end_lat, String phone, String apiKey , @NonNull final OnRateListener listener){
         RequestBody body = new FormEncodingBuilder()
-                .add("addr_start_lon" , start_lon)
-                .add("addr_start_lat" , start_lat)
-                .add("addr_end_lon" , end_lon)
-                .add("addr_end_lat" , end_lat)
+                .add("addr_start_lat" , start_lon)
+                .add("addr_start_lon" , start_lat)
+                .add("addr_end_lat" , end_lon)
+                .add("addr_end_lon" , end_lat)
                 .add("phone" , phone).build();
         Request request = new Request.Builder().url(API_HOST+API_VERSION+RATE).header("Authorization" , ""+ apiKey).post(body).build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
@@ -572,11 +572,11 @@ public class Connect_API{
                                String phone , String passenger_number , String comment ,
                                String apiKey ,@NonNull final OnNewTaskListener listener){
         RequestBody body = new FormEncodingBuilder()
-                .add("addr_start_lon" , start_lon)
-                .add("addr_start_lat" , start_lat)
+                .add("addr_start_lat" , start_lon)
+                .add("addr_start_lon" , start_lat)
                 .add("addr_start_addr" , start_addr)
-                .add("addr_end_lon" , end_lon)
-                .add("addr_end_lat" , end_lat)
+                .add("addr_end_lat" , end_lon)
+                .add("addr_end_lon" , end_lat)
                 .add("addr_end_addr" , end_addr)
                 .add("phone" , phone)
                 .add("passenger_number" , passenger_number)
@@ -622,8 +622,8 @@ public class Connect_API{
                                  String phone , String tasknumber , String apiKey ,
                                  @NonNull final OnStartTaskListener listener){
         RequestBody body = new FormEncodingBuilder( )
-                .add("addr_start_lon" , start_lon)
-                .add("addr_start_lat" , start_lat)
+                .add("addr_start_lat" , start_lon)
+                .add("addr_start_lon" , start_lat)
                 .add("phone" , phone)
                 .add("tasknumber" , tasknumber).build();
         Request request = new Request.Builder().url(API_HOST+API_VERSION+START_TASK).header("Authorization",apiKey).post(body).build();
