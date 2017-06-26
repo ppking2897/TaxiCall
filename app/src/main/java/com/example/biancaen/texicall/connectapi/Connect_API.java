@@ -3,7 +3,8 @@
 * 這部分更動會記錄在此
 * 所有 onFail() 的方法後面新增通知用字串
 * 非型別轉換錯誤的屬於API問題
-* 屬於型別錯誤可以取出來原型字串數據*/
+* 屬於型別錯誤可以取出來原型字串數據
+* 2017/06/26 更換 忘記密碼須帶入的項目*/
 package com.example.biancaen.texicall.connectapi;
 
 import android.app.Activity;
@@ -172,7 +173,7 @@ public class Connect_API{
         void onFail(Exception e , String jsonError);
     }
     /**忘記密碼(乘客端) 2017/06/22 新增*/
-    public static void passengerFogot(@NonNull final Activity activity, String phone, String apiKey, @NonNull final OnForgotPasswordPassnegerListener listener){
+    public static void passengerFogot(@NonNull final Activity activity, String phone, @NonNull final OnForgotPasswordPassnegerListener listener){
         RequestBody body = new FormEncodingBuilder().add("phone" , phone).build();
         Request request = new Request.Builder().url(API_HOST+API_VERSION+FORGOT).header("Authorization" ,""+ apiKey).post(body).build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
