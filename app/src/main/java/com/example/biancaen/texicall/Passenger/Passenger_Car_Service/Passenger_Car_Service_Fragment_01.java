@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.Spinner;
 
 import com.example.biancaen.texicall.Support_Class.CityAreaData;
@@ -30,11 +31,16 @@ public class Passenger_Car_Service_Fragment_01 extends android.app.Fragment {
     private List<String> cityDataArray;
     private List<CityAreaData> areaDataArray;
     private List<String> area;
+    private EditText editText;
+    private String getOnCity;
+    private String getOnArea;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_passenger_car_service_get_on_address_01, null);
+        editText = (EditText)view.findViewById(R.id.locationGetOn);
+
         GetAddress(view);
         return view;
     }
@@ -59,10 +65,10 @@ public class Passenger_Car_Service_Fragment_01 extends android.app.Fragment {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.v("ppking" , " areaSpinner01 :  " + cityDataArray.get(position));
+                getOnCity = cityDataArray.get(position);
                 areaSpinner.setAdapter(null);
                 area = areaDataArray.get(position).getDistrict();
-                ArrayAdapter adapter = new ArrayAdapter<>(view.getContext() , R.layout.layout_spiner_text_item , area );
+                ArrayAdapter adapter = new ArrayAdapter<>(getActivity() , R.layout.layout_spiner_text_item , area );
                 adapter.setDropDownViewResource(R.layout.layout_spinner_dropdown_item);
                 areaSpinner.setAdapter(adapter);
 
@@ -77,8 +83,7 @@ public class Passenger_Car_Service_Fragment_01 extends android.app.Fragment {
         areaSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.v("ppking" , " areaSpinner01 :  " + area.get(position));
-
+                getOnArea = area.get(position);
             }
 
             @Override
@@ -86,9 +91,6 @@ public class Passenger_Car_Service_Fragment_01 extends android.app.Fragment {
 
             }
         });
-
-
-        //----------------------------------------
     }
 
     public void InitCityData(){
@@ -139,4 +141,13 @@ public class Passenger_Car_Service_Fragment_01 extends android.app.Fragment {
         areaDataArray = dataArray;
     }
 
+    public String getOnAddress(){
+        return editText.getText().toString();
+    }
+    public String getGetOnCity(){
+        return this.getOnCity;
+    }
+    public String getGetOnArea(){
+        return this.getOnArea;
+    }
 }

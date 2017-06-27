@@ -34,6 +34,7 @@
                     android:text="data"
                     android:textSize="10sp"
                     android:textColor="#ffffff"
+                    android:layout_marginBottom="10dp"
                     />
                 <TextView
                     android:id="@+id/driver_record_get_on"
@@ -42,6 +43,7 @@
                     android:text="data"
                     android:textSize="16sp"
                     android:textColor="#ffffff"
+                    android:layout_marginBottom="10dp"
                     />
                 <TextView
                     android:id="@+id/driver_record_get_off"
@@ -50,6 +52,7 @@
                     android:text="data"
                     android:textSize="16sp"
                     android:textColor="#ffffff"
+                    android:layout_marginBottom="10dp"
                     />
                 <TextView
                     android:id="@+id/driver_record_time"
@@ -58,6 +61,7 @@
                     android:text="data"
                     android:textSize="16sp"
                     android:textColor="#ffffff"
+                    android:layout_marginBottom="10dp"
                     />
                 <TextView
                     android:id="@+id/driver_record_rate"

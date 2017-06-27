@@ -3,6 +3,7 @@ package com.example.biancaen.texicall.Support_Class;
 import android.content.Context;
 import android.location.Address;
 import android.location.Geocoder;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
@@ -23,7 +24,8 @@ public class Get_Location {
 
         try {
             address = coder.getFromLocationName(strAddress, 5);
-            if (address == null) {
+            if (address == null || address.size() ==0) {
+                Log.v("ppking" , " address : null" );
                 return null;
             }
             Address location = address.get(0);

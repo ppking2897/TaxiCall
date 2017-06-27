@@ -34,18 +34,19 @@ public class Passenger_Sign_Up_Activity extends AppCompatActivity {
         if (!(nameString.equals("") || passwordString.equals("") || mailString.equals("") || phoneString.equals(""))) {
 
             Connect_API.register(this ,nameString, passwordString, mailString, phoneString, new Connect_API.OnRegisterListener() {
+
                 @Override
                 public void onRegisterSuccessListener(String isFail, String message) {
                     Log.v("ppking" , " onRegisterSuccess  :  " + message);
                     Log.v("ppking" , " onRegisterSuccess  :  " + isFail);
-
-                    Success(isFail.equals("false") , message);
+                    //Success(isFail , message);
                 }
 
                 @Override
                 public void onRegisterFailListener(Exception e, String jsonError) {
-                    Log.v("ppking" , " onRegisterFail  :  " + e);
+
                 }
+
             });
 
         }else{
@@ -64,8 +65,12 @@ public class Passenger_Sign_Up_Activity extends AppCompatActivity {
                     Toast.makeText(Passenger_Sign_Up_Activity.this , "註冊成功!!", Toast.LENGTH_SHORT).show();
                     Intent it = new Intent(Passenger_Sign_Up_Activity.this , Passenger_Car_Service_Activity.class);
                     startActivity(it);
+                    finish();
                 }
             }
         });
+    }
+    public void Fail(){
+        Toast.makeText(Passenger_Sign_Up_Activity.this , "連線異常!!" ,Toast.LENGTH_SHORT).show();
     }
 }

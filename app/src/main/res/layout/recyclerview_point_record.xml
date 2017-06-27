@@ -27,7 +27,7 @@
                 android:id="@+id/pointDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="10sp"
+                android:layout_marginBottom="10dp"
                 android:textColor="#FFFFFF"
                 android:text="date"
                 />
@@ -38,6 +38,7 @@
                 android:textSize="16sp"
                 android:textColor="#FFFFFF"
                 android:text="Point Info"
+                android:lineSpacingExtra="10dp"
                 />
         </LinearLayout>
     </LinearLayout>

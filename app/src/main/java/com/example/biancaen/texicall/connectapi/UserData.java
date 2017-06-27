@@ -5,18 +5,28 @@ import java.io.Serializable;
 public class UserData implements Serializable {
 
     private String error;
-    private String account;
+	private String type;
+    private String phone;
     private String email;
+	private String name;
     private String apiKey;
     private int status;
     private String createdAt;
+	
+	public String getName() {
+        return name;
+    }
 
     public String isError() {
         return error;
     }
 
-    public String getAccount() {
-        return account;
+    public String getPhone() {
+        return phone;
+    }
+	
+	public String getType() {
+        return type;
     }
 
     public String getEmail() {

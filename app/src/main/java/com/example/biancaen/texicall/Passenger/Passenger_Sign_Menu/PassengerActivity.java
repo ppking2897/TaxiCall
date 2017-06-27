@@ -17,13 +17,16 @@ public class PassengerActivity extends AppCompatActivity {
     public void passenger_sign_in(View view){
         Intent it = new Intent(this , Passenger_Sign_in_Activity.class);
         startActivity(it);
+        finish();
     }
     public void passenger_sign_up(View view){
         Intent it = new Intent(this , Passenger_Sign_Up_Activity.class);
         startActivity(it);
+        finish();
     }
     public void passenger_send_new_password(View view){
         Intent it = new Intent(this , ForgotPasswordActivity.class);
         startActivity(it);
+        finish();
     }
 }

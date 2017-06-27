@@ -13,6 +13,7 @@ import com.example.biancaen.texicall.Passenger.Passenger_Sign_Menu.PassengerActi
 import com.example.biancaen.texicall.R;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+
 public class MainMenuActivity extends AppCompatActivity {
 
     @Override
@@ -25,6 +26,12 @@ public class MainMenuActivity extends AppCompatActivity {
 
         //推播測試階段
         Log.i("get token   ", FirebaseInstanceId.getInstance().getToken());
+    }
+
+    @Override
+    public void onBackPressed() {
+
+        finish();
     }
 
     public void passenger(View view) {

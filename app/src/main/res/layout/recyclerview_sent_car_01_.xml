@@ -17,20 +17,21 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginTop="38dp"
-                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
                 android:src="@drawable/ic_past_records"
                 />
 
             <TextView
                 android:id="@+id/sent_car_textView_01"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingTop="31dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="35dp"
                 android:layout_marginLeft="25dp"
                 android:layout_marginRight="25dp"
                 android:text="no data"
                 android:textSize="16sp"
                 android:textColor="#ffffff"
+                android:gravity="center"
                 />
         </LinearLayout>
         <TextView

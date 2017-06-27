@@ -26,6 +26,7 @@ public class Passenger_On_The_Way_Activity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         arriveTime = (TextView)findViewById(R.id.arriveTime);
+        TextView arriveAddress = (TextView)findViewById(R.id.arriveAddress);
 
         ImageView imageView =  (ImageView)findViewById(R.id.cancelCar);
 
@@ -41,6 +42,13 @@ public class Passenger_On_The_Way_Activity extends AppCompatActivity {
 
         Bundle getBundle = this.getIntent().getExtras();
         TIME = getBundle.getInt("time")*1000;
+
+        String destination = getBundle.getString("destination");
+
+        Log.v("ppking" , " destination  : " +destination );
+
+        arriveAddress.setText(destination);
+
 
         if (myCountTimer ==null) {
             Log.v("ppking" , " mycountTimer  == null ");

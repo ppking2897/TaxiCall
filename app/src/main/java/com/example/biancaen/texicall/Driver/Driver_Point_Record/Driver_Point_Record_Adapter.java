@@ -38,7 +38,6 @@ class Driver_Point_Record_Adapter extends RecyclerView.Adapter<Driver_Point_Reco
 
     @Override
     public int getItemCount() {
-        Log.v("ppking" , " size " + pointInfo.size());
         return pointInfo.size();
     }
 

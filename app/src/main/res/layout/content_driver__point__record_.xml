@@ -34,20 +34,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="司機名字"
+
                 />
             <TextView
-                android:id="@+id/point_currentPoint"
+                android:id="@+id/point_remainPoint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
-                android:text="目前點數"
+
                 />
             <TextView
-                android:id="@+id/point_pointUsed"
+                android:id="@+id/point_reducePoint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="已用點數"
+
                 />
 
         </LinearLayout>

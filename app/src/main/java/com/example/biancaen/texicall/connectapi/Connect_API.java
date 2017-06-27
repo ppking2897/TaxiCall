@@ -3,7 +3,8 @@
 * 這部分更動會記錄在此
 * 所有 onFail() 的方法後面新增通知用字串
 * 非型別轉換錯誤的屬於API問題
-* 屬於型別錯誤可以取出來原型字串數據*/
+* 屬於型別錯誤可以取出來原型字串數據
+* 2017/06/26 更換 忘記密碼須帶入的項目*/
 package com.example.biancaen.texicall.connectapi;
 
 import android.app.Activity;
@@ -78,7 +79,7 @@ public class Connect_API{
 
     public interface OnRegisterListener{
         void onRegisterSuccessListener(String isFail, String message);
-        void onRegisterFailListener(Exception e , String jsonError);
+        void onRegisterFailListener(Exception e, String jsonError);
     }
     /** 會員註冊*/
     public static void register(@NonNull final Activity activity, String name , String password , String email , String phone , @NonNull final OnRegisterListener listener){
@@ -122,7 +123,7 @@ public class Connect_API{
     public interface OnUserLoginListener {
          void onLoginSuccess(UserData userData);
          void onLoginFail(String isFail, String msg);
-         void onFail(Exception e , String jsonError);
+         void onFail(Exception e, String jsonError);
      }
      /**乘客登入2017/06/19 更動*/
     public static void userLogin(@NonNull final Activity activity, final String phone , String password , @NonNull final OnUserLoginListener listener){
@@ -169,12 +170,13 @@ public class Connect_API{
 
     public interface OnForgotPasswordPassnegerListener{
         void onSuccess(String isError, String message);
-        void onFail(Exception e , String jsonError);
+        void onFail(Exception e, String jsonError);
     }
-    /**忘記密碼(乘客端) 2017/06/22 新增*/
-    public static void passengerFogot(@NonNull final Activity activity, String phone, String apiKey, @NonNull final OnForgotPasswordPassnegerListener listener){
+    /**忘記密碼(乘客端) 2017/06/22 新增
+	2017*06/26 修正*/
+    public static void passengerFogot(@NonNull final Activity activity, String phone, @NonNull final OnForgotPasswordPassnegerListener listener){
         RequestBody body = new FormEncodingBuilder().add("phone" , phone).build();
-        Request request = new Request.Builder().url(API_HOST+API_VERSION+FORGOT).header("Authorization" ,""+ apiKey).post(body).build();
+        Request request = new Request.Builder().url(API_HOST+API_VERSION+FORGOT).post(body).build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, final IOException e) {
@@ -209,7 +211,7 @@ public class Connect_API{
     public interface OnDriverLoginListener {
         void onLoginSuccess(DriverData driverData);
         void onLoginFail(String isFail, String msg);
-        void onFail(Exception e , String jsonError);
+        void onFail(Exception e, String jsonError);
     }
     /**駕駛登入 2017/06/19 更動*/
     public static void driverLogin(@NonNull final Activity activity, String phone , String password , @NonNull final OnDriverLoginListener listener){
@@ -258,7 +260,7 @@ public class Connect_API{
 
     public interface OnModifyChangeListener{
         void onSuccess(String isFail, String msg);
-        void onFail(Exception e , String jsonError);
+        void onFail(Exception e, String jsonError);
     }
     /**會員資料修改 2017/06/19 更動*/
     public static void modifyChange(@NonNull final Activity activity, String email, String phone, String oldpassword, String password,
@@ -461,7 +463,7 @@ public class Connect_API{
 
 
     public interface OnPutDriverStatusListener{
-        void onFail(Exception e , String jsonError);
+        void onFail(Exception e, String jsonError);
         void onSuccess(String isError, String result);
     }
     /**司機端上傳狀態
@@ -508,7 +510,7 @@ public class Connect_API{
 
 
     public interface OnRateListener{
-        void onFail(Exception e , String jsonError);
+        void onFail(Exception e, String jsonError);
         void onSuccess(String isErrorResult, int price, int time, String distance);
     }
     /**
@@ -518,10 +520,10 @@ public class Connect_API{
     public static void rate(@NonNull final Activity activity, String start_lon , String start_lat,
                             String end_lon, String end_lat, String phone, String apiKey , @NonNull final OnRateListener listener){
         RequestBody body = new FormEncodingBuilder()
-                .add("addr_start_lon" , start_lon)
-                .add("addr_start_lat" , start_lat)
-                .add("addr_end_lon" , end_lon)
-                .add("addr_end_lat" , end_lat)
+                .add("addr_start_lat" , start_lon)
+                .add("addr_start_lon" , start_lat)
+                .add("addr_end_lat" , end_lon)
+                .add("addr_end_lon" , end_lat)
                 .add("phone" , phone).build();
         Request request = new Request.Builder().url(API_HOST+API_VERSION+RATE).header("Authorization" , ""+ apiKey).post(body).build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
@@ -570,11 +572,11 @@ public class Connect_API{
                                String phone , String passenger_number , String comment ,
                                String apiKey ,@NonNull final OnNewTaskListener listener){
         RequestBody body = new FormEncodingBuilder()
-                .add("addr_start_lon" , start_lon)
-                .add("addr_start_lat" , start_lat)
+                .add("addr_start_lat" , start_lon)
+                .add("addr_start_lon" , start_lat)
                 .add("addr_start_addr" , start_addr)
-                .add("addr_end_lon" , end_lon)
-                .add("addr_end_lat" , end_lat)
+                .add("addr_end_lat" , end_lon)
+                .add("addr_end_lon" , end_lat)
                 .add("addr_end_addr" , end_addr)
                 .add("phone" , phone)
                 .add("passenger_number" , passenger_number)
@@ -612,7 +614,7 @@ public class Connect_API{
 
 
     public interface OnStartTaskListener{
-        void onFail(Exception e , String jsonError);
+        void onFail(Exception e, String jsonError);
         void onSuccess(String isError, String message);
     }
     /**開始配對*/
@@ -620,8 +622,8 @@ public class Connect_API{
                                  String phone , String tasknumber , String apiKey ,
                                  @NonNull final OnStartTaskListener listener){
         RequestBody body = new FormEncodingBuilder( )
-                .add("addr_start_lon" , start_lon)
-                .add("addr_start_lat" , start_lat)
+                .add("addr_start_lat" , start_lon)
+                .add("addr_start_lon" , start_lat)
                 .add("phone" , phone)
                 .add("tasknumber" , tasknumber).build();
         Request request = new Request.Builder().url(API_HOST+API_VERSION+START_TASK).header("Authorization",apiKey).post(body).build();

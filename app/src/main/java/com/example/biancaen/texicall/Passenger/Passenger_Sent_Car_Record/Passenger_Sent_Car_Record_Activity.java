@@ -12,16 +12,22 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.CompoundButton;
+import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.example.biancaen.texicall.Passenger.Passenger_Car_Service.Passenger_Car_Service_Activity;
 import com.example.biancaen.texicall.Passenger.Passenger_Customer_Activity;
 import com.example.biancaen.texicall.Passenger.Passenger_Edit.Passenger_Info_Activity;
 import com.example.biancaen.texicall.R;
+import com.example.biancaen.texicall.connectapi.Connect_API;
+import com.example.biancaen.texicall.connectapi.RecordPassengerData;
+import com.example.biancaen.texicall.connectapi.UserData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Passenger_Sent_Car_Record_Activity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener{
@@ -29,6 +35,10 @@ public class Passenger_Sent_Car_Record_Activity extends AppCompatActivity
     private ViewPager myViewPager;
     private ToggleButton toggleButton;
     private ArrayList<Fragment> views = new ArrayList<>();
+    private static UserData userData;
+    private static String phoneNumber;
+    private static String passWord;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,9 +83,15 @@ public class Passenger_Sent_Car_Record_Activity extends AppCompatActivity
                 }
             }
         });
-
-
     }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_sent_car);
+        navigationView.setCheckedItem(R.id.nav_sent_car_record);
+    }
+
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_sent_car);
@@ -94,21 +110,25 @@ public class Passenger_Sent_Car_Record_Activity extends AppCompatActivity
         if (id == R.id.nav_car_service) {
 
             Intent it = new Intent(this ,Passenger_Car_Service_Activity.class);
+            it.putExtras(TransData());
             startActivity(it);
 
         } else if (id == R.id.nav_sent_car_record) {
 
             Intent it = new Intent(this , Passenger_Sent_Car_Record_Activity.class);
+            it.putExtras(TransData());
             startActivity(it);
 
         } else if (id == R.id.nav_customer_service) {
 
             Intent it = new Intent(this , Passenger_Customer_Activity.class);
+            it.putExtras(TransData());
             startActivity(it);
 
         } else if (id == R.id.nav_account) {
 
             Intent it = new Intent(this , Passenger_Info_Activity.class);
+            it.putExtras(TransData());
             startActivity(it);
         }
 
@@ -133,4 +153,18 @@ public class Passenger_Sent_Car_Record_Activity extends AppCompatActivity
             return views.size();
         }
     }
+
+    public Bundle TransData(){
+        Bundle bundle = getIntent().getExtras();
+        passWord = bundle.getString("passWord");
+        userData = (UserData)bundle.getSerializable("userData");
+        phoneNumber = bundle.getString("phoneNumber");
+
+        bundle.putString("passWord" , passWord );
+        bundle.putSerializable("userData" , userData);
+        bundle.putString("phoneNumber" , phoneNumber);
+
+        return bundle;
+    }
+
 }

@@ -20,9 +20,10 @@
         android:background="#F5F4F6"
         />
     <TextView
+        android:id="@+id/phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="手機號碼 / XXXXXXXXXX"
+        android:text="手機號碼 / "
         android:textColor="#ffffff"
         android:textSize="18sp"
         android:textColorHint="#FFFFFF"
@@ -48,9 +49,10 @@
         >
 
         <TextView
+            android:id="@+id/userName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="用戶名稱 / XXXXXX"
+            android:text="用戶名稱 / "
             android:textColor="#ffffff"
             android:textSize="18sp"
             android:textColorHint="#FFFFFF"
@@ -93,9 +95,10 @@
         >
 
         <TextView
+            android:id="@+id/passWordText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="密碼 / XXXXXXXXXX"
+            android:text="密碼 / "
             android:textColor="#ffffff"
             android:textSize="18sp"
             android:textColorHint="#FFFFFF"
@@ -138,9 +141,10 @@
         >
 
         <TextView
+            android:id="@+id/mail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="信箱 / XXXXXXXXXXXXXX"
+            android:text="信箱 / "
             android:textColor="#ffffff"
             android:textSize="18sp"
             android:textColorHint="#FFFFFF"
@@ -181,5 +185,6 @@
         android:layout_gravity="center"
         android:src="@drawable/btn_logout_settingpage"
         android:background="?android:selectableItemBackground"
+        android:onClick="logout"
         />
 </LinearLayout>

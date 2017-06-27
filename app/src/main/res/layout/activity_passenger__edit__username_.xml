@@ -22,9 +22,10 @@
     </android.support.design.widget.AppBarLayout>
 
     <TextView
+        android:id="@+id/userName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="原用戶名稱/XXXXX"
+        android:text="原用戶名稱 / "
         android:textSize="18sp"
         android:textColor="#FFFFFF"
         android:drawableStart="@drawable/ic_username_ori_change_username_"
@@ -45,6 +46,7 @@
         >
 
         <EditText
+            android:id="@+id/edit_Username"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
@@ -63,11 +65,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:layout_marginRight="21dp"
-        android:layout_marginLeft="19dp"
+        android:layout_gravity="center"
         android:src="@drawable/btn_edited_settingflow"
         android:background="?attr/selectableItemBackground"
-        android:onClick="edit_Username"
+        android:onClick="accept"
         />
 
 </LinearLayout>

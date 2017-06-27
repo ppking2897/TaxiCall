@@ -24,7 +24,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="原信箱/XXXXXXXXXXXXXXXX"
+        android:text="原信箱 / "
         android:textSize="18sp"
         android:textColor="#FFFFFF"
         android:drawableStart="@drawable/ic_mail_ori_change_email_page"
@@ -45,6 +45,7 @@
         >
 
         <EditText
+            android:id="@+id/edit_Mail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"

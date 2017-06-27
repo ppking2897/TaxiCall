@@ -11,14 +11,20 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.biancaen.texicall.Driver.Driver_Info.Driver_Info_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Main_Menu.Driver_Main_Menu_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Point_Record.Driver_Point_Record_Activity;
 import com.example.biancaen.texicall.R;
+import com.example.biancaen.texicall.connectapi.Connect_API;
+import com.example.biancaen.texicall.connectapi.DriverData;
+import com.example.biancaen.texicall.connectapi.RecordDriverData;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Driver_Travel_Record_Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -51,21 +57,51 @@ public class Driver_Travel_Record_Activity extends AppCompatActivity
 //        textView.setText(123456+"");
 
         //ToDo 司機紀錄上車 下車 時間  金額 資料位置
-        date.add("2017-04-20");
-        date.add("2017-04-20");
-        date.add("2017-04-20");
-        getOn.add("上車地點/");
-        getOn.add("上車地點/");
-        getOn.add("上車地點/");
-        getOff.add("下車地點/");
-        getOff.add("下車地點/");
-        getOff.add("下車地點/");
-        time.add("乘車時間/");
-        time.add("乘車時間/");
-        time.add("乘車時間/");
-        rate.add("金額/");
-        rate.add("金額/");
-        rate.add("金額/");
+
+        Bundle bundle =getIntent().getExtras();
+        DriverData driverData = (DriverData)bundle.getSerializable("driverData");
+        String phone = bundle.getString("phone");
+
+
+        Connect_API.getRecordListForDriver(this, phone, driverData.getApiKey(), new Connect_API.OnRecordListDriverListener() {
+            @Override
+            public void onFail(Exception e, String jsonError) {
+                Log.v("ppking" , e.getMessage());
+                Log.v("ppking" , " jsonError :  "+jsonError);
+                Toast.makeText(Driver_Travel_Record_Activity.this , "連線異常" , Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSuccess(String isError, String msg, List<RecordDriverData> data) {
+                Log.v("ppking" , " jsonError :  "+isError);
+                Log.v("ppking" , " msg :  "+msg);
+                Log.v("ppking" , " data :  "+data.get(0));
+
+                date.clear();
+                getOn.clear();
+                getOff.clear();
+                time.clear();
+                rate.clear();
+
+                for ( int i = 0 ; i<data.size() ; i++){
+                    if (isError.equals("false")){
+                        date.add(data.get(i).getCreated_at().substring(0,11));
+                        getOn.add("上車地點  /  \n" + data.get(i).getAddr_start_addr());
+                        getOff.add("下車地點  /  \n" + data.get(i).getAddr_end_addr());
+                        time.add("乘車時間  /  \n" + data.get(i).getTime());
+                        rate.add("金額  /  \n" + data.get(i).getPrice() + "元");
+                    }else {
+                        String fail = "資料取得失敗";
+                        date.add(fail);
+                        getOn.add(fail);
+                        getOff.add(fail);
+                        time.add(fail);
+                        rate.add(fail);
+                    }
+                }
+            }
+        });
+
 
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.driver_travel_record_recyclerview);
 

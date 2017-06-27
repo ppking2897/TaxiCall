@@ -12,7 +12,10 @@ import android.widget.TextView;
 
 import com.example.biancaen.texicall.Passenger.Passenger_On_The_Way.Passenger_On_The_Way_Activity;
 import com.example.biancaen.texicall.R;
+import com.example.biancaen.texicall.connectapi.Connect_API;
+import com.example.biancaen.texicall.connectapi.UserData;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -21,11 +24,18 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
     private ArrayList<Fragment> views = new ArrayList<>();
     MyViewPager myViewPager;
     private boolean systemCountEnd = true;
-    private boolean systemMatchEnd;
     private boolean isExit;
     private Timer countEndTimer , matchEndTimer;
     private int TIME = 2000;
-    private int TimeArrive = 2000 ;
+    private int TimeArrive = 4500 ;
+    private Bundle getBundle;
+    private int time;
+    private UserData userData;
+    private String phoneNumber;
+    private String location , destination , passenger_number , comment;
+    private String startLat , startLng , endLat , endLng;
+    private String taskNumber;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,7 +72,7 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
         FragmentPagerAdapter fragmentPagerAdapter = new FaresFragmentAdapter01(getSupportFragmentManager());
         myViewPager.setAdapter(fragmentPagerAdapter);
         myViewPager.setCurrentItem(0);
-
+        GetDataAndNewTask();
     }
 
 
@@ -108,16 +118,11 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if (!isExit) {
-
-                            //Todo 判斷系統試算是否結束，若判斷結束則直接進入試算結果頁面
                             systemCountEnd = true;
-                            Log.v("ppking" , " setCurrentItem : 0 !!! NO JUMP  ");
                             if (systemCountEnd){
                                 myViewPager.setCurrentItem(1);
-                                Log.v("ppking" , " setCurrentItem : 1  ");
                                 countEndTimer.cancel();
                                 countEndTimer = null;
-                                systemMatchEndTimer();
                             }
                         }
                     }
@@ -127,42 +132,44 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
         }, TIME , TimeArrive);
     }
     //系統配對Task
-    private void systemMatchEndTimer(){
-        cancelTimer();
-        matchEndTimer = new Timer();
-        matchEndTimer.schedule(new TimerTask() {
+    public void systemMatchEnd(){
+
+        Log.v("ppking" , " jump!!!!  ");
+
+        Log.v("ppking" , " startLng :  " +startLng );
+        Log.v("ppking" , " startLat :  " +startLat );
+        Log.v("ppking" , " phoneNumber :  " +phoneNumber );
+        Log.v("ppking" , " taskNumber :  " +taskNumber );
+        Log.v("ppking" , " userData.getApiKey() :  " +userData.getApiKey() );
+
+
+        Connect_API.starttask(Passenger_Rates_Activity.this,  startLng  , startLat , phoneNumber, taskNumber, userData.getApiKey(), new Connect_API.OnStartTaskListener() {
             @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!isExit) {
-                            Log.v("ppking" , " NO NO jump!!!!  ");
-                            //Todo 判斷系統配對是否結束，若判斷結束則直接進入試算結果頁面
-                            if (systemMatchEnd){
-                                Log.v("ppking" , " jump!!!!  ");
-                                matchEndTimer.cancel();
-                                matchEndTimer = null;
+            public void onFail(Exception e, String jsonError) {
+                Log.v("ppking" , " Exception : " + e.getMessage());
+                Log.v("ppking" , " jsonError : " + jsonError);
+            }
 
-                                Bundle getbundle = Passenger_Rates_Activity.this.getIntent().getExtras();
-                                int time = getbundle.getInt("time");
-                                Log.v("ppking" , " TIMEEEEEE" + time);
-
-                                Bundle bundle = new Bundle();
-                                bundle.putInt("time" , time);
-
-                                Intent it = new Intent(Passenger_Rates_Activity.this , Passenger_On_The_Way_Activity.class);
-                                it.putExtras(bundle);
-                                startActivity(it);
-                                finish();
-                            }
-                        }
-                    }
-                });
+            @Override
+            public void onSuccess(String isError, String message) {
+                Log.v("ppking" , " isError : " + isError);
+                Log.v("ppking" , " message : " + message);
 
             }
-        }, TIME , TimeArrive);
-    }
+        });
+//        final Bundle bundle = new Bundle();
+//        bundle.putInt("time" , time);
+//        bundle.putString("destination" , destination);
+//
+//
+//        Intent it = new Intent(Passenger_Rates_Activity.this , Passenger_On_The_Way_Activity.class);
+//        it.putExtras(bundle);
+//        startActivity(it);
+//        finish();
+
+        }
+
+
     private void cancelTimer(){
         if(countEndTimer != null){
             countEndTimer.cancel();
@@ -173,8 +180,43 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
             matchEndTimer = null;
         }
     }
-    //Todo 藉由此方法配斷是否配對成功
-    public void isSystemMatchEnd (boolean systemMatchEnd){
-        this.systemMatchEnd = systemMatchEnd;
+
+    public void GetDataAndNewTask(){
+        getBundle = Passenger_Rates_Activity.this.getIntent().getExtras();
+        time = getBundle.getInt("time");
+
+        userData =(UserData)getBundle.getSerializable("userData");
+        phoneNumber = getBundle.getString("phoneNumber");
+
+        location = getBundle.getString("location");
+        destination = getBundle.getString("destination");
+        passenger_number = getBundle.getString("passenger_number");
+        comment = getBundle.getString("comment");
+
+        startLat = getBundle.getString("startLat");
+        startLng = getBundle.getString("startLng");
+        endLat = getBundle.getString("endLat");
+        endLng = getBundle.getString("endLng");
+
+        Connect_API.newTask(
+        Passenger_Rates_Activity.this, startLng, startLat, location, endLng, endLat,
+        destination, phoneNumber, passenger_number, comment, userData.getApiKey(),
+        new Connect_API.OnNewTaskListener() {
+
+            @Override
+            public void onFail(Exception e, String jsonError) {
+                Log.v("ppking" , ""+e.getMessage());
+                Log.v("ppking" , " jsonError  : " + jsonError);
+            }
+
+            @Override
+            public void onSuccess(String isError, String message, String tasknumber) {
+                Log.v("ppking" , " isError  : " + isError);
+                Log.v("ppking" , " message  : " + message);
+                Log.v("ppking" , " tasknumber  : " + tasknumber);
+                taskNumber = tasknumber;
+            }
+        });
+
     }
 }
