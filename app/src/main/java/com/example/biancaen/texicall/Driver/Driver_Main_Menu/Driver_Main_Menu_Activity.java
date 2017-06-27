@@ -140,7 +140,6 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
                         Intent it = new Intent(Driver_Main_Menu_Activity.this , Driver_WaitMatch_Activity.class);
                         startActivity(it);
                     }
-
                 }
             }
         });
