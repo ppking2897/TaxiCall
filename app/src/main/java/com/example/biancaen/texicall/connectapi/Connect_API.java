@@ -4,12 +4,24 @@
 * 所有 onFail() 的方法後面新增通知用字串
 * 非型別轉換錯誤的屬於API問題
 * 屬於型別錯誤可以取出來原型字串數據
-* 2017/06/26 更換 忘記密碼須帶入的項目*/
+* ************************************
+* 2017/06/26 更換 忘記密碼須帶入的項目
+* *************************************
+* 2017/06/28 新增窗口
+* 新增 司機資料變更 功能
+* 更新 結算 功能
+* 新增 司機忘記密碼 功能
+* 新增 設定常用地址 功能
+* 新增 取得常用地址 功能
+* 新增 取得網路回傳用(常用型)監聽器，替換原設計監聽器
+* 替換項目: 忘記密碼(乘客端)，取消配對，接受任務(司機端)
+* ，即時更新司機座標，客戶取消任務，客戶取消任務，司機取消任務
+* ，司機已抵達，乘客已上車。
+* *************************************************************/
 package com.example.biancaen.texicall.connectapi;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
@@ -24,7 +36,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,9 +45,9 @@ import java.util.List;
  */
 public class Connect_API{
 
-    private static String debugTag = Connect_API.class.getName();
     private static String debugTAG_ValueType = "JSON轉換型別異常 => ";
     private static String debugTAG_NOT_ValueType = "非型別錯誤，API連線產生的IO例外錯誤";
+
     //HOST位置
     private static final String API_HOST = "http://188.166.213.209/hb";
     //應該是版本
@@ -46,8 +57,10 @@ public class Connect_API{
     private static final String REGISTER = "/register";
     private static final String LOGIN = "/login";
     private static final String FORGOT = "/forget";
+    private static final String FORGOT_DRIVER = "/forgetdriver";
     private static final String LOGIN_OUT = "/loginout";
     private static final String MODIFY = "/modify";
+    private static final String DRIVER_MODIFY = "/modifydriver";
     private static final String GET_STATUS = "/getstatus";
     private static final String PUT_STATUS = "/putstatus";
     private static final String GET_DRIVER_STATUS = "/getdriverstatus";
@@ -55,6 +68,8 @@ public class Connect_API{
     private static final String RECORD_LIST = "/recordlist";
     private static final String RECORD_LIST_DRIVER = "/recordlistdriver";
     private static final String GET_TASK_INFO_FULL = "/gettaskfullinfo";
+    private static final String SET_FAVORITE = "/setfavorite";
+    private static final String GET_FAVORITE= "/getfavorite";
 
     /**司機專用*/
     private static final String POINT_RECORD = "/pointrecord";
@@ -77,6 +92,14 @@ public class Connect_API{
     private static final String PICKUP = "/pickup";
     private static final String TAKE_RIDE = "/takeride";
     private static final String REAL_PRICE = "/realprice";
+
+
+    /**新增常用型監聽器 2017/06/28*/
+    public interface OnGetConnectStatusListener{
+        void onFail(Exception e, String jsonError);
+        void onSuccess(String isError, String message);
+    }
+
 
     public interface OnRegisterListener{
         void onRegisterSuccessListener(String isFail, String message);
@@ -184,15 +207,45 @@ public class Connect_API{
     }
 
 
-    public interface OnForgotPasswordPassnegerListener{
-        void onSuccess(String isError, String message);
-        void onFail(Exception e, String jsonError);
-    }
     /**忘記密碼(乘客端) 2017/06/22 新增
-	2017*06/26 修正*/
-    public static void passengerFogot(@NonNull final Activity activity, String phone, @NonNull final OnForgotPasswordPassnegerListener listener){
+	2017/06/26 修正*/
+    public static void passengerForgot(@NonNull final Activity activity, String phone, @NonNull final OnGetConnectStatusListener listener){
         RequestBody body = new FormEncodingBuilder().add("phone" , phone).build();
         Request request = new Request.Builder().url(API_HOST+API_VERSION+FORGOT).post(body).build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, final IOException e) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        listener.onFail(e , debugTAG_NOT_ValueType);
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                final String body = response.body().string();
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject object = new JSONObject(body);
+                            listener.onSuccess(object.getString("error"),object.getString("message"));
+                        } catch (JSONException e) {
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
+                        }
+                    }
+                });
+            }
+        });
+    }
+
+    /**忘記密碼(司機端) 2017/06/28 新增*/
+    public static void driverForgot(@NonNull final Activity activity, String phone, @NonNull final OnGetConnectStatusListener listener){
+        RequestBody body = new FormEncodingBuilder().add("phone" , phone).build();
+        Request request = new Request.Builder().url(API_HOST+API_VERSION+FORGOT_DRIVER).post(body).build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
             @Override
             public void onFailure(Request request, final IOException e) {
@@ -274,17 +327,17 @@ public class Connect_API{
                                     }
                                 });
 
-                                /**上傳位置測試用*/
-                                updateLocation(activity, "120.6650702", "24.1315638", phone, driverData.getApiKey(), new OnUpdateLocationListener() {
-                                    @Override
-                                    public void onFail(Exception e, String jsonError) {
-
-                                    }
-
-                                    @Override
-                                    public void onSuccess(String isError, String message) {
-                                    }
-                                });
+//                                /**上傳位置測試用*/
+//                                updateLocation(activity, "120.6650702", "24.1315638", phone, driverData.getApiKey(), new OnGetConnectStatusListener() {
+//                                    @Override
+//                                    public void onFail(Exception e, String jsonError) {
+//
+//                                    }
+//
+//                                    @Override
+//                                    public void onSuccess(String isError, String message) {
+//                                    }
+//                                });
 
                                 listener.onLoginSuccess(driverData);
                             }
@@ -344,6 +397,52 @@ public class Connect_API{
 
             }
         });
+    }
+
+
+    /**司機資料變更 2017/06/28*/
+    public static void driverModify(@NonNull final Activity activity, String email, String phone, String oldpassword, String password,
+                                    String name, String carnumber, String carshow, String apiKey , @NonNull final OnModifyChangeListener listener){
+        RequestBody body = new FormEncodingBuilder()
+                .add("email" , email)
+                .add("oldpassword" , oldpassword)
+                .add("password" , password)
+                .add("name" , name)
+                .add("phone" , phone)
+                .add("carnumber" , carnumber)
+                .add("carshow" , carshow).build();
+        Request request = new Request.Builder().url(API_HOST+API_VERSION+DRIVER_MODIFY).header("Authorization" ,""+ apiKey).post(body).build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, final IOException e) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        listener.onFail(e,debugTAG_NOT_ValueType);
+                    }
+                });
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                final String body = response.body().string();
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject jsonObject = new JSONObject(body);
+                            listener.onSuccess(jsonObject.getString("error"),jsonObject.getString("message"));
+
+                        } catch (JSONException e) {
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
+                        }
+                    }
+                });
+
+            }
+        });
+
     }
 
 
@@ -700,12 +799,8 @@ public class Connect_API{
     }
 
 
-    public interface OnCancelTaskListener{
-        void onFail(Exception e, String jsonError);
-        void onSuccess(String isError, String message);
-    }
     /**取消配對*/
-    public static void cancelTask(@NonNull final Activity activity, String tasknumber , String apiKey , @NonNull final OnCancelTaskListener listener){
+    public static void cancelTask(@NonNull final Activity activity, String tasknumber , String apiKey , @NonNull final OnGetConnectStatusListener listener){
         RequestBody body = new FormEncodingBuilder().add("tasknumber" ,tasknumber).build();
         Request request = new Request.Builder().url(API_HOST+API_VERSION+CANCEL_TASK).header("Authorization",apiKey).post(body).build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
@@ -784,12 +879,8 @@ public class Connect_API{
     }
 
 
-    public interface OnAcceptTaskListener{
-        void onFail(Exception e, String jsonError);
-        void onSuccess(String isError, String message);
-    }
     /**接受任務(司機端)*/
-    public static void accepttask(@NonNull final Activity activity, String tasknumber , String phone , String apiKey , @NonNull final OnAcceptTaskListener listener){
+    public static void accepttask(@NonNull final Activity activity, String tasknumber , String phone , String apiKey , @NonNull final OnGetConnectStatusListener listener){
         RequestBody body = new FormEncodingBuilder()
                 .add("phone" ,phone)
                 .add("tasknumber" ,tasknumber)
@@ -867,13 +958,9 @@ public class Connect_API{
     }
 
 
-    public interface OnUpdateLocationListener{
-        void onFail(Exception e, String jsonError);
-        void onSuccess(String isError, String message);
-    }
     /**即時更新司機座標(司機端)
      * 皆放入司機端訊息*/
-    public static void updateLocation(@NonNull final Activity activity, String lon , String lat , String phone , String apiKey , @NonNull  final OnUpdateLocationListener listener){
+    public static void updateLocation(@NonNull final Activity activity, String lon , String lat , String phone , String apiKey , @NonNull  final OnGetConnectStatusListener listener){
         RequestBody body = new FormEncodingBuilder()
                 .add("driver_lon" ,lon)
                 .add("driver_lat" ,lat)
@@ -952,12 +1039,8 @@ public class Connect_API{
     }
 
 
-    public interface OnTerminatePassengerListener{
-        void onFail(Exception e, String jsonError);
-        void onSuccess(String isError, String msg);
-    }
     /**客戶取消任務*/
-    public static void terminateByPassenger(@NonNull final Activity activity, String tasknumber, String apiKey, final OnTerminatePassengerListener listener){
+    public static void terminateByPassenger(@NonNull final Activity activity, String tasknumber, String apiKey, final OnGetConnectStatusListener listener){
         RequestBody body = new FormEncodingBuilder().add("tasknumber" ,tasknumber).build();
         Request request = new Request.Builder().url(API_HOST+API_VERSION+TERMINATE_PASSENGER).header("Authorization",apiKey).post(body).build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
@@ -991,12 +1074,8 @@ public class Connect_API{
     }
 
 
-    public interface OnTerminateDriverListener{
-        void onFail(Exception e, String jsonError);
-        void onSuccess(String isError, String msg);
-    }
     /**司機取消任務*/
-    public static void terminateByDriver(@NonNull final Activity activity, String tasknumber, String apiKey, @NonNull final OnTerminateDriverListener listener){
+    public static void terminateByDriver(@NonNull final Activity activity, String tasknumber, String apiKey, @NonNull final OnGetConnectStatusListener listener){
         RequestBody body = new FormEncodingBuilder().add("tasknumber" ,tasknumber).build();
         Request request = new Request.Builder().url(API_HOST+API_VERSION+TERMINATE_DRIVER).header("Authorization",apiKey).post(body).build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
@@ -1030,12 +1109,8 @@ public class Connect_API{
     }
 
 
-    public interface OnPickupListener{
-        void onFail(Exception e, String jsonError);
-        void onSuccess(String isError, String message);
-    }
     /**司機已抵達*/
-    public static void pickup(@NonNull final Activity activity, String tasknumber , String apiKey , @NonNull final OnPickupListener listener){
+    public static void pickup(@NonNull final Activity activity, String tasknumber , String apiKey , @NonNull final OnGetConnectStatusListener listener){
         RequestBody body = new FormEncodingBuilder().add("tasknumber" ,tasknumber).build();
         Request request = new Request.Builder().url(API_HOST+API_VERSION+PICKUP).header("Authorization",apiKey).post(body).build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
@@ -1069,12 +1144,8 @@ public class Connect_API{
     }
 
 
-    public interface OnTakeRideListener{
-        void onFail(Exception e, String jsonError);
-        void onSuccess(String isError, String message);
-    }
     /**乘客已上車*/
-    public static void takeride(@NonNull final Activity activity, String tasknumber , String apiKey , @NonNull final OnTakeRideListener listener){
+    public static void takeride(@NonNull final Activity activity, String tasknumber , String apiKey , @NonNull final OnGetConnectStatusListener listener){
         RequestBody body = new FormEncodingBuilder().add("tasknumber" ,tasknumber).build();
         Request request = new Request.Builder().url(API_HOST+API_VERSION+TAKE_RIDE).header("Authorization",apiKey).post(body).build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
@@ -1154,9 +1225,9 @@ public class Connect_API{
 
     public interface OnCheckOutListener{
         void onFail(Exception e, String jsonError);
-        void onSuccess(String isError, String message, String distance, String time, String price);
+        void onSuccess(CheckOutData data);
     }
-    /**結算*/
+    /**結算 2017/06/28 更新*/
     public static void checkOut(@NonNull final Activity activity, String tasknumber, String phone, String apiKey , @NonNull final OnCheckOutListener listener){
         RequestBody body = new FormEncodingBuilder()
                 .add("phone",phone)
@@ -1181,11 +1252,9 @@ public class Connect_API{
                     @Override
                     public void run() {
                         try {
-                            JSONObject jsonObject = new JSONObject(body);
-                            listener.onSuccess(jsonObject.getString("error"),
-                                    jsonObject.getString("message"), jsonObject.getString("distance"),
-                                    jsonObject.getString("time"),jsonObject.getString("price"));
-                        } catch (JSONException e) {
+                            Gson gson = new Gson();
+                            listener.onSuccess(gson.fromJson(body,CheckOutData.class));
+                        } catch (Exception e) {
                             String jsonError = debugTAG_ValueType + body;
                             listener.onFail(e , jsonError);
                         }
@@ -1420,10 +1489,91 @@ public class Connect_API{
         });
     }
 
-    //*********************-----------2017/06/22 更新新項目--------------****************************
+    /* ********************-----------2017/06/28 更新新項目--------------****************************/
+
+    /**設定常用地址 2017/06/28 新增*/
+    public static void setFavoriteAddress(@NonNull final Activity activity, String phone, String tasknumber, String apiKey, @NonNull final OnGetConnectStatusListener listener){
+        RequestBody body = new FormEncodingBuilder()
+                .add("tasknumber",tasknumber)
+                .add("phone",phone).build();
+        Request request = new Request.Builder().url(API_HOST+API_VERSION+SET_FAVORITE).header("Authorization",apiKey).post(body).build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, final IOException e) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        listener.onFail(e,debugTAG_NOT_ValueType);
+                    }
+                });
+
+            }
+
+            @Override
+            public void onResponse(Response response) throws IOException {
+                final String body = response.body().string();
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            JSONObject object = new JSONObject(body);
+                            listener.onSuccess(object.getString("error"),object.getString("message"));
+
+                        } catch (JSONException e) {
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
+                        }
+                    }
+                });
+
+            }
+        });
+    }
 
 
+    public interface OnGetFavoriteAddressListener{
+        void onFail(Exception e, String jsonError);
+        void onSuccess(List<FavoriteAddressData> datas);
+    }
+    /**取得常用地址 2017/06/28 新增*/
+    public static void getFavoriteAddress(@NonNull final Activity activity, String phone, String apiKey, @NonNull final OnGetFavoriteAddressListener listener){
+        RequestBody body = new FormEncodingBuilder().add("phone",phone).build();
+        Request request = new Request.Builder().url(API_HOST+API_VERSION+GET_FAVORITE).header("Authorization",apiKey).post(body).build();
+        new OkHttpClient().newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Request request, final IOException e) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        listener.onFail(e,debugTAG_NOT_ValueType);
+                    }
+                });
 
+            }
 
+            @Override
+            public void onResponse(Response response) throws IOException {
+                final String body = response.body().string();
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        try {
+                            Gson gson = new Gson();
+                            List<FavoriteAddressData> list = new ArrayList<>();
+                            JSONObject object = new JSONObject(body);
+                            JSONArray src = object.getJSONArray("data");
+                            for (int i = 0 ; i < src.length() ; i++){
+                                list.add(gson.fromJson(src.getJSONObject(i).toString(),FavoriteAddressData.class));
+                            }
+                            listener.onSuccess(list);
+                        } catch (Exception e) {
+                            String jsonError = debugTAG_ValueType + body;
+                            listener.onFail(e , jsonError);
+                        }
+                    }
+                });
 
+            }
+        });
+    }
 }
