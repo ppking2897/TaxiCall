@@ -9,6 +9,7 @@ package com.example.biancaen.texicall.connectapi;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.gson.Gson;
@@ -155,7 +156,22 @@ public class Connect_API{
                                 listener.onLoginFail(object.getString("error"),object.getString("message"));
                             }else {
                                 Gson gson = new Gson();
-                                listener.onLoginSuccess(gson.fromJson(body, UserData.class));
+                                UserData userData = gson.fromJson(body, UserData.class);
+
+                                //TODO 登入後送出推播用參數
+                                getStatus(activity, phone, userData.getApiKey(), new OnGetStatusListener() {
+                                    @Override
+                                    public void onFail(Exception e, String jsonError) {
+
+                                    }
+
+                                    @Override
+                                    public void onSuccess(String isError, String result, int status, String tasknumber, int misscatch_time, int misscatch_price) {
+
+                                    }
+                                });
+
+                                listener.onLoginSuccess(userData);
                             }
                         } catch (JSONException e) {
                             String jsonError = debugTAG_ValueType + body;
@@ -214,7 +230,7 @@ public class Connect_API{
         void onFail(Exception e, String jsonError);
     }
     /**駕駛登入 2017/06/19 更動*/
-    public static void driverLogin(@NonNull final Activity activity, String phone , String password , @NonNull final OnDriverLoginListener listener){
+    public static void driverLogin(@NonNull final Activity activity, final String phone , String password , @NonNull final OnDriverLoginListener listener){
         RequestBody body = new FormEncodingBuilder()
                 .add("password" , password)
                 .add("phone" , phone).build();
@@ -244,7 +260,33 @@ public class Connect_API{
                             if (object.getBoolean("error")){
                                 listener.onLoginFail(object.getString("error"),object.getString("message"));
                             }else {
-                                listener.onLoginSuccess(gson.fromJson(body, DriverData.class));
+                                //推播數據送出
+                                DriverData driverData = gson.fromJson(body, DriverData.class);
+                                getdriverstatus(activity, phone, driverData.getApiKey(), new OnGetDriverStatusListener() {
+                                    @Override
+                                    public void onFail(Exception e, String jsonError) {
+
+                                    }
+
+                                    @Override
+                                    public void onSuccess(String isError, String result, String status, String tasknumber, String carshow, String carnumber) {
+
+                                    }
+                                });
+
+                                /**上傳位置測試用*/
+                                updateLocation(activity, "120.6650702", "24.1315638", phone, driverData.getApiKey(), new OnUpdateLocationListener() {
+                                    @Override
+                                    public void onFail(Exception e, String jsonError) {
+
+                                    }
+
+                                    @Override
+                                    public void onSuccess(String isError, String message) {
+                                    }
+                                });
+
+                                listener.onLoginSuccess(driverData);
                             }
                         } catch (JSONException e) {
                             String jsonError = debugTAG_ValueType + body;

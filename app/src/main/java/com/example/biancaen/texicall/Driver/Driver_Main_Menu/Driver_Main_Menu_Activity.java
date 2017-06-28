@@ -21,6 +21,7 @@ import com.example.biancaen.texicall.connectapi.Connect_API;
 import com.example.biancaen.texicall.connectapi.DriverData;
 import com.example.biancaen.texicall.connectapi.PointData;
 import com.example.biancaen.texicall.connectapi.RecordDriverData;
+import com.example.biancaen.texicall.notificaiton.HBMessageService;
 
 import java.util.List;
 
@@ -81,6 +82,13 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
         Log.v("ppking", " MaindriverData getSavings :  " + driverData.getSavings());
 
 
+        /**2017/06/28 取tasknumber*/
+        HBMessageService.setOnGetTasknumber(new HBMessageService.OnStartTaskAlertListener() {
+            @Override
+            public void onGetTasknumber(String tasknumber) {
+                Log.v("推播訊息於駕駛主畫面顯示內容", tasknumber);
+            }
+        });
 
     }
     public void driver_travel_record(View view){

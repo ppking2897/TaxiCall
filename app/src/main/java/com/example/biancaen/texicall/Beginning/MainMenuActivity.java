@@ -25,7 +25,7 @@ public class MainMenuActivity extends AppCompatActivity {
         setContentView(R.layout.activity_mainmenu);
 
         //推播測試階段
-        Log.i("get token   ", FirebaseInstanceId.getInstance().getToken());
+//        Log.i("get token   ", FirebaseInstanceId.getInstance().getToken());
     }
 
     @Override

@@ -7,18 +7,26 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.example.biancaen.texicall.Beginning.MainMenuActivity;
 import com.example.biancaen.texicall.R;
+import com.example.biancaen.texicall.connectapi.DriverData;
 import com.google.firebase.messaging.FirebaseMessagingService;
 
 public class HBMessageService extends FirebaseMessagingService {
-    String TAG = getClass().getName();
+    String TAG = getClass().getName() + "推播訊息";
+    private static OnStartTaskAlertListener onStartTaskAlertListener;
     private final int REQUEST_CODE = 200;
     private final int INTENT_ID = 100;
     //若要變動要另設規則，影響通知那邊的ID號碼，重複會被覆蓋
     //新版zzm已不可用
+
+    /**當收到新配對通知時要做的事情*/
+    public interface OnStartTaskAlertListener{
+        void onGetTasknumber(String tasknumber);
+    }
 
     @Override
     public void handleIntent(Intent intent) {
@@ -29,18 +37,30 @@ public class HBMessageService extends FirebaseMessagingService {
     //收到FCM時第一階段在此處哩,不分前後台
     public void receiveMessageFirst(Intent intent) {
 //        Log.i("底層",intent.toString());
+        Bundle bundle = intent.getExtras();
         String msg = intent.getStringExtra("gcm.notification.body");  // 原型訊息
         //鍵值資料
-        String title = intent.getStringExtra("title");
+        String title =  bundle.getString("notify_title");
         String tasknumber = intent.getStringExtra("tasknumber");
-        String body = intent.getStringExtra("body");
+        String body =  bundle.getString("notify_message");
 
-        Log.i(TAG , msg+"+++++"+title+"+++++"+tasknumber+"+++++"+body);
-        sendNotification(title ,body ,tasknumber ,MainMenuActivity.class);
+//        Log.i(TAG ,tasknumber+"+++++"+intent.getExtras().toString());
+//        Log.i(TAG,"Bound內容:\n"+
+//                "title用:" +  bundle.getString("notify_title")+ "\n" +
+//                "body用:" + bundle.getString("notify_message"));
+
+        if (title != null && title.equals("配對通知")){
+            sendNotificationToStarttask(title ,body ,tasknumber ,MainMenuActivity.class);
+        }
+
     }
 
-    //送出通知 API 21 以下要額外做處裡 通知訊息22以後android有翻版過
-    private void sendNotification(String title , String body , String tasknumber , Class activityClass) {
+    //送出通知在開始配對
+    private void sendNotificationToStarttask(String title , String body , String tasknumber , Class activityClass) {
+
+        if (onStartTaskAlertListener != null){
+            onStartTaskAlertListener.onGetTasknumber(tasknumber);
+        }
 
         Intent launchIntent = new Intent(this, activityClass);
         launchIntent.setAction(Intent.ACTION_MAIN);
@@ -85,12 +105,9 @@ public class HBMessageService extends FirebaseMessagingService {
 
         //取消以前顯示的所有通知.
 //              mNotificationManager.cancelAll();
-
-
-
-
-
-
     }
 
+    public static void setOnGetTasknumber(OnStartTaskAlertListener listener){
+        onStartTaskAlertListener = listener;
+    }
 }
