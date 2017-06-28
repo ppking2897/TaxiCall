@@ -22,15 +22,17 @@
             android:layout_gravity="center"
             android:src="@drawable/ic_driver_account_info"
             />
+
         <TextView
+            android:id="@+id/driverName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="19dp"
-            android:text="司機姓名"
             android:gravity="center"
-            android:textSize="16sp"
+            android:text="司機姓名"
             android:textColor="@color/colorWhite"
-            />
+            android:textSize="16sp" />
+
         <TextView
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -63,6 +65,7 @@
                     android:layout_height="wrap_content"
                     >
                     <TextView
+                        android:id="@+id/carShowText"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="車身顏色"
@@ -71,6 +74,7 @@
                 </FrameLayout>
 
                 <TextView
+                    android:id="@+id/carNumberText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
@@ -108,16 +112,16 @@
                 android:orientation="vertical"
                 >
                 <TextView
+                    android:id="@+id/driverPhone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="09XXXXXXXX"
                     android:textSize="16sp"
                     />
                 <TextView
+                    android:id="@+id/driverMail"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="****************"
                     android:textSize="16sp"
                     />
             </LinearLayout>

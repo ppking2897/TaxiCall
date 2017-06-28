@@ -16,6 +16,7 @@ public class DriverData implements Serializable {
     private int status;
     private String createdAt;
     private int savings;
+    private String name;
 
     public String isError() {
         return error;
@@ -47,5 +48,9 @@ public class DriverData implements Serializable {
 
     public int getSavings() {
         return savings;
+    }
+
+    public String getName(){
+        return name;
     }
 }

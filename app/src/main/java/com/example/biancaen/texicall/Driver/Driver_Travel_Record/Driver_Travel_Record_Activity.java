@@ -34,6 +34,9 @@ public class Driver_Travel_Record_Activity extends AppCompatActivity
     private ArrayList<String> getOff = new ArrayList<>();
     private ArrayList<String> time = new ArrayList<>();
     private ArrayList<String> rate = new ArrayList<>();
+    private static DriverData driverData;
+    private static String phone;
+    private static String password;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,11 +61,75 @@ public class Driver_Travel_Record_Activity extends AppCompatActivity
 
         //ToDo 司機紀錄上車 下車 時間  金額 資料位置
 
-        Bundle bundle =getIntent().getExtras();
-        DriverData driverData = (DriverData)bundle.getSerializable("driverData");
-        String phone = bundle.getString("phone");
+        Bundle bundle = getIntent().getExtras();
+        if (bundle!=null){
+            driverData = (DriverData)bundle.getSerializable("driverData");
+            phone = bundle.getString("phone");
+            password = bundle.getString("password");
+        }
 
 
+        GetTravelData();
+
+
+        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.driver_travel_record_recyclerview);
+
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        Driver_Travel_Record_Adapter adapter = new Driver_Travel_Record_Adapter(this , date , getOn , getOff , time , rate);
+
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        GetTravelData();
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_driver_travel__record);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.nav_driver_travel_record) {
+
+
+        } else if (id == R.id.nav_driver_point_list) {
+            Intent it = new Intent(this , Driver_Point_Record_Activity.class);
+            it.putExtras(TransData());
+            startActivity(it);
+
+        } else if (id == R.id.nav_id__info) {
+            Intent it = new Intent(this , Driver_Info_Activity.class);
+            it.putExtras(TransData());
+            startActivity(it);
+
+        } else if (id == R.id.nav_home) {
+            Intent it = new Intent(this , Driver_Main_Menu_Activity.class);
+            it.putExtras(TransData());
+            startActivity(it);
+
+        } else if (id == R.id.nav_logout) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_driver_travel__record);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+    public void GetTravelData(){
         Connect_API.getRecordListForDriver(this, phone, driverData.getApiKey(), new Connect_API.OnRecordListDriverListener() {
             @Override
             public void onFail(Exception e, String jsonError) {
@@ -101,55 +168,13 @@ public class Driver_Travel_Record_Activity extends AppCompatActivity
                 }
             }
         });
-
-
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.driver_travel_record_recyclerview);
-
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        Driver_Travel_Record_Adapter adapter = new Driver_Travel_Record_Adapter(this , date , getOn , getOff , time , rate);
-
-        recyclerView.setAdapter(adapter);
     }
 
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_driver_travel__record);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-        int id = item.getItemId();
-
-        if (id == R.id.nav_driver_travel_record) {
-            Intent it = new Intent(this , Driver_Travel_Record_Activity.class);
-            startActivity(it);
-
-        } else if (id == R.id.nav_driver_point_list) {
-            Intent it = new Intent(this , Driver_Point_Record_Activity.class);
-            startActivity(it);
-
-        } else if (id == R.id.nav_id__info) {
-            Intent it = new Intent(this , Driver_Info_Activity.class);
-            startActivity(it);
-
-        } else if (id == R.id.nav_home) {
-            Intent it = new Intent(this , Driver_Main_Menu_Activity.class);
-            startActivity(it);
-
-        } else if (id == R.id.nav_logout) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_driver_travel__record);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+    public Bundle TransData(){
+        Bundle bundle = new Bundle();
+        bundle.putString("phone" , phone);
+        bundle.putString("phone" , password);
+        bundle.putSerializable("driverData" , driverData);
+        return bundle;
     }
 }

@@ -32,11 +32,13 @@ public class Driver_Point_Record_Activity extends AppCompatActivity
 
     private ArrayList<String> date = new ArrayList<>();
     private ArrayList<String> pointIfo = new ArrayList<>();
-    private DriverData driverData;
-    private String phone;
+    private static DriverData driverData;
+    private static String phone;
+    private static String password;
     private TextView driverName;
     private TextView remainPoint;
     private TextView reducePoint;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,18 +56,71 @@ public class Driver_Point_Record_Activity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_driver_point__record);
         navigationView.setNavigationItemSelectedListener(this);
 
+
         driverName = (TextView)findViewById(R.id.point_driver_name);
         remainPoint = (TextView)findViewById(R.id.point_remainPoint);
         reducePoint = (TextView)findViewById(R.id.point_reducePoint);
 
         Bundle bundle =getIntent().getExtras();
-        driverData = (DriverData)bundle.getSerializable("driverData");
-        phone = bundle.getString("phone");
 
-        Log.v("ppking" , "  driverData  :  " + driverData);
-        Log.v("ppking" , "  phone  :  " + phone);
+        if (bundle!=null){
+            driverData = (DriverData)bundle.getSerializable("driverData");
+            phone = bundle.getString("phone");
+            password = bundle.getString("password");
+        }
 
 
+        GetPointRecord();
+
+        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.driver_point_record_recyclerView);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        Driver_Point_Record_Adapter adapter = new Driver_Point_Record_Adapter(this , date , pointIfo );
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_driver_point__record);
+        if (drawer.isDrawerOpen(GravityCompat.START)) {
+            drawer.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    @SuppressWarnings("StatementWithEmptyBody")
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.nav_driver_travel_record) {
+            Intent it = new Intent(this , Driver_Travel_Record_Activity.class);
+            it.putExtras(TransData());
+            startActivity(it);
+
+        } else if (id == R.id.nav_driver_point_list) {
+
+        } else if (id == R.id.nav_id__info) {
+            Intent it = new Intent(this , Driver_Info_Activity.class);
+            it.putExtras(TransData());
+            startActivity(it);
+
+        } else if (id == R.id.nav_home) {
+            Intent it = new Intent(this , Driver_Main_Menu_Activity.class);
+            it.putExtras(TransData());
+            startActivity(it);
+        } else if (id == R.id.nav_logout) {
+
+        }
+
+        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_driver_point__record);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
+    public void GetPointRecord(){
         Connect_API.getPointRecord(this, phone, driverData.getApiKey() , new Connect_API.OnPointRecordListener() {
             @Override
             public void onFail(Exception e, String jsonError) {
@@ -96,51 +151,12 @@ public class Driver_Point_Record_Activity extends AppCompatActivity
 
             }
         });
-
-        RecyclerView recyclerView = (RecyclerView)findViewById(R.id.driver_point_record_recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        Driver_Point_Record_Adapter adapter = new Driver_Point_Record_Adapter(this , date , pointIfo );
-        recyclerView.setAdapter(adapter);
     }
-
-    @Override
-    public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_driver_point__record);
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-            drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
-        }
-    }
-
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-        int id = item.getItemId();
-
-        if (id == R.id.nav_driver_travel_record) {
-            Intent it = new Intent(this , Driver_Travel_Record_Activity.class);
-            startActivity(it);
-
-        } else if (id == R.id.nav_driver_point_list) {
-            Intent it = new Intent(this , Driver_Point_Record_Activity.class);
-            startActivity(it);
-
-        } else if (id == R.id.nav_id__info) {
-            Intent it = new Intent(this , Driver_Info_Activity.class);
-            startActivity(it);
-
-        } else if (id == R.id.nav_home) {
-            Intent it = new Intent(this , Driver_Main_Menu_Activity.class);
-            startActivity(it);
-        } else if (id == R.id.nav_logout) {
-
-        }
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_driver_point__record);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
+    public Bundle TransData(){
+        Bundle bundle = new Bundle();
+        bundle.putString("phone" , phone);
+        bundle.putString("phone" , password);
+        bundle.putSerializable("driverData" , driverData);
+        return bundle;
     }
 }

@@ -47,6 +47,9 @@ public class Driver_Login_Activity extends AppCompatActivity {
                 @Override
                 public void onLoginFail(String isFail, String msg) {
 
+                    Log.v("ppking" , " isFail  :  " + isFail);
+                    Log.v("ppking" , " msg  :  " + msg);
+
                     Toast.makeText(Driver_Login_Activity.this , "輸入資料有誤" , Toast.LENGTH_SHORT).show();
                 }
 

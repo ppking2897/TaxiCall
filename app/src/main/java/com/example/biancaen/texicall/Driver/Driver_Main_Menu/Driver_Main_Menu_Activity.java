@@ -19,11 +19,9 @@ import com.example.biancaen.texicall.Driver.Driver_Match.Driver_WaitMatch_Activi
 import com.example.biancaen.texicall.R;
 import com.example.biancaen.texicall.connectapi.Connect_API;
 import com.example.biancaen.texicall.connectapi.DriverData;
-import com.example.biancaen.texicall.connectapi.PointData;
-import com.example.biancaen.texicall.connectapi.RecordDriverData;
 import com.example.biancaen.texicall.notificaiton.HBMessageService;
 
-import java.util.List;
+
 
 public class Driver_Main_Menu_Activity extends AppCompatActivity {
 
@@ -45,9 +43,12 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
 
         Bundle bundle = getIntent().getExtras();
 
-        driverData = (DriverData)bundle.getSerializable("driverData");
-        phone = bundle.getString("phone");
-        password = bundle.getString("password");
+        if (bundle!=null){
+            driverData = (DriverData)bundle.getSerializable("driverData");
+            phone = bundle.getString("phone");
+            password = bundle.getString("password");
+        }
+
 
         driverOnline = (LinearLayout)findViewById(R.id.driverOnline);
         onlineImg = (ImageView)findViewById(R.id.onlineImg);
@@ -91,23 +92,21 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
         });
 
     }
+
     public void driver_travel_record(View view){
 
-        Bundle bundle = new Bundle();
-        bundle.putString("phone" , phone);
-        bundle.putSerializable("driverData" , driverData);
         Intent it = new Intent(this , Driver_Travel_Record_Activity.class);
-        it.putExtras(bundle);
+        it.putExtras(TransData());
         startActivity(it);
     }
     public void driver_point_record(View view){
-        Bundle bundle = new Bundle();
-        bundle.putString("phone" , phone);
-        bundle.putSerializable("driverData" , driverData);
+
         Intent it = new Intent(this , Driver_Point_Record_Activity.class);
-        it.putExtras(bundle);
+        it.putExtras(TransData());
         startActivity(it);
     }
+
+
     public void driver_info(View view){
         Intent it = new Intent(this , Driver_Info_Activity.class);
         startActivity(it);
@@ -151,6 +150,14 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public Bundle TransData(){
+        Bundle bundle = new Bundle();
+        bundle.putString("phone" , phone);
+        bundle.putString("phone" , password);
+        bundle.putSerializable("driverData" , driverData);
+        return bundle;
     }
 
     public void ReLogin(){
