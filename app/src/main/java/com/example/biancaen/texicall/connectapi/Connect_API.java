@@ -557,7 +557,7 @@ public class Connect_API{
                 * 3->任務中*/
         void onSuccess(String isError, String result, String status, String tasknumber, String carshow, String carnumber);
     }
-    /**司機端打開App(更新)  2017/06/22 再更新*/
+    /**司機端打開App(更新)  2017/06/29 修正*/
     public static void getdriverstatus(@NonNull final Activity activity, String phone, String apiKey , @NonNull final OnGetDriverStatusListener listener){
         RequestBody body = new FormEncodingBuilder()
                 .add("phone" , phone)
@@ -589,7 +589,7 @@ public class Connect_API{
                             String carshow = jsonObject.getString("carshow");
                             String carnumber = jsonObject.getString("carnumber");
                             if (status.equals("3")){
-                                String tasknumber = jsonObject.getString("status");
+                                String tasknumber = jsonObject.getString("tasknumber");
                                 listener.onSuccess(isError,result,status,tasknumber,carshow,carnumber);
                                 return;
                             }
