@@ -17,7 +17,10 @@
 * 替換項目: 忘記密碼(乘客端)，取消配對，接受任務(司機端)
 * ，即時更新司機座標，客戶取消任務，客戶取消任務，司機取消任務
 * ，司機已抵達，乘客已上車。
-* *************************************************************/
+* ************************************************************
+* 2017/06/29 新增在rate功能當超過金額後的另一個判斷
+* ************************************************************/
+
 package com.example.biancaen.texicall.connectapi;
 
 import android.app.Activity;
@@ -652,6 +655,7 @@ public class Connect_API{
 
     public interface OnRateListener{
         void onFail(Exception e, String jsonError);
+        void onFailToResult(String isErrorResult, String errorMessage);
         void onSuccess(String isErrorResult, int price, int time, String distance);
     }
     /**
@@ -684,16 +688,22 @@ public class Connect_API{
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        JSONObject jsonObject = null;
                         try {
-                            JSONObject jsonObject = new JSONObject(body);
+                            jsonObject = new JSONObject(body);
                             listener.onSuccess(
                                     jsonObject.getString("result"),
                                     jsonObject.getInt("price"),
                                     jsonObject.getInt("time"),
                                     jsonObject.getString("distance"));
                         } catch (JSONException e) {
-                            String jsonError = debugTAG_ValueType + body;
-                            listener.onFail(e , jsonError);
+                            try {
+                                if (jsonObject != null)
+                                    listener.onFailToResult(jsonObject.getString("result"),jsonObject.getString("price"));
+                            }catch (Exception je){
+                                String jsonError = debugTAG_ValueType + body;
+                                listener.onFail(je , jsonError);
+                            }
                         }
                     }
                 });
