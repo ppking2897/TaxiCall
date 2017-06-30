@@ -8,7 +8,7 @@
     android:background="@drawable/shape_color"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:showIn="@layout/app_bar_driver_trip_done"
-    tools:context=".Driver.Driver_Trip_Done.Driver_Trip_Done_Activity"
+    tools:context=".Driver.Driver_Trip.Driver_Trip_Done_Activity"
     >
     <ImageView
         android:layout_width="142dp"

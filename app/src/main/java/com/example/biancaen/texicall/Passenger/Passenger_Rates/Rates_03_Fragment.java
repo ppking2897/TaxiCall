@@ -13,12 +13,12 @@ import android.widget.LinearLayout;
 import com.example.biancaen.texicall.R;
 
 
-public class Rates_03_Fragment extends Fragment {
+public class Rates_03_Fragment extends android.app.Fragment {
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = LayoutInflater.from(getContext()).inflate(R.layout.fragment_passenger_rates03_,null);
+        View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment_passenger_rates03_,null);
 
         LinearLayout linearLayout = (LinearLayout)view.findViewById(R.id.matchFares);
 

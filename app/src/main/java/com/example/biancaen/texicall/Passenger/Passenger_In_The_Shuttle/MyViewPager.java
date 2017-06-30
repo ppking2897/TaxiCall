@@ -1,4 +1,9 @@
-package com.example.biancaen.texicall.Passenger.Passenger_Rates;
+package com.example.biancaen.texicall.Passenger.Passenger_In_The_Shuttle;
+
+/**
+ * Created by BiancaEN on 2017/6/29.
+ */
+
 
 import android.content.Context;
 import android.support.v4.view.ViewPager;

@@ -1,6 +1,10 @@
 package com.example.biancaen.texicall.Beginning;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.ChangeTransform;
@@ -23,6 +27,7 @@ public class MainMenuActivity extends AppCompatActivity {
         getWindow().setEnterTransition(new ChangeTransform());
         getWindow().setExitTransition(new ChangeTransform());
         setContentView(R.layout.activity_mainmenu);
+
 
         //推播測試階段
 //        Log.i("get token   ", FirebaseInstanceId.getInstance().getToken());

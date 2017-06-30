@@ -164,6 +164,7 @@ public class Driver_Info_Activity extends AppCompatActivity implements Navigatio
         Bundle bundle = new Bundle();
         bundle.putString("phone" , phone);
         bundle.putSerializable("driverData" , driverData);
+        bundle.putString("password" , password);
         return bundle;
     }
 }

@@ -42,9 +42,10 @@ public class Sent_Car_01_Record_Fragment extends Fragment {
         userData = (UserData)getBundle.getSerializable("userData");
         phoneNumber = getBundle.getString("phoneNumber");
 
+        Log.v("ppking" , "userData　:" + userData);
+        Log.v("ppking" , "phoneNumber　:" + phoneNumber);
 
         GetRecord();
-
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.sent_car_01_recyclerView);
 
@@ -62,6 +63,9 @@ public class Sent_Car_01_Record_Fragment extends Fragment {
             @Override
             public void onFail(Exception e, String jsonError) {
 
+                Log.v("ppking" , " Exception  : " +e);
+                Log.v("ppking" , " jsonError  : " +jsonError);
+
                 Toast.makeText(getActivity() , "連線異常" ,Toast.LENGTH_SHORT).show();
             }
 
@@ -75,7 +79,6 @@ public class Sent_Car_01_Record_Fragment extends Fragment {
                     for (int i = 0; i < listRecord.size(); i++) {
                         address_Record.add(listRecord.get(i).getAddr_end_addr());
                         myAdapter.notifyDataSetChanged();
-
                     }
 
                 }else{

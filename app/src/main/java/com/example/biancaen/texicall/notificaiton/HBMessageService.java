@@ -11,6 +11,8 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.example.biancaen.texicall.Beginning.MainMenuActivity;
+import com.example.biancaen.texicall.Driver.Driver_Main_Menu.Driver_Main_Menu_Activity;
+import com.example.biancaen.texicall.Driver.Driver_Match.Driver_WaitMatch_Activity;
 import com.example.biancaen.texicall.R;
 import com.example.biancaen.texicall.connectapi.DriverData;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -50,7 +52,7 @@ public class HBMessageService extends FirebaseMessagingService {
 //                "body用:" + bundle.getString("notify_message"));
 
         if (title != null && title.equals("配對通知")){
-            sendNotificationToStarttask(title ,body ,tasknumber ,MainMenuActivity.class);
+            sendNotificationToStarttask(title ,body ,tasknumber ,Driver_WaitMatch_Activity.class);
         }
 
     }
@@ -63,6 +65,9 @@ public class HBMessageService extends FirebaseMessagingService {
         }
 
         Intent launchIntent = new Intent(this, activityClass);
+        Bundle bundle = new Bundle();
+        launchIntent.putExtras(bundle);
+
         launchIntent.setAction(Intent.ACTION_MAIN);
         launchIntent.addCategory(Intent.CATEGORY_LAUNCHER);
 

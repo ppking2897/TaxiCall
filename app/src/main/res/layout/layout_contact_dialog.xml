@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shape_contact_dialog_background"
+    >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:orientation="horizontal"
+        android:background="#364F6B"
+        >
+        <TextView
+            android:id="@+id/textViewDialog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="聯絡乘客"
+            android:textSize="16sp"
+            android:textColor="#FFFFFF"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            />
+
+        <ImageView
+            android:id="@+id/closeDialog"
+            android:layout_width="50dp"
+            android:layout_height="40dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/btn_exit_deadhead_notice"
+            android:background="?android:selectableItemBackground"
+            />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/numberPhone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:lineSpacingExtra="5dp"
+        android:textColor="@color/colorBlack"
+        android:gravity="center"
+        />
+
+    <LinearLayout
+        android:id="@+id/knowButton"
+        android:layout_width="260dp"
+        android:layout_height="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/shape_i_know_button"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="確定"
+            android:gravity="center"
+            android:textColor="#FFFFFF"
+            />
+    </LinearLayout>
+
+
+</LinearLayout>

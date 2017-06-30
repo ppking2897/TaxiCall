@@ -1,6 +1,7 @@
 package com.example.biancaen.texicall.Passenger.Passenger_In_The_Shuttle;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -9,13 +10,11 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 
 import com.example.biancaen.texicall.Passenger.Passenger_Customer_Activity;
 import com.example.biancaen.texicall.Passenger.Passenger_Edit.Passenger_Info_Activity;
-import com.example.biancaen.texicall.Passenger.Passenger_Rates.MyViewPager;
 import com.example.biancaen.texicall.Passenger.Passenger_Sent_Car_Record.Passenger_Sent_Car_Record_Activity;
 import com.example.biancaen.texicall.R;
 

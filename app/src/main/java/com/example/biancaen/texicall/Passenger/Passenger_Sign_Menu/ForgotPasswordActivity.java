@@ -23,7 +23,14 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     }
     public void accept(View view){
         if (!phoneNumber.getText().toString().equals("")){
-            Connect_API.passengerFogot(this, phoneNumber.getText().toString(), new Connect_API.OnForgotPasswordPassnegerListener() {
+            Connect_API.passengerForgot(this, phoneNumber.getText().toString(), new Connect_API.OnGetConnectStatusListener() {
+                @Override
+                public void onFail(Exception e, String jsonError) {
+                    Log.v("ppking" , "Exception : "+e.getMessage());
+                    Log.v("ppking" , "jsonError : "+jsonError);
+                    Toast.makeText(ForgotPasswordActivity.this , "輸入的資料有誤",Toast.LENGTH_SHORT).show();
+                }
+
                 @Override
                 public void onSuccess(String isError, String message) {
                     Log.v("ppking" , "isError : "+isError);
@@ -32,13 +39,6 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                     Intent it = new Intent(ForgotPasswordActivity.this , Passenger_Sign_in_Activity.class);
                     startActivity(it);
                     finish();
-                }
-
-                @Override
-                public void onFail(Exception e, String jsonError) {
-                    Log.v("ppking" , "Exception : "+e.getMessage());
-                    Log.v("ppking" , "jsonError : "+jsonError);
-                    Toast.makeText(ForgotPasswordActivity.this , "輸入的資料有誤",Toast.LENGTH_SHORT).show();
                 }
             });
         }else{

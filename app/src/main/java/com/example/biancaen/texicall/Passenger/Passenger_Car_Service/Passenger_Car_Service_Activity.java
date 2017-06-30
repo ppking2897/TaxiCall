@@ -2,6 +2,7 @@ package com.example.biancaen.texicall.Passenger.Passenger_Car_Service;
 
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -34,8 +35,8 @@ import com.google.android.gms.maps.model.LatLng;
 public class Passenger_Car_Service_Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
-    private int emptyTripCount = 1;
-    private int emptyTripPay = 60;
+    private int emptyTripCount;
+    private int emptyTripPay ;
     private TextView passenger_Number;
     private EditText comment;
     private int number = 1;
@@ -55,6 +56,7 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
     private static String phoneNumber;
     private static String passWord;
     private boolean isLogout;
+    private TextView textView_emptyTripCount,textView_emptyTripPay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,25 +79,12 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
         passenger_Number = (TextView) findViewById(R.id.passenger_Number);
         comment = (EditText)findViewById(R.id.textView_Comment);
 
-        //Todo 空趟的次數已及要加收的價格資料存放位置 emptyTripCount emptyTripPay
-
-        TextView textView_emptyTripCount = (TextView) findViewById(R.id.null_Empty_Trip_Count);
-        TextView textView_emptyTripPay = (TextView) findViewById(R.id.null_Empty_Trip_ToPay);
-
-        textView_emptyTripCount.setText(""+emptyTripCount);
-        textView_emptyTripPay.setText("" + emptyTripPay);
-
-        if (emptyTripCount != 0|| emptyTripPay !=0){
-            Empty_Dialog empty_dialog = new Empty_Dialog(this , emptyTripCount , emptyTripPay);
-            empty_dialog.CreateEmptyDialog();
-        }
-
-        Bundle getBundle = this.getIntent().getExtras();
-        userData = (UserData)getBundle.getSerializable("userData");
-        phoneNumber = getBundle.getString("phoneNumber");
-        passWord = getBundle.getString("passWord");
+        textView_emptyTripCount = (TextView) findViewById(R.id.null_Empty_Trip_Count);
+        textView_emptyTripPay = (TextView) findViewById(R.id.null_Empty_Trip_ToPay);
 
         InputOrSelect();
+
+        InitialData();
 
     }
 
@@ -121,7 +110,6 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
 
         }else if (isLogout){
 
-            super.onBackPressed();
             logout();
         }
     }
@@ -175,6 +163,7 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
 
         boolean isEmpty = false;
 
+        //判斷利用已記錄的地址或者利用輸入方式輸入地址是否為空格
         if (!isGetOnRecordAddress){
             if (f1.getOnAddress().equals("")){
                 Toast.makeText(this , "輸入不得空格!!" , Toast.LENGTH_SHORT).show();
@@ -188,7 +177,6 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
             location = f2.getGetOnRecord();
         }
 
-
         if (!isGetOffRecordAddress){
             if (f3.getOffAddress().equals("")){
                 Toast.makeText(this , "輸入不得空格!!" , Toast.LENGTH_SHORT).show();
@@ -201,12 +189,12 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
             destination = f4.getGetOffRecord();
         }
 
+        //判斷都不是空格後再將地址丟入方法轉換經緯度
         if (!isEmpty || !location.equals("") || !destination.equals("")){
             Get_Location get_location = new Get_Location();
 
             LatLng startLatLng = get_location.getLocationFromAddress(this , location);
             LatLng endLatLng = get_location.getLocationFromAddress(this ,destination);
-
 
             if (startLatLng != null){
                 startLat = String.valueOf(startLatLng.latitude);
@@ -215,7 +203,6 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
             }else{
                 Toast.makeText(this , "請輸入詳細的上車地點" , Toast.LENGTH_SHORT).show();
             }
-
 
             if (endLatLng != null){
                 endLat = String.valueOf(endLatLng.latitude);
@@ -226,56 +213,32 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
             }
         }
 
-        final boolean finalIsEmpty = isEmpty;
-        Connect_API.rate(this , startLng  , startLat , endLng  , endLat , phoneNumber , userData.getApiKey(), new Connect_API.OnRateListener() {
-            @Override
-            public void onFail(Exception e, String jsonError) {
-                Log.v("ppking" , "onFail : " + e.getMessage());
-                if (!finalIsEmpty){
-                    Toast.makeText(Passenger_Car_Service_Activity.this , "車程橫跨過多縣市，HB不提供此服務" , Toast.LENGTH_SHORT ).show();
-                }
-            }
+        Bundle bundle = new Bundle();
+        //資料
+        bundle.putSerializable("userData" , userData);
+        bundle.putString("phoneNumber" , phoneNumber);
+        bundle.putInt("emptyTripCount" , emptyTripCount);
+        bundle.putInt("emptyTripPay" , emptyTripPay);
+        bundle.putString("passWord" , passWord);
 
-            @Override
-            public void onSuccess(String isErrorResult, int price, int time, String distance) {
+        //起始結束地址
+        bundle.putString("location" , location);
+        bundle.putString("destination" , destination);
 
-                if (isErrorResult.equals("false")){
-                    DataIntent(price , time);
-                }else {
-                    Toast.makeText(Passenger_Car_Service_Activity.this,"試算結果錯誤，請確認地址是否正確!!",Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        //乘客人數、備註
+        bundle.putString("passenger_number" , passenger_Number.getText().toString());
+        bundle.putString("comment" , comment.getText().toString());
+
+        //起始、結束經緯度
+        bundle.putString("startLat" , startLat);
+        bundle.putString("startLng" , startLng);
+        bundle.putString("endLat" , endLat);
+        bundle.putString("endLng" , endLng);
+
+        Intent it = new Intent(Passenger_Car_Service_Activity.this , Passenger_Rates_Activity.class);
+        it.putExtras(bundle);
+        startActivity(it);
     }
-
-    //資料丟入成功後回傳的資料，並傳到下一個activity
-    public void DataIntent (final int price , final int time){
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("userData" , userData);
-                bundle.putInt("price" , price);
-                bundle.putInt("time" , time);
-                bundle.putString("phoneNumber" , phoneNumber);
-
-                bundle.putString("location" , location);
-                bundle.putString("destination" , destination);
-                bundle.putString("passenger_number" , passenger_Number.getText().toString());
-                bundle.putString("comment" , comment.getText().toString());
-
-                bundle.putString("startLat" , startLat);
-                bundle.putString("startLng" , startLng);
-                bundle.putString("endLat" , endLat);
-                bundle.putString("endLng" , endLng);
-
-                Intent it = new Intent(Passenger_Car_Service_Activity.this , Passenger_Rates_Activity.class);
-                it.putExtras(bundle);
-                startActivity(it);
-            }
-        });
-    }
-
 
     //選擇住址或者已記錄住址
     public void InputOrSelect(){
@@ -338,6 +301,7 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
         });
     }
 
+    //傳送的資料
     public Bundle TransUserData(){
 
         Bundle bundle = new Bundle();
@@ -375,4 +339,40 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
         });
     }
 
+    public void InitialData(){
+        Bundle getBundle = this.getIntent().getExtras();
+        if (getBundle!=null) {
+            userData = (UserData) getBundle.getSerializable("userData");
+            phoneNumber = getBundle.getString("phoneNumber");
+            passWord = getBundle.getString("passWord");
+        }
+
+        Connect_API.getStatus(this, phoneNumber, userData.getApiKey(), new Connect_API.OnGetStatusListener() {
+            @Override
+            public void onFail(Exception e, String jsonError) {
+                Log.v("ppking" , " Exception   :   " +e );
+                Log.v("ppking" , " jsonError   :   " +jsonError );
+                Toast.makeText(Passenger_Car_Service_Activity.this , "連線異常" , Toast.LENGTH_SHORT ).show();
+            }
+
+            @Override
+            public void onSuccess(String isError, String result, int status, String tasknumber, int misscatch_time, int misscatch_price) {
+                if (isError.equals("false")){
+                    emptyTripCount = misscatch_time;
+                    emptyTripPay = misscatch_price;
+
+                    textView_emptyTripCount.setText(""+emptyTripCount);
+                    textView_emptyTripPay.setText("" + emptyTripPay);
+
+                    if (emptyTripCount != 0|| emptyTripPay !=0){
+                        Empty_Dialog empty_dialog = new Empty_Dialog(Passenger_Car_Service_Activity.this , emptyTripCount , emptyTripPay);
+                        empty_dialog.CreateEmptyDialog();
+                    }
+                }else{
+                    Toast.makeText(Passenger_Car_Service_Activity.this , "資料提取異常" , Toast.LENGTH_SHORT ).show();
+                }
+
+            }
+        });
+    }
 }

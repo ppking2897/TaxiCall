@@ -37,6 +37,7 @@ public class Driver_Travel_Record_Activity extends AppCompatActivity
     private static DriverData driverData;
     private static String phone;
     private static String password;
+    private Driver_Travel_Record_Adapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,17 +67,18 @@ public class Driver_Travel_Record_Activity extends AppCompatActivity
             driverData = (DriverData)bundle.getSerializable("driverData");
             phone = bundle.getString("phone");
             password = bundle.getString("password");
+
+            Log.v("ppking" , "phone  :  " + phone);
+            Log.v("ppking" , "driverData  :  " + driverData);
         }
 
-
         GetTravelData();
-
 
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.driver_travel_record_recyclerview);
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        Driver_Travel_Record_Adapter adapter = new Driver_Travel_Record_Adapter(this , date , getOn , getOff , time , rate);
+        adapter = new Driver_Travel_Record_Adapter(this , date , getOn , getOff , time , rate);
 
         recyclerView.setAdapter(adapter);
     }
@@ -165,6 +167,7 @@ public class Driver_Travel_Record_Activity extends AppCompatActivity
                         time.add(fail);
                         rate.add(fail);
                     }
+                    adapter.notifyDataSetChanged();
                 }
             }
         });
@@ -173,7 +176,7 @@ public class Driver_Travel_Record_Activity extends AppCompatActivity
     public Bundle TransData(){
         Bundle bundle = new Bundle();
         bundle.putString("phone" , phone);
-        bundle.putString("phone" , password);
+        bundle.putString("password" , password);
         bundle.putSerializable("driverData" , driverData);
         return bundle;
     }

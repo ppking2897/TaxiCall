@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Driver.Driver_Trip_Done.Driver_Trip_Done_Activity">
+    tools:context=".Driver.Driver_Trip.Driver_Trip_Done_Activity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"

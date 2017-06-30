@@ -39,12 +39,12 @@ public class Passenger_Sign_Up_Activity extends AppCompatActivity {
                 public void onRegisterSuccessListener(String isFail, String message) {
                     Log.v("ppking" , " onRegisterSuccess  :  " + message);
                     Log.v("ppking" , " onRegisterSuccess  :  " + isFail);
-                    //Success(isFail , message);
+                    Success(isFail , message);
                 }
 
                 @Override
                 public void onRegisterFailListener(Exception e, String jsonError) {
-
+                    Fail();
                 }
 
             });
@@ -55,17 +55,18 @@ public class Passenger_Sign_Up_Activity extends AppCompatActivity {
         }
 
     }
-    public void Success(final boolean isFail, final String message){
+    public void Success(final String isFail, final String message){
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (isFail){
-                    Toast.makeText(Passenger_Sign_Up_Activity.this , ""+message + "!!", Toast.LENGTH_SHORT).show();
-                }else{
+                if (isFail.equals("false")){
                     Toast.makeText(Passenger_Sign_Up_Activity.this , "註冊成功!!", Toast.LENGTH_SHORT).show();
                     Intent it = new Intent(Passenger_Sign_Up_Activity.this , Passenger_Car_Service_Activity.class);
                     startActivity(it);
                     finish();
+
+                }else{
+                    Toast.makeText(Passenger_Sign_Up_Activity.this , ""+message + "!!", Toast.LENGTH_SHORT).show();
                 }
             }
         });

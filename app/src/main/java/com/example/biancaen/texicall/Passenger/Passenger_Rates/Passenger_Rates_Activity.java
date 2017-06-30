@@ -1,6 +1,5 @@
 package com.example.biancaen.texicall.Passenger.Passenger_Rates;
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -10,36 +9,36 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.TextView;
 
-import com.example.biancaen.texicall.Passenger.Passenger_On_The_Way.Passenger_On_The_Way_Activity;
 import com.example.biancaen.texicall.R;
 import com.example.biancaen.texicall.connectapi.Connect_API;
+import com.example.biancaen.texicall.connectapi.PairInfoData;
+import com.example.biancaen.texicall.connectapi.TaskInfoFullData;
 import com.example.biancaen.texicall.connectapi.UserData;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class Passenger_Rates_Activity extends AppCompatActivity {
-    private ArrayList<Fragment> views = new ArrayList<>();
-    MyViewPager myViewPager;
-    private boolean systemCountEnd = true;
-    private boolean isExit;
-    private Timer countEndTimer , matchEndTimer;
-    private int TIME = 2000;
-    private int TimeArrive = 4500 ;
     private Bundle getBundle;
     private int time;
-    private UserData userData;
-    private String phoneNumber;
+    private static UserData userData;
+    private static String phoneNumber;
+    private static String password;
     private String location , destination , passenger_number , comment;
     private String startLat , startLng , endLat , endLng;
     private String taskNumber;
+    private static int emptyTripCount , emptyTripPay;
+    private static int price ;
+    private android.app.FragmentManager fragmentManager;
+    private Rates_01_Fragment rates_01_fragment;
+    private Rates_02_Fragment rates_02_fragment;
+    private Rates_03_Fragment rates_03_fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_passenger__fares_);
+        setContentView(R.layout.activity_passenger__rates_);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_Fares);
         setSupportActionBar(toolbar);
@@ -49,88 +48,30 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
         TextView faresEmptyTripCount = (TextView)findViewById(R.id.fares_Empty_Trip_Count);
         TextView faresEmptyTripPay = (TextView)findViewById(R.id.fares_Empty_Trip_ToPay);
 
-
         //由Car_Service 傳來空趟的資料
-//        Bundle bundle = this.getIntent().getExtras();
-//        int emptyTripCount = bundle.getInt("emptyTripCount");
-//        int emptyTripPay = bundle.getInt("emptyTripPay");
+        Bundle bundle = this.getIntent().getExtras();
+        if (bundle!=null){
+            emptyTripCount = bundle.getInt("emptyTripCount");
+            emptyTripPay = bundle.getInt("emptyTripPay");
 
-//        faresEmptyTripCount.setText(""+emptyTripCount);
-//        faresEmptyTripPay.setText(""+emptyTripPay);
+            faresEmptyTripCount.setText(""+emptyTripCount);
+            faresEmptyTripPay.setText(""+emptyTripPay);
+        }
 
-        myViewPager =(MyViewPager) findViewById(R.id.faresViewPager);
+        rates_01_fragment = new Rates_01_Fragment();
+        rates_02_fragment = new Rates_02_Fragment();
+        rates_03_fragment = new Rates_03_Fragment();
 
-        Rates_01_Fragment rates_01_fragment = new Rates_01_Fragment();
-        Rates_02_Fragment rates_02_fragment = new Rates_02_Fragment();
-        Rates_03_Fragment rates_03_fragment = new Rates_03_Fragment();
+        fragmentManager = getFragmentManager();
 
-        views.add(rates_01_fragment);
-        views.add(rates_02_fragment);
-        views.add(rates_03_fragment);
+        fragmentManager.beginTransaction().add(R.id.fragment , rates_01_fragment)
+                .replace(R.id.fragment , rates_01_fragment , "rates01")
+                .commit();
 
-
-        FragmentPagerAdapter fragmentPagerAdapter = new FaresFragmentAdapter01(getSupportFragmentManager());
-        myViewPager.setAdapter(fragmentPagerAdapter);
-        myViewPager.setCurrentItem(0);
         GetDataAndNewTask();
     }
 
 
-    private class FaresFragmentAdapter01 extends FragmentPagerAdapter{
-
-        FaresFragmentAdapter01(FragmentManager fm) {
-            super(fm);
-        }
-
-        @Override
-        public Fragment getItem(int position) {
-            return views.get(position);
-        }
-
-        @Override
-        public int getCount() {
-            return views.size();
-        }
-    }
-
-
-    @Override
-    public void onStart(){
-        super.onStart();
-        isExit = false;
-        systemCountEndTimer();
-    }
-
-    @Override
-    public void onStop(){
-        super.onStop();
-        isExit = true;
-        cancelTimer();
-    }
-    //系統計算Task
-    private void systemCountEndTimer(){
-        cancelTimer();
-        countEndTimer = new Timer();
-        countEndTimer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (!isExit) {
-                            systemCountEnd = true;
-                            if (systemCountEnd){
-                                myViewPager.setCurrentItem(1);
-                                countEndTimer.cancel();
-                                countEndTimer = null;
-                            }
-                        }
-                    }
-                });
-
-            }
-        }, TIME , TimeArrive);
-    }
     //系統配對Task
     public void systemMatchEnd(){
 
@@ -152,9 +93,35 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
 
             @Override
             public void onSuccess(String isError, String message) {
-                Log.v("ppking" , " isError : " + isError);
-                Log.v("ppking" , " message : " + message);
+                Log.v("ppking", " isError : " + isError);
+                Log.v("ppking", " message : " + message);
 
+                Connect_API.getpairinfo(Passenger_Rates_Activity.this, taskNumber, userData.getApiKey(), new Connect_API.OnGetPairInfoListener() {
+                    @Override
+                    public void onFail(Exception e, String jsonError) {
+                        Log.v("ppking" , "getpairinfo Exception : " + e.getMessage());
+                        Log.v("ppking" , "getpairinfo jsonError : " + jsonError);
+                    }
+
+                    @Override
+                    public void onSuccessGetPairInfo(PairInfoData pairInfoData) {
+
+                        Log.v("ppking" , "getpairinfo getDriver : " + pairInfoData.getDriver());
+                        Log.v("ppking" , "getpairinfo getAddr_start_addr : " + pairInfoData.getAddr_start_addr());
+                        Log.v("ppking" , "getpairinfo getCarnumber : " + pairInfoData.getCarnumber());
+                        Log.v("ppking" , "getpairinfo getMessage : " + pairInfoData.getMessage());
+                        Log.v("ppking" , "getpairinfo getCarnshow : " + pairInfoData.getCarnshow());
+                        Log.v("ppking" , "getpairinfo getEstimated_arrive_time : " + pairInfoData.getEstimated_arrive_time());
+                        Log.v("ppking" , "getpairinfo getName : " + pairInfoData.getName());
+
+                    }
+
+                    @Override
+                    public void onWaiting(String isError, String message) {
+                        Log.v("ppking" , "getpairinfo isError : " + isError);
+                        Log.v("ppking" , "getpairinfo message : " + message);
+                    }
+                });
             }
         });
 //        final Bundle bundle = new Bundle();
@@ -169,21 +136,10 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
 
         }
 
-
-    private void cancelTimer(){
-        if(countEndTimer != null){
-            countEndTimer.cancel();
-            countEndTimer = null;
-        }
-        if(matchEndTimer != null){
-            matchEndTimer.cancel();
-            matchEndTimer = null;
-        }
-    }
-
     public void GetDataAndNewTask(){
         getBundle = Passenger_Rates_Activity.this.getIntent().getExtras();
         time = getBundle.getInt("time");
+        password = getBundle.getString("passWord");
 
         userData =(UserData)getBundle.getSerializable("userData");
         phoneNumber = getBundle.getString("phoneNumber");
@@ -217,6 +173,15 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
                 taskNumber = tasknumber;
             }
         });
-
     }
+
+    public void MainGetPrice(int price){
+        Passenger_Rates_Activity.price = price;
+    }
+
+    public int GetMainPrice(){
+        fragmentManager.beginTransaction().replace(R.id.fragment , rates_02_fragment).commit();
+        return (price+emptyTripPay);
+    }
+
 }

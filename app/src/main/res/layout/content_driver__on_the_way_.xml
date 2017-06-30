@@ -32,6 +32,7 @@
             />
     </LinearLayout>
     <TextView
+        android:id="@+id/arriveAddress"
         android:layout_width="320dp"
         android:layout_height="70dp"
         android:layout_marginStart="20dp"
@@ -39,8 +40,8 @@
         android:gravity="center"
         android:background="@drawable/shape_driver_on_the_way_address"
         android:textColor="@color/colorBlack"
-        android:text="新北市永和區中正路710號"
         android:textSize="16sp"
+        android:onClick="arriveAddress"
         />
 
     <TextView
@@ -53,17 +54,20 @@
         android:background="#F5F4F6"
         />
     <TextView
+        android:id="@+id/contact"
         android:layout_width="320dp"
         android:layout_height="50dp"
         android:layout_marginBottom="42dp"
-        android:background="@drawable/shape_driver_on_the_way_contact"
+        android:background="@drawable/ripple_orange"
         android:layout_gravity="center"
         android:gravity="center"
         android:text="連絡乘客"
         android:textColor="#ffb400"
         android:textSize="18sp"
+        android:onClick="contact"
         />
     <TextView
+        android:id="@+id/arrived"
         android:layout_width="320dp"
         android:layout_height="50dp"
         android:layout_marginBottom="42dp"
@@ -73,7 +77,7 @@
         android:text="已抵達乘客所在地"
         android:textColor="@color/colorWhite"
         android:textSize="18sp"
-        android:onClick="passenger_get_on"
+        android:onClick="arrived"
         />
 
 </LinearLayout>

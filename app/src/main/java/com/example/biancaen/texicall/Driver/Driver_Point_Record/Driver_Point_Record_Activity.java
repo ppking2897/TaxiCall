@@ -38,6 +38,7 @@ public class Driver_Point_Record_Activity extends AppCompatActivity
     private TextView driverName;
     private TextView remainPoint;
     private TextView reducePoint;
+    private Driver_Point_Record_Adapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,9 @@ public class Driver_Point_Record_Activity extends AppCompatActivity
             driverData = (DriverData)bundle.getSerializable("driverData");
             phone = bundle.getString("phone");
             password = bundle.getString("password");
+
+            Log.v("ppking" , "phone  :  " + phone);
+            Log.v("ppking" , "driverData  :  " + driverData);
         }
 
 
@@ -75,7 +79,7 @@ public class Driver_Point_Record_Activity extends AppCompatActivity
         RecyclerView recyclerView = (RecyclerView)findViewById(R.id.driver_point_record_recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        Driver_Point_Record_Adapter adapter = new Driver_Point_Record_Adapter(this , date , pointIfo );
+        adapter = new Driver_Point_Record_Adapter(this , date , pointIfo );
         recyclerView.setAdapter(adapter);
     }
 
@@ -136,6 +140,7 @@ public class Driver_Point_Record_Activity extends AppCompatActivity
                 remainPoint.setText("目前點數 : " + savings);
                 reducePoint.setText("已用點數 : " + sum);
 
+
                 date.clear();
                 pointIfo.clear();
                 if (isError.equals("false")){
@@ -144,11 +149,11 @@ public class Driver_Point_Record_Activity extends AppCompatActivity
                         date.add(data.get(i).getFinal_at());
                         pointIfo.add("扣除點數" + data.get(i).getReduce_point() + "\n剩餘點數" + data.get(i).getRemain_point() );
                     }
+                    adapter.notifyDataSetChanged();
                 }else{
-                    date.add("資料無取失敗");
+                    date.add("資料讀取失敗");
                     pointIfo.add("資料讀取失敗");
                 }
-
             }
         });
     }

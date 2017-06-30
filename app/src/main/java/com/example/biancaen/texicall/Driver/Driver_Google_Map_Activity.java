@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.biancaen.texicall.Driver.Driver_Trip_Done.Driver_Trip_Done_Activity;
+import com.example.biancaen.texicall.Driver.Driver_Trip.Driver_Trip_Done_Activity;
 import com.example.biancaen.texicall.R;
 
 public class Driver_Google_Map_Activity extends AppCompatActivity {

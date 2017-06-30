@@ -1,6 +1,7 @@
 package com.example.biancaen.texicall.Driver.Driver_Main_Menu;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,14 +13,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.biancaen.texicall.Driver.Driver_Info.Driver_Info_Activity;
+import com.example.biancaen.texicall.Driver.Driver_Passenger_Request.Driver_Passenger_Request_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Point_Record.Driver_Point_Record_Activity;
-import com.example.biancaen.texicall.Driver.Driver_Sign_Menu.Driver_Login_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Travel_Record.Driver_Travel_Record_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Match.Driver_WaitMatch_Activity;
+import com.example.biancaen.texicall.Passenger.Passenger_Car_Service.Passenger_Car_Service_Activity;
 import com.example.biancaen.texicall.R;
 import com.example.biancaen.texicall.connectapi.Connect_API;
 import com.example.biancaen.texicall.connectapi.DriverData;
-import com.example.biancaen.texicall.notificaiton.HBMessageService;
 
 
 
@@ -47,8 +48,17 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
             driverData = (DriverData)bundle.getSerializable("driverData");
             phone = bundle.getString("phone");
             password = bundle.getString("password");
-        }
 
+            SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("phone" , phone);
+            editor.putString("password" , password);
+            editor.apply();
+            Log.v("ppking", " sharedPreferences Main !");
+        }else {
+            SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+            Log.v("ppking" , "sharedPreferences " + sharedPreferences.getString("password", null));
+        }
 
         driverOnline = (LinearLayout)findViewById(R.id.driverOnline);
         onlineImg = (ImageView)findViewById(R.id.onlineImg);
@@ -66,10 +76,11 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
             driverOnline.setBackgroundResource(R.drawable.shape_offline_driver);
             onlineImg.setImageResource(R.drawable.ic_offline_btn_homescreen);
             onlineText.setText("結束下線");
+
         }else if (driverData.getStatus()==3){
-            driverOnline.setBackgroundResource(R.drawable.shape_offline_driver);
-            onlineImg.setImageResource(R.drawable.ic_offline_btn_homescreen);
-            onlineText.setText("結束下線");
+//            Intent it = new Intent(this , Driver_Passenger_Request_Activity.class);
+//            it.putExtras(TransData());
+//            startActivity(it);
         }
 
 
@@ -82,14 +93,6 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
         Log.v("ppking", " MaindriverData getType :  " + driverData.getType());
         Log.v("ppking", " MaindriverData getSavings :  " + driverData.getSavings());
 
-
-        /**2017/06/28 取tasknumber*/
-        HBMessageService.setOnGetTasknumber(new HBMessageService.OnStartTaskAlertListener() {
-            @Override
-            public void onGetTasknumber(String tasknumber) {
-                Log.v("推播訊息於駕駛主畫面顯示內容", tasknumber);
-            }
-        });
 
     }
 
@@ -106,15 +109,17 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
         startActivity(it);
     }
 
-
     public void driver_info(View view){
         Intent it = new Intent(this , Driver_Info_Activity.class);
+        it.putExtras(TransData());
         startActivity(it);
     }
+
+    //判斷目前狀態是哪種
     public void driverOnline(View view) {
 
-        Log.v("ppking" , " driverData.getStatus() :  " + driverData.getStatus());
-        if (driverData.getStatus() == 2) {
+        Log.v("ppking", " driverData.getStatus() :  " + driverData.getStatus());
+        if (driverData.getStatus() == 2 || driverData.getStatus() == 3) {
             driverOnline.setBackgroundResource(R.drawable.shape_online_driver);
             onlineImg.setImageResource(R.drawable.ic_car_online_btn_homesreen);
             onlineText.setText("上線載客");
@@ -128,23 +133,24 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
             status = "2";
         }
 
-        Connect_API.putdriverstatus(this, phone, status, driverData.getApiKey() , new Connect_API.OnPutDriverStatusListener() {
+        Connect_API.putdriverstatus(this, phone, status, driverData.getApiKey(), new Connect_API.OnPutDriverStatusListener() {
             @Override
             public void onFail(Exception e, String jsonError) {
-                Log.v("ppking" , "" + e.getMessage());
-                Log.v("ppking" , "jsonError : " + jsonError);
-                Toast.makeText(Driver_Main_Menu_Activity.this , "連線異常" , Toast.LENGTH_SHORT).show();
+                Log.v("ppking", "" + e.getMessage());
+                Log.v("ppking", "jsonError : " + jsonError);
+                Toast.makeText(Driver_Main_Menu_Activity.this, "連線異常", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onSuccess(String isError, String result) {
-                Log.v("ppking" , "isError :  " + isError);
-                Log.v("ppking" , "result : " + result);
-                if (isError.equals("false")){
+                Log.v("ppking", "isError :  " + isError);
+                Log.v("ppking", "result : " + result);
+                if (isError.equals("false")) {
 
                     ReLogin();
-                    if (driverData.getStatus() == 1){
-                        Intent it = new Intent(Driver_Main_Menu_Activity.this , Driver_WaitMatch_Activity.class);
+                    if (driverData.getStatus() == 1) {
+                        Intent it = new Intent(Driver_Main_Menu_Activity.this, Driver_WaitMatch_Activity.class);
+                        it.putExtras(TransData());
                         startActivity(it);
                     }
                 }
@@ -155,7 +161,7 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
     public Bundle TransData(){
         Bundle bundle = new Bundle();
         bundle.putString("phone" , phone);
-        bundle.putString("phone" , password);
+        bundle.putString("password" , password);
         bundle.putSerializable("driverData" , driverData);
         return bundle;
     }
@@ -170,7 +176,6 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
 
             @Override
             public void onLoginFail(String isFail, String msg) {
-
 
             }
 
