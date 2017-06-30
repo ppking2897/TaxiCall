@@ -448,7 +448,6 @@ public class Connect_API{
 
     }
 
-
     public interface  OnGetStatusListener{
         void onFail(Exception e, String jsonError);
         /**@param  status
@@ -850,7 +849,7 @@ public class Connect_API{
         void onWaiting(String isError, String message);
     }
     /**取得結果*/
-    public void getpairinfo(@NonNull final Activity activity, String tasknumber , String apiKey , @NonNull final OnGetPairInfoListener listener){
+    public static void getpairinfo(@NonNull final Activity activity, String tasknumber , String apiKey , @NonNull final OnGetPairInfoListener listener){
         RequestBody body = new FormEncodingBuilder().add("tasknumber" ,tasknumber).build();
         Request request = new Request.Builder().url(API_HOST+API_VERSION+GET_PAIR_INFO).header("Authorization",apiKey).post(body).build();
         new OkHttpClient().newCall(request).enqueue(new Callback() {
