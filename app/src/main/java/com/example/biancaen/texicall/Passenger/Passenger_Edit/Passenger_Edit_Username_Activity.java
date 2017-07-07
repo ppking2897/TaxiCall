@@ -1,6 +1,7 @@
 package com.example.biancaen.texicall.Passenger.Passenger_Edit;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -23,6 +24,9 @@ public class Passenger_Edit_Username_Activity extends AppCompatActivity {
     private String phoneNumber;
     private String passWord;
     private UserData userData;
+    private String passengerApiKey;
+    private String mail;
+    private String name;
 
 
     @Override
@@ -38,19 +42,21 @@ public class Passenger_Edit_Username_Activity extends AppCompatActivity {
         edit_Username = (EditText)findViewById(R.id.edit_Username);
         TextView userName = (TextView)findViewById(R.id.userName);
 
-        Bundle getBundle = getIntent().getExtras();
-        phoneNumber = getBundle.getString("phoneNumber");
-        passWord = getBundle.getString("passWord");
-        userData = (UserData)getBundle.getSerializable("userData");
+        SharedPreferences sharedPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
+        phoneNumber = sharedPreferences.getString("phoneNumber" , null);
+        passWord = sharedPreferences.getString("passWord" , null);
+        passengerApiKey = sharedPreferences.getString("passengerApiKey" , null);
+        mail = sharedPreferences.getString("mail" , null);
+        name = sharedPreferences.getString("name" , null);
 
-        userName.setText("原用戶名稱 / " + (userData != null ? userData.getName() : null));
+        userName.setText("原用戶名稱 / " + (name != null ? name : null));
 
     }
     public void accept(View view){
 
         String name =  edit_Username.getText().toString();
         if (!name.equals("")){
-            Connect_API.modifyChange(this, userData.getEmail(), phoneNumber, passWord, passWord, edit_Username.getText().toString(), userData.getApiKey(), new Connect_API.OnModifyChangeListener() {
+            Connect_API.modifyChange(this, mail, phoneNumber, passWord, passWord, edit_Username.getText().toString(), passengerApiKey, new Connect_API.OnModifyChangeListener() {
                 @Override
                 public void onSuccess(String isFail, String msg) {
                     if (isFail.equals("false")){

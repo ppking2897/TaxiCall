@@ -1,4 +1,4 @@
-package com.example.biancaen.texicall.Passenger.Passenger_In_The_Shuttle;
+package com.example.biancaen.texicall.Passenger.Passenger_TakeRide_And_Arrived;
 
 /**
  * Created by BiancaEN on 2017/6/29.

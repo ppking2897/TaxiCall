@@ -55,6 +55,7 @@
 
         >
         <ImageView
+            android:id="@+id/picture"
             android:layout_width="22dp"
             android:layout_height="22dp"
             android:src="@drawable/ic_offline_selected_side_drawer"

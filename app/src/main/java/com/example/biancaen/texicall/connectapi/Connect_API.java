@@ -710,7 +710,6 @@ public class Connect_API{
         });
     }
 
-
     public interface OnNewTaskListener{
         void onFail(Exception e, String jsonError);
         void onSuccess(String isError, String message, String tasknumber);

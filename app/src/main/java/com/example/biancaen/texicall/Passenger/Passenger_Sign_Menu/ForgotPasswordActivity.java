@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.biancaen.texicall.Beginning.MainMenuActivity;
 import com.example.biancaen.texicall.R;
 import com.example.biancaen.texicall.connectapi.Connect_API;
 
@@ -17,7 +16,7 @@ public class ForgotPasswordActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_forgotpassword);
+        setContentView(R.layout.activity_passenger_forgotpassword);
 
         phoneNumber = (EditText)findViewById(R.id.phoneNumber);
     }

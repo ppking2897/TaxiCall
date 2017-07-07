@@ -1,6 +1,7 @@
 package com.example.biancaen.texicall.Passenger.Passenger_Sign_Menu;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -71,19 +72,35 @@ public class Passenger_Sign_in_Activity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (userData.getType().equals("passenger")){
 
-                Toast.makeText(Passenger_Sign_in_Activity.this , "登入成功" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Passenger_Sign_in_Activity.this , "登入成功" , Toast.LENGTH_SHORT).show();
 
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("userData" , userData);
-                bundle.putString("phoneNumber" , phoneNumber);
-                bundle.putString("passWord" , passWord);
 
-                Intent it = new Intent(Passenger_Sign_in_Activity.this , Passenger_Car_Service_Activity.class);
-                it.putExtras(bundle);
-                startActivity(it);
-                finish();
+                    //將資料丟入SharedPreferences 共用
+                    SharedPreferences sharedPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("phoneNumber" , phoneNumber);
+                    editor.putString("passWord" , passWord);
+                    editor.putString("passengerApiKey" , userData.getApiKey());
+                    Log.v("ppking" , "passengerApiKey : "+ userData.getApiKey());
+                    editor.putString("mail" , userData.getEmail());
+                    editor.putString("name" , userData.getName());
+                    editor.apply();
 
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("userData" , userData);
+                    bundle.putString("phoneNumber" , phoneNumber);
+                    bundle.putString("passWord" , passWord);
+
+                    Intent it = new Intent(Passenger_Sign_in_Activity.this , Passenger_Car_Service_Activity.class);
+                    it.putExtras(bundle);
+                    startActivity(it);
+                    finish();
+
+                }else {
+                    Sign_In_Fail();
+                }
             }
         });
     }

@@ -64,7 +64,7 @@
         android:text="連絡乘客"
         android:textColor="#ffb400"
         android:textSize="18sp"
-        android:onClick="contact"
+        android:onClick="contactPassenger"
         />
     <TextView
         android:id="@+id/arrived"

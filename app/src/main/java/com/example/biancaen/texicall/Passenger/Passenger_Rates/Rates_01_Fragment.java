@@ -39,8 +39,6 @@ public class Rates_01_Fragment extends android.app.Fragment {
         alphaAnimation.setRepeatCount(Animation.INFINITE);
         alphaAnimation.setRepeatMode(Animation.REVERSE);
 
-
-
         linearLayout.setAnimation(alphaAnimation);
 
         activity = (Passenger_Rates_Activity)getActivity();
@@ -53,6 +51,7 @@ public class Rates_01_Fragment extends android.app.Fragment {
         phoneNumber = bundle.getString("passenger_number");
         userData = (UserData)bundle.getSerializable("userData");
 
+        Log.v("ppking" , "　fragment rate" );
 
         RateCount();
 
@@ -60,6 +59,8 @@ public class Rates_01_Fragment extends android.app.Fragment {
     }
 
     public void RateCount(){
+
+        Log.v("ppking" , "　fragment RateCount" );
         Connect_API.rate(getActivity() , startLng  , startLat , endLng  , endLat , phoneNumber , userData.getApiKey(), new Connect_API.OnRateListener() {
             @Override
             public void onFail(Exception e, String jsonError) {
@@ -72,15 +73,23 @@ public class Rates_01_Fragment extends android.app.Fragment {
             @Override
             public void onFailToResult(String isErrorResult, String errorMessage) {
 
+                Log.v("ppking" , "　isErrorResult  : " + isErrorResult);
+                Log.v("ppking" , "　errorMessage  : " + errorMessage);
+                Toast.makeText(getActivity() , "" + errorMessage , Toast.LENGTH_SHORT ).show();
             }
 
             @Override
             public void onSuccess(String isErrorResult, int price, int time, String distance) {
+                Log.v("ppking" , "isErrorResult :  "+ isErrorResult);
+                Log.v("ppking" , "price :  "+ price);
+                Log.v("ppking" , "time :  "+ time);
+                Log.v("ppking" , "distance :  "+ distance);
 
                 if (isErrorResult.equals("false")){
                     linearLayout.clearAnimation();
                     Log.v("ppking" , " 試算成功 !!");
                     activity.MainGetPrice(price);
+                    activity.MainGetTime(time);
                     FragmentTransaction ft = getFragmentManager().beginTransaction();
                     ft.replace(R.id.fragment , new Rates_02_Fragment() );
                     ft.commit();
@@ -90,6 +99,7 @@ public class Rates_01_Fragment extends android.app.Fragment {
                 }
             }
         });
+        Log.v("ppking" , " RateCountRateCountRateCountRateCount" );
     }
 
 }

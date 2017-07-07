@@ -3,6 +3,7 @@ package com.example.biancaen.texicall.Driver.Driver_Match;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.audiofx.BassBoost;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -38,6 +39,7 @@ public class Driver_Matched_Dialog {
     public Driver_Matched_Dialog(Context context  , TaskInfoData taskInfoData ,
                                  DriverData driverData , String tasknumber ,
                                  String phone , String password){
+
         this.context = context;
         this.taskInfoData = taskInfoData;
         this.tasknumber = tasknumber;
@@ -46,7 +48,9 @@ public class Driver_Matched_Dialog {
         this.password = password;
 
     }
+
     public void CreateMatchedDialog(){
+
         final AlertDialog.Builder builder = new AlertDialog.Builder(context , R.style.Driver_Match_Dialog);
         View view = LayoutInflater.from(context).inflate(R.layout.layout_driver_match_dialog,null);
 
@@ -69,54 +73,85 @@ public class Driver_Matched_Dialog {
         refuse.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.ClearTaskNumber();
-                alertDialog.dismiss();
-                activity.finish();
-                Intent it = new Intent(context , Driver_WaitMatch_Activity.class );
-                context.startActivity(it);
-            }
-        });
-
-        accept.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Connect_API.accepttask(activity, tasknumber, phone, driverData.getApiKey(), new Connect_API.OnGetConnectStatusListener() {
+                String status = "1";
+                Connect_API.putdriverstatus(activity , phone, status, driverData.getApiKey(), new Connect_API.OnPutDriverStatusListener() {
                     @Override
                     public void onFail(Exception e, String jsonError) {
-                        Log.v("ppking" , "Exception   : " + e);
-                        Log.v("ppking" , "jsonError   : " + jsonError);
+                        Log.v("ppking", "" + e.getMessage());
+                        Log.v("ppking", "jsonError : " + jsonError);
+
                     }
 
                     @Override
-                    public void onSuccess(String isError, String message) {
-                        Log.v("ppking" , "isError   : " + isError);
-                        Log.v("ppking" , "message   : " + message);
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("taskInfoData" , taskInfoData);
-                        bundle.putString("phone" , phone);
-                        bundle.putSerializable("driverData" , driverData);
-                        bundle.putString("password" , password);
-                        Intent it = new Intent(context , Driver_Passenger_Request_Activity.class );
-                        it.putExtras(bundle);
+                    public void onSuccess(String isError, String result) {
+                        Log.v("ppking", "isError :  " + isError);
+                        Log.v("ppking", "result : " + result);
+                        activity.ClearTaskNumber();
+                        alertDialog.dismiss();
+                        activity.finish();
+                        Intent it = new Intent(context , Driver_Main_Menu_Activity.class );
                         context.startActivity(it);
                     }
                 });
             }
         });
+        //確定接任務
+        accept.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            Connect_API.accepttask(activity, tasknumber, phone, driverData.getApiKey(), new Connect_API.OnGetConnectStatusListener() {
+                @Override
+                public void onFail(Exception e, String jsonError) {
+                    Log.v("ppking" , "Exception   : " + e);
+                    Log.v("ppking" , "jsonError   : " + jsonError);
+                }
+
+                @Override
+                public void onSuccess(String isError, String message) {
+                    Log.v("ppking" , "isError   : " + isError);
+                    Log.v("ppking" , "message   : " + message);
+
+                    alertDialog.dismiss();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("taskInfoData" , taskInfoData);
+                    bundle.putString("phone" , phone);
+                    bundle.putSerializable("driverData" , driverData);
+                    bundle.putString("password" , password);
+                    Intent it = new Intent(context , Driver_Passenger_Request_Activity.class );
+                    it.putExtras(bundle);
+                    context.startActivity(it);
+                    activity.finish();
+                }
+            });
+            }
+        });
+        //右上角離開，reload一次activity
         closeDialog.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                activity.ClearTaskNumber();
-                alertDialog.dismiss();
-                activity.finish();
-                Intent it = new Intent(context , Driver_WaitMatch_Activity.class );
-                context.startActivity(it);
+                String status = "2";
+                Connect_API.putdriverstatus(activity , phone, status, driverData.getApiKey(), new Connect_API.OnPutDriverStatusListener() {
+                    @Override
+                    public void onFail(Exception e, String jsonError) {
+                        Log.v("ppking", "" + e.getMessage());
+                        Log.v("ppking", "jsonError : " + jsonError);
+
+                    }
+
+                    @Override
+                    public void onSuccess(String isError, String result) {
+                        Log.v("ppking", "isError :  " + isError);
+                        Log.v("ppking", "result : " + result);
+                        activity.ClearTaskNumber();
+                        alertDialog.dismiss();
+                        activity.finish();
+                        Intent it = new Intent(context , Driver_WaitMatch_Activity.class );
+                        context.startActivity(it);
+
+                    }
+                });
             }
         });
-    }
-
-    public void Dismiss(){
-        alertDialog.dismiss();
     }
 }

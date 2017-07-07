@@ -26,7 +26,6 @@ public class Rates_02_Fragment extends android.app.Fragment {
         //試算出來價格
         int price = activity.GetMainPrice();
 
-
         ImageView callTheCar = (ImageView) view.findViewById(R.id.callTheCar);
         final ScrollView fares_ScrollView = (ScrollView)view.findViewById(R.id.fares_ScrollView);
         TextView payTheMoney = (TextView)view.findViewById(R.id.payTheMoney);

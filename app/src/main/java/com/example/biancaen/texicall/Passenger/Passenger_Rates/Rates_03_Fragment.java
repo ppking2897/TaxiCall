@@ -32,4 +32,8 @@ public class Rates_03_Fragment extends android.app.Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 }

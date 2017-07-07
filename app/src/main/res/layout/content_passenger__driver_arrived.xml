@@ -60,16 +60,9 @@
             android:layout_height="60dp"
             android:src="@drawable/btn_contact_driver_arrivedpage"
             android:layout_gravity="center"
+            android:onClick="contactArrived"
             />
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:text="測試已接送"
-            android:background="@color/colorPrimary"
-            android:onClick="testArrive"
-            />
     </LinearLayout>
 
 

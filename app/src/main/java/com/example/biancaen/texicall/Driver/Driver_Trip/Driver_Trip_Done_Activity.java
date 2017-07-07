@@ -1,6 +1,8 @@
 package com.example.biancaen.texicall.Driver.Driver_Trip;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -9,18 +11,25 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
+import com.example.biancaen.texicall.Beginning.MainMenuActivity;
 import com.example.biancaen.texicall.Driver.Driver_Info.Driver_Info_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Main_Menu.Driver_Main_Menu_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Point_Record.Driver_Point_Record_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Travel_Record.Driver_Travel_Record_Activity;
 import com.example.biancaen.texicall.R;
+import com.example.biancaen.texicall.connectapi.CheckOutData;
+import com.example.biancaen.texicall.connectapi.Connect_API;
 
 public class Driver_Trip_Done_Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private boolean isLogout;
+    private CheckOutData checkOutData;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,8 +52,14 @@ public class Driver_Trip_Done_Activity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_driver_trip_done_);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        } else if (!isLogout){
+
+            Toast.makeText(this , "再按一次返回即可登出" , Toast.LENGTH_SHORT).show();
+            isLogout = true;
+
+        }else if (isLogout){
+
+            Logout();
         }
     }
 
@@ -71,7 +86,7 @@ public class Driver_Trip_Done_Activity extends AppCompatActivity
             startActivity(it);
 
         } else if (id == R.id.nav_logout) {
-
+            Logout();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_driver_trip_done_);
@@ -79,7 +94,55 @@ public class Driver_Trip_Done_Activity extends AppCompatActivity
         return true;
     }
     public void settle(View view){
-        Driver_Trip_Done_Dialog driver_trip_done_dialog = new Driver_Trip_Done_Dialog(this);
+        SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+        String taskNumber =sharedPreferences.getString("tasknumber", null);
+        final String phone =sharedPreferences.getString("phone", null);
+        final String driverApiKey = sharedPreferences.getString("driverApiKey" , null);
+        final String destination =  sharedPreferences.getString("destination" , null);
+        final String location =  sharedPreferences.getString("location" , null);
+        String password = sharedPreferences.getString("password" , null);
+
+        Log.v("ppking" , " phone  :  " + phone);
+        Log.v("ppking" , " password  :  " + password);
+        Log.v("ppking" , " driverApiKey  :  " + driverApiKey);
+
+
+        Bundle bundle = getIntent().getExtras();
+        checkOutData = (CheckOutData)bundle.getSerializable("CheckOutData");
+        Log.v("ppking" , " checkOutData  :  " + checkOutData);
+
+        Driver_Trip_Done_Dialog driver_trip_done_dialog =
+                new Driver_Trip_Done_Dialog(Driver_Trip_Done_Activity.this , checkOutData , location , destination ,
+                        phone , driverApiKey);
         driver_trip_done_dialog.CreateTripDoneDialog();
+
+
+    }
+
+    public void Logout(){
+        SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+        String phone = sharedPreferences.getString("phone", null);
+        String driverApiKey = sharedPreferences.getString("driverApiKey" , null);
+
+        Connect_API.loginOut(this, phone, driverApiKey, new Connect_API.OnLoginOutListener() {
+            @Override
+            public void onFail(Exception e, String jsonError) {
+                Log.v("ppking" , "Exception : " +e);
+                Log.v("ppking" , "jsonError : " +jsonError);
+            }
+
+            @Override
+            public void onSuccess(boolean isError, String message) {
+                if (!isError){
+                    Toast.makeText(Driver_Trip_Done_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
+                    //清除所有上一頁Activity
+                    Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }else {
+                    Toast.makeText(Driver_Trip_Done_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

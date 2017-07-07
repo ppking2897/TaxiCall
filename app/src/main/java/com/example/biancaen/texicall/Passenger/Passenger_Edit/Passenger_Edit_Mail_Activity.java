@@ -1,11 +1,13 @@
 package com.example.biancaen.texicall.Passenger.Passenger_Edit;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.biancaen.texicall.R;
@@ -17,6 +19,9 @@ public class Passenger_Edit_Mail_Activity extends AppCompatActivity {
     private String phoneNumber;
     private String passWord;
     private UserData userData;
+    private String passengerApiKey;
+    private String name;
+    private String mail;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,17 +32,22 @@ public class Passenger_Edit_Mail_Activity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Bundle getBundle = getIntent().getExtras();
-        phoneNumber = getBundle.getString("phoneNumber");
-        passWord = getBundle.getString("passWord");
-        userData = (UserData)getBundle.getSerializable("userData");
+        SharedPreferences sharedPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
+        phoneNumber = sharedPreferences.getString("phoneNumber" , null);
+        passWord = sharedPreferences.getString("passWord" , null);
+        passengerApiKey = sharedPreferences.getString("passengerApiKey" , null);
+        name = sharedPreferences.getString("name" , null);
+        mail = sharedPreferences.getString("mail" , null);
 
+        TextView pastMail = (TextView)findViewById(R.id.pastMail);
         edit_Mail = (EditText)findViewById(R.id.edit_Mail);
+
+        pastMail.setText("原信箱 / " + mail);
     }
 
     public void edit_Mail(View view){
         if (!edit_Mail.getText().toString().equals("")){
-            Connect_API.modifyChange(this, edit_Mail.getText().toString(), phoneNumber, passWord, passWord, userData.getName(), userData.getApiKey(), new Connect_API.OnModifyChangeListener() {
+            Connect_API.modifyChange(this, edit_Mail.getText().toString(), phoneNumber, passWord, passWord, name, passengerApiKey, new Connect_API.OnModifyChangeListener() {
                 @Override
                 public void onSuccess(String isFail, String msg) {
                     if (isFail.equals("false")){

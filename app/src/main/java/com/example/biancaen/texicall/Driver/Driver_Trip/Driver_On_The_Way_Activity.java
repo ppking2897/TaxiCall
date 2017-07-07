@@ -1,10 +1,16 @@
-package com.example.biancaen.texicall.Driver;
+package com.example.biancaen.texicall.Driver.Driver_Trip;
 
 import android.Manifest;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
@@ -20,20 +26,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.biancaen.texicall.Beginning.MainMenuActivity;
 import com.example.biancaen.texicall.Driver.Driver_Info.Driver_Info_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Main_Menu.Driver_Main_Menu_Activity;
-import com.example.biancaen.texicall.Driver.Driver_Passenger_Request.Driver_Passenger_Request_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Point_Record.Driver_Point_Record_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Travel_Record.Driver_Travel_Record_Activity;
+import com.example.biancaen.texicall.Passenger.Passenger_On_The_Way.Passenger_On_The_Way_Activity;
 import com.example.biancaen.texicall.R;
 import com.example.biancaen.texicall.connectapi.Connect_API;
 import com.example.biancaen.texicall.connectapi.DriverData;
 import com.example.biancaen.texicall.connectapi.TaskInfoData;
+import com.example.biancaen.texicall.notificaiton.HBMessageService;
 
 public class Driver_On_The_Way_Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -43,6 +52,7 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
     private static String password;
     private static TaskInfoData getTaskInfoData;
     private AlertDialog alertDialog;
+    private boolean isLogout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +79,8 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
         }
         Log.v("ppking" , " getTaskInfoData  !!" + getTaskInfoData);
         TextView arriveAddress = (TextView)findViewById(R.id.arriveAddress);
-        arriveAddress.setText(getTaskInfoData.getAddr_end_addr());
+        arriveAddress.setText(getTaskInfoData.getAddr_start_addr());
+        PassengerTerminateListener();
     }
 
     //跳轉google導航
@@ -81,7 +92,7 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
     }
 
     //聯絡乘客跳出視窗提醒
-    public void contact(View view){
+    public void contactPassenger(View view){
         CreateDialog();
     }
 
@@ -90,8 +101,14 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_driver_on_the_way);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        } else if (!isLogout){
+
+            Toast.makeText(this , "再按一次返回即可登出" , Toast.LENGTH_SHORT).show();
+            isLogout = true;
+
+        }else if (isLogout){
+
+            Logout();
         }
     }
     @SuppressWarnings("StatementWithEmptyBody")
@@ -117,7 +134,7 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
             startActivity(it);
 
         } else if (id == R.id.nav_logout) {
-
+            Logout();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_driver_on_the_way);
@@ -135,7 +152,7 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
             @Override
             public void onSuccess(String isError, String result, String status, String tasknumber, String carshow, String carnumber) {
 
-                Log.v("ppking", "OnTheWay_tasknumber :  " + tasknumber);
+                Log.v("ppking", "status :  " + status);
 
                 Connect_API.pickup(Driver_On_The_Way_Activity.this, tasknumber, driverData.getApiKey(), new Connect_API.OnGetConnectStatusListener() {
                     @Override
@@ -148,12 +165,13 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
                     public void onSuccess(String isError, String message) {
                         Log.v("ppking" , " isError : " + isError);
                         Log.v("ppking" , " message : " + message);
+                        Intent it = new Intent(Driver_On_The_Way_Activity.this , Driver_Arrived_Activity.class);
+                        startActivity(it);
                     }
                 });
             }
         });
-//        Intent it = new Intent(this , Driver_Arrived_Activity.class);
-//        startActivity(it);
+
     }
 
     public void CreateDialog(){
@@ -210,5 +228,80 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
                 alertDialog.dismiss();
             }
         }
+    }
+
+
+    public void Logout(){
+        SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+        String phone = sharedPreferences.getString("phone", null);
+        String driverApiKey = sharedPreferences.getString("driverApiKey" , null);
+
+        Connect_API.loginOut(this, phone, driverApiKey, new Connect_API.OnLoginOutListener() {
+            @Override
+            public void onFail(Exception e, String jsonError) {
+                Log.v("ppking" , "Exception : " +e);
+                Log.v("ppking" , "jsonError : " +jsonError);
+            }
+
+            @Override
+            public void onSuccess(boolean isError, String message) {
+                if (!isError){
+                    Toast.makeText(Driver_On_The_Way_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
+                    //清除所有上一頁Activity
+                    Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }else {
+                    Toast.makeText(Driver_On_The_Way_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+    public void PassengerTerminateListener(){
+        HBMessageService.setOnStartDriverTerminateListener(new HBMessageService.OnStartDriverTerminateListener() {
+            @Override
+            public void onGetDriverTerminate(String title, String body, int REQUEST_CODE, int INTENT_ID) {
+                Connect_API.putdriverstatus(Driver_On_The_Way_Activity.this, phone, "1", driverData.getApiKey(), new Connect_API.OnPutDriverStatusListener() {
+                    @Override
+                    public void onFail(Exception e, String jsonError) {
+                        Log.v("ppking" , "Exception  :  "+ e);
+                        Log.v("ppking" , "jsonError  :  "+ jsonError);
+                    }
+
+                    @Override
+                    public void onSuccess(String isError, String result) {
+                        Log.v("ppking" , "isError  :  "+ isError);
+                        Log.v("ppking" , "result  :  "+ result);
+                    }
+                });
+                CreateTerminateDialog();
+            }
+        });
+    }
+
+    public void CreateTerminateDialog(){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(Driver_On_The_Way_Activity.this , R.style.Contact_Dialog);
+                View view = LayoutInflater.from(Driver_On_The_Way_Activity.this).inflate(R.layout.layout_passenger_ask_terminate_task_dialog , null);
+
+                LinearLayout knowButton = (LinearLayout)view.findViewById(R.id.knowButton);
+
+                builder.setView(view);
+                final AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+
+                knowButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        alertDialog.dismiss();
+                        Intent it = new Intent(Driver_On_The_Way_Activity.this , Driver_Main_Menu_Activity.class);
+                        startActivity(it);
+                        finish();
+                    }
+                });
+            }
+        });
     }
 }

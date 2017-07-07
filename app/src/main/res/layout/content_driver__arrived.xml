@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:showIn="@layout/app_bar_driver_arrived"
-    tools:context=".Driver.Driver_On_The_Way_Activity"
+    tools:context=".Driver.Driver_Trip.Driver_On_The_Way_Activity"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:background="#515E71"
     >
@@ -52,6 +52,7 @@
         />
 
     <TextView
+        android:id="@+id/cancel"
         android:layout_width="320dp"
         android:layout_height="50dp"
         android:layout_marginBottom="20dp"
@@ -61,6 +62,7 @@
         android:text="取消此筆叫車"
         android:textColor="@color/colorWhite"
         android:textSize="18sp"
+        android:onClick="cancel"
         />
     <TextView
         android:layout_width="320dp"

@@ -1,4 +1,4 @@
-package com.example.biancaen.texicall.Passenger.Passenger_In_The_Shuttle;
+package com.example.biancaen.texicall.Passenger.Passenger_TakeRide_And_Arrived;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -31,14 +31,6 @@ public class Shuttle_Fragment_01 extends Fragment {
         linearLayout.setAnimation(alphaAnimation);
 
         passengerInTheShuttleActivity = (Passenger_In_The_Shuttle_Activity)getActivity();
-
-        Button button = (Button)view.findViewById(R.id.goal);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                passengerInTheShuttleActivity.shuttle_viewPager.setCurrentItem(1);
-            }
-        });
 
         return view;
     }

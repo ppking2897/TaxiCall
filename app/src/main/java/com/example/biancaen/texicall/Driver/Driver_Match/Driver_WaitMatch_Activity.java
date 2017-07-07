@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.example.biancaen.texicall.Driver.Driver_Main_Menu.Driver_Main_Menu_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Passenger_Request.Driver_Passenger_Request_Activity;
@@ -24,6 +25,7 @@ public class Driver_WaitMatch_Activity extends AppCompatActivity {
     private static String password;
     private static TaskInfoData getTaskInfoData;
     private Driver_Matched_Dialog driver_matched_dialog;
+    private SharedPreferences sharedPreferences;
 
     //由dialog傳送資料並intent到另一個activity
     @Override
@@ -40,17 +42,16 @@ public class Driver_WaitMatch_Activity extends AppCompatActivity {
 
         linearLayout.setAnimation(alphaAnimation);
 
-        Bundle bundle = getIntent().getExtras();
-        if (bundle!=null){
-            driverData = (DriverData)bundle.getSerializable("driverData");
-            phone = bundle.getString("phone");
-            password = bundle.getString("password");
-        }
+        sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+        phone = sharedPreferences.getString("phone" , null);
+        password =  sharedPreferences.getString("password" , null);
+
 
         //經由推播進來時出現Dialog
         if (getTaskNumber!=null){
 
             ReLogin();
+            Log.v("ppking ", "getTaskNumber  :  " + getTaskNumber);
 
         }else {
 
@@ -58,36 +59,21 @@ public class Driver_WaitMatch_Activity extends AppCompatActivity {
             HBMessageService.setOnGetTasknumber(new HBMessageService.OnStartTaskAlertListener() {
                 @Override
                 public void onGetTasknumber(String tasknumber) {
-                    Log.v("ppking2897 ", "HBMessageService  :  " + tasknumber);
+                    Log.v("ppking ", "HBMessageService  :  " + tasknumber);
+                    ReLogin();
                     getTaskNumber = tasknumber;
-                    GetTaskInfo();
+                    sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.putString("tasknumber" , tasknumber);
+                    editor.apply();
+
                 }
             });
         }
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable("driverData" , driverData);
-        Log.v("ppking2897 ", "onSaveInstanceState driverData !! " + driverData);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        savedInstanceState.getSerializable("driverData");
-        Log.v("ppking2897 ", "onRestoreInstanceState driverData !! " + driverData);
-    }
-
-    @Override
     public void onBackPressed() {
-        super.onBackPressed();
         Intent it = new Intent(this , Driver_Main_Menu_Activity.class );
         startActivity(it);
     }
@@ -103,6 +89,7 @@ public class Driver_WaitMatch_Activity extends AppCompatActivity {
             @Override
             public void onSuccess(TaskInfoData taskInfoData) {
                 Log.v("ppking", "taskInfoData   : " + taskInfoData);
+
                 getTaskInfoData = taskInfoData;
 
                 if (driver_matched_dialog == null) {
@@ -110,6 +97,7 @@ public class Driver_WaitMatch_Activity extends AppCompatActivity {
                             new Driver_Matched_Dialog(Driver_WaitMatch_Activity.this, taskInfoData, driverData, getTaskNumber, phone, password);
 
                     driver_matched_dialog.CreateMatchedDialog();
+                    getTaskNumber = null;
                 }else{
                     driver_matched_dialog = null;
                 }
@@ -121,40 +109,14 @@ public class Driver_WaitMatch_Activity extends AppCompatActivity {
         getTaskNumber = null;
     }
 
-    public void AcceptMission(){
-        Connect_API.accepttask(Driver_WaitMatch_Activity.this, getTaskNumber, phone, driverData.getApiKey(), new Connect_API.OnGetConnectStatusListener() {
-            @Override
-            public void onFail(Exception e, String jsonError) {
-                Log.v("ppking" , "Exception   : " + e);
-                Log.v("ppking" , "jsonError   : " + jsonError);
-            }
-
-            @Override
-            public void onSuccess(String isError, String message) {
-                Log.v("ppking" , "isError   : " + isError);
-                Log.v("ppking" , "message   : " + message);
-                Bundle bundle = new Bundle();
-                bundle.putSerializable("taskInfoData" , getTaskInfoData);
-                Intent it = new Intent(Driver_WaitMatch_Activity.this , Driver_Passenger_Request_Activity.class );
-                it.putExtras(bundle);
-                Driver_WaitMatch_Activity.this.startActivity(it);
-            }
-        });
-    }
-
     public void ReLogin(){
-        SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
-        String newpassword =sharedPreferences.getString("password", null);
-        String newphone =sharedPreferences.getString("phone", null);
-        Log.v("ppking" , "password " + sharedPreferences.getString("password", null));
-        Log.v("ppking" , "phone " + sharedPreferences.getString("phone", null));
 
-
-        Connect_API.driverLogin(this, newphone, newpassword, new Connect_API.OnDriverLoginListener() {
+        Connect_API.driverLogin(this, phone, password, new Connect_API.OnDriverLoginListener() {
             @Override
             public void onLoginSuccess(DriverData newDriverData) {
 
                 driverData = newDriverData;
+                ChangeStatus("1");
                 GetTaskInfo();
             }
 
@@ -166,6 +128,25 @@ public class Driver_WaitMatch_Activity extends AppCompatActivity {
             @Override
             public void onFail(Exception e, String jsonError) {
 
+            }
+        });
+    }
+
+    //改變目前狀態為1  並且暫時不接收tasknumber  以便不重複接收
+
+    public void ChangeStatus(String status){
+        Connect_API.putdriverstatus(this, phone, status, driverData.getApiKey(), new Connect_API.OnPutDriverStatusListener() {
+            @Override
+            public void onFail(Exception e, String jsonError) {
+                Log.v("ppking", "" + e.getMessage());
+                Log.v("ppking", "jsonError : " + jsonError);
+
+            }
+
+            @Override
+            public void onSuccess(String isError, String result) {
+                Log.v("ppking", "isError :  " + isError);
+                Log.v("ppking", "result : " + result);
             }
         });
     }

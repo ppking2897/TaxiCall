@@ -1,5 +1,6 @@
 package com.example.biancaen.texicall.Passenger.Passenger_Sent_Car_Record;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,6 +20,8 @@ import com.example.biancaen.texicall.connectapi.UserData;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class Sent_Car_02_Record_Fragment extends Fragment {
     private ArrayList<String> date = new ArrayList<>();
     private ArrayList<String> getOn = new ArrayList<>();
@@ -26,7 +29,7 @@ public class Sent_Car_02_Record_Fragment extends Fragment {
     private ArrayList<String> time = new ArrayList<>();
     private MySent_Car_Record_Adapter_02 myAdapter_02;
 
-    private static UserData userData;
+    private static String passengerApiKey;
     private static String phoneNumber;
     private List<RecordPassengerData> listRecord;
 
@@ -35,9 +38,9 @@ public class Sent_Car_02_Record_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sent_car_02 , container , false);
 
-        Bundle getBundle = getActivity().getIntent().getExtras();
-        userData = (UserData)getBundle.getSerializable("userData");
-        phoneNumber = getBundle.getString("phoneNumber");
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("passenger" , MODE_PRIVATE);
+        phoneNumber = sharedPreferences.getString("phoneNumber" , null);
+        passengerApiKey = sharedPreferences.getString("passengerApiKey" , null);
 
         GetRecord();
 
@@ -52,7 +55,7 @@ public class Sent_Car_02_Record_Fragment extends Fragment {
     }
 
     public void GetRecord(){
-        Connect_API.getRecordListForPassenger(getActivity(), phoneNumber, userData.getApiKey(), new Connect_API.OnRecordListListener() {
+        Connect_API.getRecordListForPassenger(getActivity(), phoneNumber, passengerApiKey, new Connect_API.OnRecordListListener() {
             @Override
             public void onFail(Exception e, String jsonError) {
 
@@ -70,7 +73,7 @@ public class Sent_Car_02_Record_Fragment extends Fragment {
                         date.add(listRecord.get(i).getCreated_at().substring(0 , 11));
                         getOn.add("上車地點 / " +listRecord.get(i).getAddr_start_addr());
                         getOff.add("下車地點 / " +listRecord.get(i).getAddr_end_addr());
-                        time.add("乘車時間 / " +listRecord.get(i).getTime() + "分");
+                        time.add("乘車時間 / " +(int)Double.parseDouble(listRecord.get(i).getTime()) + "分");
 
                         myAdapter_02.notifyDataSetChanged();
                     }

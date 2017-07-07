@@ -1,6 +1,7 @@
 package com.example.biancaen.texicall.Driver.Driver_Travel_Record;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,8 +14,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.biancaen.texicall.Beginning.MainMenuActivity;
 import com.example.biancaen.texicall.Driver.Driver_Info.Driver_Info_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Main_Menu.Driver_Main_Menu_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Point_Record.Driver_Point_Record_Activity;
@@ -34,10 +39,13 @@ public class Driver_Travel_Record_Activity extends AppCompatActivity
     private ArrayList<String> getOff = new ArrayList<>();
     private ArrayList<String> time = new ArrayList<>();
     private ArrayList<String> rate = new ArrayList<>();
-    private static DriverData driverData;
     private static String phone;
     private static String password;
+    private static String driverApiKey;
     private Driver_Travel_Record_Adapter adapter;
+    private int driverStatus;
+    private NavigationView navigationView;
+    private boolean isLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,25 +60,12 @@ public class Driver_Travel_Record_Activity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_driver_travel_record);
+        navigationView = (NavigationView) findViewById(R.id.nav_view_driver_travel_record);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //todo 改變滑頁header textView
-//        View header = navigationView.getHeaderView(0);
-//        TextView textView = (TextView)header.findViewById(R.id.header_state);
-//        textView.setText(123456+"");
+        InitData();
 
-        //ToDo 司機紀錄上車 下車 時間  金額 資料位置
-
-        Bundle bundle = getIntent().getExtras();
-        if (bundle!=null){
-            driverData = (DriverData)bundle.getSerializable("driverData");
-            phone = bundle.getString("phone");
-            password = bundle.getString("password");
-
-            Log.v("ppking" , "phone  :  " + phone);
-            Log.v("ppking" , "driverData  :  " + driverData);
-        }
+        HeaderTextView();
 
         GetTravelData();
 
@@ -94,8 +89,14 @@ public class Driver_Travel_Record_Activity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_driver_travel__record);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        } else if (!isLogout){
+
+            Toast.makeText(this , "再按一次返回即可登出" , Toast.LENGTH_SHORT).show();
+            isLogout = true;
+
+        }else if (isLogout){
+
+            Logout();
         }
     }
 
@@ -110,21 +111,18 @@ public class Driver_Travel_Record_Activity extends AppCompatActivity
 
         } else if (id == R.id.nav_driver_point_list) {
             Intent it = new Intent(this , Driver_Point_Record_Activity.class);
-            it.putExtras(TransData());
             startActivity(it);
 
         } else if (id == R.id.nav_id__info) {
             Intent it = new Intent(this , Driver_Info_Activity.class);
-            it.putExtras(TransData());
             startActivity(it);
 
         } else if (id == R.id.nav_home) {
             Intent it = new Intent(this , Driver_Main_Menu_Activity.class);
-            it.putExtras(TransData());
             startActivity(it);
 
         } else if (id == R.id.nav_logout) {
-
+            Logout();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_driver_travel__record);
@@ -132,7 +130,7 @@ public class Driver_Travel_Record_Activity extends AppCompatActivity
         return true;
     }
     public void GetTravelData(){
-        Connect_API.getRecordListForDriver(this, phone, driverData.getApiKey(), new Connect_API.OnRecordListDriverListener() {
+        Connect_API.getRecordListForDriver(this, phone, driverApiKey, new Connect_API.OnRecordListDriverListener() {
             @Override
             public void onFail(Exception e, String jsonError) {
                 Log.v("ppking" , e.getMessage());
@@ -172,12 +170,50 @@ public class Driver_Travel_Record_Activity extends AppCompatActivity
             }
         });
     }
+    public void HeaderTextView(){
+        //改變滑頁header textView
+        View header = navigationView.getHeaderView(0);
+        TextView textView = (TextView)header.findViewById(R.id.header_state);
+        ImageView imageView = (ImageView)header.findViewById(R.id.picture);
 
-    public Bundle TransData(){
-        Bundle bundle = new Bundle();
-        bundle.putString("phone" , phone);
-        bundle.putString("password" , password);
-        bundle.putSerializable("driverData" , driverData);
-        return bundle;
+        if (driverStatus==2){
+
+            textView.setText("結束下線");
+            imageView.setImageResource(R.drawable.ic_offline_selected_side_drawer);
+        }else if (driverStatus==1){
+
+            textView.setText("上線載客");
+            imageView.setImageResource(R.drawable.ic_online_selected_side_drawer);
+        }
+    }
+    public void InitData(){
+        SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+        phone = sharedPreferences.getString("phone", null);
+        password = sharedPreferences.getString("password" , null);
+        driverApiKey = sharedPreferences.getString("driverApiKey" , null);
+        driverStatus = sharedPreferences.getInt("driverStatus" , 0);
+    }
+
+    public void Logout(){
+        Connect_API.loginOut(this, phone, driverApiKey, new Connect_API.OnLoginOutListener() {
+            @Override
+            public void onFail(Exception e, String jsonError) {
+                Log.v("ppking" , "Exception : " +e);
+                Log.v("ppking" , "jsonError : " +jsonError);
+            }
+
+            @Override
+            public void onSuccess(boolean isError, String message) {
+                if (!isError){
+                    Toast.makeText(Driver_Travel_Record_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
+                    //清除所有上一頁Activity
+                    Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }else {
+                    Toast.makeText(Driver_Travel_Record_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 }

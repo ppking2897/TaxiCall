@@ -1,6 +1,7 @@
 package com.example.biancaen.texicall.Passenger.Passenger_Edit;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,6 +33,7 @@ public class Passenger_Info_Activity extends AppCompatActivity
     private static UserData userData;
     private static String phoneNumber;
     private static String passWord;
+    private static String passengerApiKey;
     private TextView userName , phone , passWordText , mail;
     private Timer myTimer;
     @Override
@@ -57,14 +59,10 @@ public class Passenger_Info_Activity extends AppCompatActivity
         passWordText = (TextView)findViewById(R.id.passWordText);
         mail = (TextView)findViewById(R.id.mail);
 
-
-        Bundle bundle = getIntent().getExtras();
-
-        if (bundle!=null){
-            passWord = bundle.getString("passWord");
-            userData = (UserData)bundle.getSerializable("userData");
-            phoneNumber = bundle.getString("phoneNumber");
-        }
+        SharedPreferences sharedPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
+        phoneNumber = sharedPreferences.getString("phoneNumber" , null);
+        passWord = sharedPreferences.getString("passWord" , null);
+        passengerApiKey = sharedPreferences.getString("passengerApiKey" , null);
 
         if (myTimer==null){
             myTimer = new Timer();
@@ -135,25 +133,21 @@ public class Passenger_Info_Activity extends AppCompatActivity
         if (id == R.id.nav_car_service) {
 
             Intent it = new Intent(this ,Passenger_Car_Service_Activity.class);
-            it.putExtras(TransData());
             startActivity(it);
 
         } else if (id == R.id.nav_sent_car_record) {
 
             Intent it = new Intent(this , Passenger_Sent_Car_Record_Activity.class);
-            it.putExtras(TransData());
             startActivity(it);
 
         } else if (id == R.id.nav_customer_service) {
 
             Intent it = new Intent(this , Passenger_Customer_Activity.class);
-            it.putExtras(TransData());
             startActivity(it);
 
         } else if (id == R.id.nav_account) {
 
             Intent it = new Intent(this , Passenger_Info_Activity.class);
-            it.putExtras(TransData());
             startActivity(it);
         }
 
@@ -165,19 +159,16 @@ public class Passenger_Info_Activity extends AppCompatActivity
     public void passenger_edit_username(View view){
 
         Intent it = new Intent(this , Passenger_Edit_Username_Activity.class);
-        it.putExtras(TransData());
         startActivity(it);
     }
 
     public void passenger_edit_password(View view){
         Intent it = new Intent(this , Passenger_Edit_Password_Activity.class);
-        it.putExtras(TransData());
         startActivity(it);
     }
 
     public void passenger_edit_mail(View view){
         Intent it = new Intent(this , Passenger_Edit_Mail_Activity.class);
-        it.putExtras(TransData());
         startActivity(it);
     }
 
@@ -197,7 +188,7 @@ public class Passenger_Info_Activity extends AppCompatActivity
                     userData = newUserData;
                     userName.setText("用戶名 / " + newUserData.getName());
                     phone.setText("手機號碼 / " + updatePhoneNumber);
-                    passWordText.setText("密碼 / " + updatePassWord);
+                    passWordText.setText(updatePassWord);
                     mail.setText("信箱 / " + newUserData.getEmail());
 
                 }
@@ -214,13 +205,5 @@ public class Passenger_Info_Activity extends AppCompatActivity
 
             });
         }
-    }
-
-    public Bundle TransData(){
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("userData" , userData);
-        bundle.putString("phoneNumber" , phoneNumber);
-        bundle.putString("passWord" , passWord);
-        return bundle;
     }
 }

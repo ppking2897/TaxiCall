@@ -50,7 +50,7 @@ public class Driver_Login_Activity extends AppCompatActivity {
                     Log.v("ppking" , " isFail  :  " + isFail);
                     Log.v("ppking" , " msg  :  " + msg);
 
-                    Toast.makeText(Driver_Login_Activity.this , "輸入資料有誤" , Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Driver_Login_Activity.this , ""+msg , Toast.LENGTH_SHORT).show();
                 }
 
                 @Override

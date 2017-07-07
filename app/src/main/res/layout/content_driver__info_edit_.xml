@@ -24,6 +24,7 @@
             android:src="@drawable/ic_driver_account_info"
             />
         <EditText
+            android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="19dp"
@@ -63,6 +64,7 @@
                 >
 
                 <EditText
+                    android:id="@+id/carShow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:hint="車身顏色"
@@ -73,14 +75,14 @@
 
 
                 <EditText
+                    android:id="@+id/carNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="-10dp"
                     android:hint="車牌號碼"
-                    android:textColorHint="@color/colorWhite"
-                    android:textSize="16sp"
                     android:inputType="text"
-                    />
+                    android:textColorHint="@color/colorWhite"
+                    android:textSize="16sp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -112,19 +114,23 @@
                 android:orientation="vertical"
                 >
                 <EditText
+                    android:id="@+id/phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:hint="09XXXXXXXX"
+                    android:hint="電話"
                     android:inputType="number"
                     android:textColorHint="@color/colorWhite"
                     android:textSize="16sp"
+                    android:clickable="false"
+                    android:focusableInTouchMode="false"
                     />
                 <EditText
+                    android:id="@+id/password"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="-10dp"
-                    android:hint="**************"
                     android:inputType="textPassword"
+                    android:hint="密碼"
                     android:textColorHint="@color/colorWhite"
                     android:textSize="16sp"
                     />

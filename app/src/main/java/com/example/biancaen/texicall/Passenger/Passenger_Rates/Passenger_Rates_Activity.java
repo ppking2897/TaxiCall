@@ -1,5 +1,7 @@
 package com.example.biancaen.texicall.Passenger.Passenger_Rates;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -8,7 +10,10 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.biancaen.texicall.Passenger.Passenger_Car_Service.Passenger_Car_Service_Activity;
+import com.example.biancaen.texicall.Passenger.Passenger_On_The_Way.Passenger_On_The_Way_Activity;
 import com.example.biancaen.texicall.R;
 import com.example.biancaen.texicall.connectapi.Connect_API;
 import com.example.biancaen.texicall.connectapi.PairInfoData;
@@ -21,7 +26,7 @@ import java.util.TimerTask;
 
 public class Passenger_Rates_Activity extends AppCompatActivity {
     private Bundle getBundle;
-    private int time;
+    private static int time;
     private static UserData userData;
     private static String phoneNumber;
     private static String password;
@@ -34,6 +39,8 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
     private Rates_01_Fragment rates_01_fragment;
     private Rates_02_Fragment rates_02_fragment;
     private Rates_03_Fragment rates_03_fragment;
+    private Timer timer;
+    private boolean isStartMatch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,20 +76,12 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
                 .commit();
 
         GetDataAndNewTask();
+
     }
 
 
     //系統配對Task
     public void systemMatchEnd(){
-
-        Log.v("ppking" , " jump!!!!  ");
-
-        Log.v("ppking" , " startLng :  " +startLng );
-        Log.v("ppking" , " startLat :  " +startLat );
-        Log.v("ppking" , " phoneNumber :  " +phoneNumber );
-        Log.v("ppking" , " taskNumber :  " +taskNumber );
-        Log.v("ppking" , " userData.getApiKey() :  " +userData.getApiKey() );
-
 
         Connect_API.starttask(Passenger_Rates_Activity.this,  startLng  , startLat , phoneNumber, taskNumber, userData.getApiKey(), new Connect_API.OnStartTaskListener() {
             @Override
@@ -96,49 +95,18 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
                 Log.v("ppking", " isError : " + isError);
                 Log.v("ppking", " message : " + message);
 
-                Connect_API.getpairinfo(Passenger_Rates_Activity.this, taskNumber, userData.getApiKey(), new Connect_API.OnGetPairInfoListener() {
-                    @Override
-                    public void onFail(Exception e, String jsonError) {
-                        Log.v("ppking" , "getpairinfo Exception : " + e.getMessage());
-                        Log.v("ppking" , "getpairinfo jsonError : " + jsonError);
-                    }
+                if (timer == null){
 
-                    @Override
-                    public void onSuccessGetPairInfo(PairInfoData pairInfoData) {
-
-                        Log.v("ppking" , "getpairinfo getDriver : " + pairInfoData.getDriver());
-                        Log.v("ppking" , "getpairinfo getAddr_start_addr : " + pairInfoData.getAddr_start_addr());
-                        Log.v("ppking" , "getpairinfo getCarnumber : " + pairInfoData.getCarnumber());
-                        Log.v("ppking" , "getpairinfo getMessage : " + pairInfoData.getMessage());
-                        Log.v("ppking" , "getpairinfo getCarnshow : " + pairInfoData.getCarnshow());
-                        Log.v("ppking" , "getpairinfo getEstimated_arrive_time : " + pairInfoData.getEstimated_arrive_time());
-                        Log.v("ppking" , "getpairinfo getName : " + pairInfoData.getName());
-
-                    }
-
-                    @Override
-                    public void onWaiting(String isError, String message) {
-                        Log.v("ppking" , "getpairinfo isError : " + isError);
-                        Log.v("ppking" , "getpairinfo message : " + message);
-                    }
-                });
+                    timer = new Timer();
+                    timer.schedule(new TaskAndGetDriverData() ,  1000 , 4000);
+                    isStartMatch = true;
+                }
             }
         });
-//        final Bundle bundle = new Bundle();
-//        bundle.putInt("time" , time);
-//        bundle.putString("destination" , destination);
-//
-//
-//        Intent it = new Intent(Passenger_Rates_Activity.this , Passenger_On_The_Way_Activity.class);
-//        it.putExtras(bundle);
-//        startActivity(it);
-//        finish();
-
-        }
+    }
 
     public void GetDataAndNewTask(){
         getBundle = Passenger_Rates_Activity.this.getIntent().getExtras();
-        time = getBundle.getInt("time");
         password = getBundle.getString("passWord");
 
         userData =(UserData)getBundle.getSerializable("userData");
@@ -161,7 +129,7 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
 
             @Override
             public void onFail(Exception e, String jsonError) {
-                Log.v("ppking" , ""+e.getMessage());
+                Log.v("ppking" , "Exception  : "+e.getMessage());
                 Log.v("ppking" , " jsonError  : " + jsonError);
             }
 
@@ -171,6 +139,10 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
                 Log.v("ppking" , " message  : " + message);
                 Log.v("ppking" , " tasknumber  : " + tasknumber);
                 taskNumber = tasknumber;
+                SharedPreferences sharedPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.putString("taskNumber" , taskNumber);
+                editor.apply();
             }
         });
     }
@@ -179,9 +151,101 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
         Passenger_Rates_Activity.price = price;
     }
 
+    public void MainGetTime(int time){
+        Passenger_Rates_Activity.time = time;
+    }
+
     public int GetMainPrice(){
         fragmentManager.beginTransaction().replace(R.id.fragment , rates_02_fragment).commit();
         return (price+emptyTripPay);
     }
 
+    public class TaskAndGetDriverData extends TimerTask{
+
+        @Override
+        public void run() {
+            Connect_API.getpairinfo(Passenger_Rates_Activity.this, taskNumber, userData.getApiKey(), new Connect_API.OnGetPairInfoListener() {
+                @Override
+                public void onFail(Exception e, String jsonError) {
+                    Log.v("ppking" , "getpairinfo Exception : " + e.getMessage());
+                    Log.v("ppking" , "getpairinfo jsonError : " + jsonError);
+                }
+
+                @Override
+                public void onSuccessGetPairInfo(PairInfoData pairInfoData) {
+
+                    if (pairInfoData.getMessage().equals("搜尋資訊成功")){
+                        timer.cancel();
+                        timer=null;
+
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("time" , time);
+                        bundle.putString("location" , location);
+                        bundle.putSerializable("pairInfoData" , pairInfoData);
+                        bundle.putSerializable("userData" , userData);
+                        bundle.putString("taskNumber", taskNumber);
+                        SharedPreferences sharedPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
+                        sharedPreferences.edit().putString("taskNumber" , taskNumber).apply();
+                        Intent it = new Intent(Passenger_Rates_Activity.this , Passenger_On_The_Way_Activity.class);
+                        it.putExtras(bundle);
+                        startActivity(it);
+                        finish();
+                    }
+                }
+
+                @Override
+                public void onWaiting(String isError, String message) {
+                    Log.v("ppking" , "getpairinfo isError : " + isError);
+                    Log.v("ppking" , "getpairinfo message : " + message);
+                }
+            });
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (isStartMatch){
+            timer = new Timer();
+            timer.schedule(new TaskAndGetDriverData() ,  1000 , 4000);
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (timer != null){
+            timer.cancel();
+            timer=null;
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        SharedPreferences sharedPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
+        String passengerApiKey = sharedPreferences.getString("passengerApiKey" , null);
+        Connect_API.cancelTask(this, taskNumber, passengerApiKey , new Connect_API.OnGetConnectStatusListener() {
+            @Override
+            public void onFail(Exception e, String jsonError) {
+                Log.v("ppking" , "cancelTask Exception :  " + e);
+                Log.v("ppking" , "cancelTask jsonError :  " + jsonError);
+            }
+
+            @Override
+            public void onSuccess(String isError, String message) {
+                Log.v("ppking" , "cancelTask isError :  " + isError);
+                Log.v("ppking" , "cancelTask message :  " + message);
+                if (isError.equals("false")){
+                    Toast.makeText(Passenger_Rates_Activity.this , ""+message , Toast.LENGTH_SHORT).show();
+                    Intent it = new Intent(Passenger_Rates_Activity.this , Passenger_Car_Service_Activity.class);
+                    startActivity(it);
+                }else{
+                    Toast.makeText(Passenger_Rates_Activity.this , ""+message , Toast.LENGTH_SHORT).show();
+                    Intent it = new Intent(Passenger_Rates_Activity.this , Passenger_Car_Service_Activity.class);
+                    startActivity(it);
+                }
+
+            }
+        });
+    }
 }

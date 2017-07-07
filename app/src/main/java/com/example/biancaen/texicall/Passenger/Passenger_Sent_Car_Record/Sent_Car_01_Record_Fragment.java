@@ -1,6 +1,7 @@
 package com.example.biancaen.texicall.Passenger.Passenger_Sent_Car_Record;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -16,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.biancaen.texicall.R;
 import com.example.biancaen.texicall.connectapi.Connect_API;
+import com.example.biancaen.texicall.connectapi.FavoriteAddressData;
 import com.example.biancaen.texicall.connectapi.RecordPassengerData;
 import com.example.biancaen.texicall.connectapi.UserData;
 
@@ -24,11 +26,12 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class Sent_Car_01_Record_Fragment extends Fragment {
     private ArrayList<String> address_Record = new ArrayList<>();
-    private static UserData userData;
+    private static String passengerApiKey;
     private static String phoneNumber;
-    private List<RecordPassengerData> listRecord;
     private MySent_Car_Record_Adapter_01 myAdapter;
     @Nullable
     @Override
@@ -37,13 +40,9 @@ public class Sent_Car_01_Record_Fragment extends Fragment {
 
         //-----Todo 地址紀錄預備位置-----
 
-
-        Bundle getBundle = getActivity().getIntent().getExtras();
-        userData = (UserData)getBundle.getSerializable("userData");
-        phoneNumber = getBundle.getString("phoneNumber");
-
-        Log.v("ppking" , "userData　:" + userData);
-        Log.v("ppking" , "phoneNumber　:" + phoneNumber);
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("passenger" , MODE_PRIVATE);
+        phoneNumber = sharedPreferences.getString("phoneNumber" , null);
+        passengerApiKey = sharedPreferences.getString("passengerApiKey" , null);
 
         GetRecord();
 
@@ -59,7 +58,7 @@ public class Sent_Car_01_Record_Fragment extends Fragment {
     }
 
     public void GetRecord(){
-        Connect_API.getRecordListForPassenger(getActivity(), phoneNumber, userData.getApiKey(), new Connect_API.OnRecordListListener() {
+        Connect_API.getFavoriteAddress(getActivity(), phoneNumber, passengerApiKey, new Connect_API.OnGetFavoriteAddressListener() {
             @Override
             public void onFail(Exception e, String jsonError) {
 
@@ -70,19 +69,11 @@ public class Sent_Car_01_Record_Fragment extends Fragment {
             }
 
             @Override
-            public void onSuccess(String isError, String msg, List<RecordPassengerData> data) {
+            public void onSuccess(List<FavoriteAddressData> datas) {
 
-
-                if (isError.equals("false")){
-                    Toast.makeText(getActivity() , ""+msg ,Toast.LENGTH_SHORT).show();
-                    listRecord = data;
-                    for (int i = 0; i < listRecord.size(); i++) {
-                        address_Record.add(listRecord.get(i).getAddr_end_addr());
-                        myAdapter.notifyDataSetChanged();
-                    }
-
-                }else{
-                    Toast.makeText(getActivity() , "記錄取得失敗" ,Toast.LENGTH_SHORT).show();
+                for (int i = 0; i < datas.size(); i++) {
+                    address_Record.add(datas.get(i).getFavorite());
+                    myAdapter.notifyDataSetChanged();
                 }
             }
         });

@@ -114,7 +114,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".Passenger.Passenger_In_The_Shuttle.Passenger_In_The_Shuttle_Activity"
+            android:name=".Passenger.Passenger_TakeRide_And_Arrived.Passenger_In_The_Shuttle_Activity"
             android:label="@string/title_activity_passenger__in_the_shuttle"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
@@ -160,16 +160,16 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".Driver.Driver_On_The_Way_Activity"
+            android:name=".Driver.Driver_Trip.Driver_On_The_Way_Activity"
             android:label="@string/title_activity_driver__on_the_way"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity
-            android:name=".Driver.Driver_Arrived_Activity"
+            android:name=".Driver.Driver_Trip.Driver_Arrived_Activity"
             android:label="@string/title_activity_driver__arrived"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-        <activity android:name=".Driver.Driver_Google_Map_Activity"
+        <activity android:name=".Driver.Driver_Trip.Driver_Google_Map_Activity"
             android:screenOrientation="portrait"
             />
         <activity android:name=".Driver.Driver_Trip.Driver_Trip_Done_Activity"

@@ -60,8 +60,8 @@ public class Passenger_Sign_Up_Activity extends AppCompatActivity {
             @Override
             public void run() {
                 if (isFail.equals("false")){
-                    Toast.makeText(Passenger_Sign_Up_Activity.this , "註冊成功!!", Toast.LENGTH_SHORT).show();
-                    Intent it = new Intent(Passenger_Sign_Up_Activity.this , Passenger_Car_Service_Activity.class);
+                    Toast.makeText(Passenger_Sign_Up_Activity.this , "註冊成功，請到信箱認證", Toast.LENGTH_SHORT).show();
+                    Intent it = new Intent(Passenger_Sign_Up_Activity.this , Passenger_Sign_in_Activity.class);
                     startActivity(it);
                     finish();
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.biancaen.texicall.Driver.Driver_On_The_Way_Activity"
+    tools:context="com.example.biancaen.texicall.Driver.Driver_Trip.Driver_On_The_Way_Activity"
     android:orientation="vertical"
     >
     <android.support.design.widget.AppBarLayout

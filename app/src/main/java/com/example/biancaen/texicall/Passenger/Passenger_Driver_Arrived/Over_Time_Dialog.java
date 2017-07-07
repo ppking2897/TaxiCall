@@ -40,7 +40,8 @@ class Over_Time_Dialog {
         noThanks.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent it = new Intent(context, Passenger_Car_Service_Activity.class);
+                context.startActivity(it);
             }
         });
 

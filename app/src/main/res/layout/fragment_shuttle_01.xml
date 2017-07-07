@@ -27,12 +27,5 @@
             android:textSize="24sp"
             android:gravity="center"
             />
-        <Button
-            android:id="@+id/goal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="測試到達目的地"
-            android:onClick="goal"
-            />
     </LinearLayout>
 </ScrollView>

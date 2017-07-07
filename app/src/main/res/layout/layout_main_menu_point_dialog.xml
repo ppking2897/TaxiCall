@@ -51,12 +51,11 @@
             android:textSize="16sp"
             />
         <TextView
-            android:id="@+id/dialogMainmeu"
+            android:id="@+id/dialogMainMenu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#FFB400"
             android:textSize="36sp"
-            android:text="1238"
             />
         <TextView
             android:layout_width="wrap_content"

@@ -17,29 +17,25 @@
             android:id="@+id/textViewDialog"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="聯絡乘客"
-            android:textSize="16sp"
+            android:text="乘客已取消此搭乘任務"
+            android:padding="10dp"
+            android:textSize="18sp"
             android:textColor="#FFFFFF"
             android:layout_centerInParent="true"
             android:gravity="center"
             />
 
-        <ImageView
-            android:id="@+id/closeDialog"
-            android:layout_width="50dp"
-            android:layout_height="40dp"
-            android:layout_alignParentEnd="true"
-            android:src="@drawable/btn_exit_deadhead_notice"
-            android:background="?android:selectableItemBackground"
-            />
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/numberPhone"
+        android:id="@+id/textView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:lineSpacingExtra="5dp"
+        android:layout_marginTop="20dp"
+        android:text="按下確定後回到主畫面"
         android:textColor="@color/colorBlack"
+        android:textSize="16sp"
         android:gravity="center"
         />
 

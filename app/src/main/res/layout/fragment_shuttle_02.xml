@@ -1,109 +1,118 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
-
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@color/topToolBarColor"
         >
-        <TextView
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="已抵達目的地"
-            android:layout_marginTop="40dp"
-            android:layout_marginBottom="30dp"
-            android:gravity="center"
-            android:textSize="20sp"
-            />
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginEnd="15dp"
+            android:orientation="vertical"
+            android:background="@color/topToolBarColor"
+            >
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="已抵達目的地"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="30dp"
+                android:gravity="center"
+                android:textSize="20sp"
+                />
 
-        <TextView
+            <TextView
+                android:id="@+id/address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="15dp"
+                android:layout_marginEnd="15dp"
+                android:layout_marginBottom="40dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:textSize="16sp"
+                android:background="@color/colorWhite"
+                android:textColor="@color/colorBlack"
+                android:gravity="center"
+                />
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="15dp"
             android:layout_marginEnd="15dp"
-            android:layout_marginBottom="40dp"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp"
-            android:textSize="16sp"
+            android:orientation="vertical"
             android:background="@color/colorWhite"
-            android:textColor="@color/colorBlack"
-            android:text="新北市板橋區中正路二段542巷18弄64之7號"
-            />
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        android:orientation="vertical"
-        android:background="@color/colorWhite"
-        >
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:layout_marginBottom="30dp"
-            android:text="本次車程花費"
-            android:textSize="20sp"
-            android:gravity="center"
-            android:textColor="@color/topToolBarColor"
-            />
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
             >
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="34dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginEnd="24dp"
-                android:text="新台幣"
-                android:textColor="@color/colorBlack"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:textSize="80sp"
-                android:text="1238"
-                android:textColor="#FC5185"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="30dp"
+                android:text="本次車程花費"
+                android:textSize="20sp"
+                android:gravity="center"
+                android:textColor="@color/topToolBarColor"
                 />
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="16sp"
-                android:text="元整"
-                android:textColor="@color/colorBlack"
+                android:orientation="horizontal"
+                android:gravity="center_horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginEnd="24dp"
+                    android:text="新台幣"
+                    android:textColor="@color/colorBlack"
+                    android:textSize="16sp"
+                    />
+                <TextView
+                    android:id="@+id/price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:textSize="80sp"
+                    android:textColor="#FC5185"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="元整"
+                    android:textColor="@color/colorBlack"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="25dp"
+                android:layout_marginBottom="24dp"
+                android:background="#C0BDC0"
                 />
+            <ImageView
+                android:id="@+id/recordAddress"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_gravity="center"
+                android:layout_marginBottom="24dp"
+                android:src="@drawable/btn_record_common_used"
+                />
+
+
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="25dp"
-            android:layout_marginBottom="24dp"
-            android:background="#C0BDC0"
-            />
-        <ImageView
-            android:layout_width="300dp"
-            android:layout_height="50dp"
-            android:layout_gravity="center"
-            android:layout_marginBottom="24dp"
-            android:src="@drawable/btn_record_common_used"
-            />
-
-
     </LinearLayout>
-
-</LinearLayout>
+</ScrollView>

@@ -51,8 +51,6 @@ public class Passenger_Sent_Car_Record_Activity extends AppCompatActivity
 
         toggleButton = (ToggleButton)findViewById(R.id.toggleButton);
 
-
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_sent_car);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -68,7 +66,6 @@ public class Passenger_Sent_Car_Record_Activity extends AppCompatActivity
 
         views.add(sent_car_01_Record_fragment);
         views.add(sent_car_02_Record_fragment);
-
 
         myViewPager.setAdapter(new MyFragmentAdapter(getSupportFragmentManager()));
         myViewPager.setCurrentItem(0);
@@ -110,25 +107,21 @@ public class Passenger_Sent_Car_Record_Activity extends AppCompatActivity
         if (id == R.id.nav_car_service) {
 
             Intent it = new Intent(this ,Passenger_Car_Service_Activity.class);
-            it.putExtras(TransData());
             startActivity(it);
 
         } else if (id == R.id.nav_sent_car_record) {
 
             Intent it = new Intent(this , Passenger_Sent_Car_Record_Activity.class);
-            it.putExtras(TransData());
             startActivity(it);
 
         } else if (id == R.id.nav_customer_service) {
 
             Intent it = new Intent(this , Passenger_Customer_Activity.class);
-            it.putExtras(TransData());
             startActivity(it);
 
         } else if (id == R.id.nav_account) {
 
             Intent it = new Intent(this , Passenger_Info_Activity.class);
-            it.putExtras(TransData());
             startActivity(it);
         }
 
@@ -153,18 +146,4 @@ public class Passenger_Sent_Car_Record_Activity extends AppCompatActivity
             return views.size();
         }
     }
-
-    public Bundle TransData(){
-        Bundle bundle = getIntent().getExtras();
-        passWord = bundle.getString("passWord");
-        userData = (UserData)bundle.getSerializable("userData");
-        phoneNumber = bundle.getString("phoneNumber");
-
-        bundle.putString("passWord" , passWord );
-        bundle.putSerializable("userData" , userData);
-        bundle.putString("phoneNumber" , phoneNumber);
-
-        return bundle;
-    }
-
 }
