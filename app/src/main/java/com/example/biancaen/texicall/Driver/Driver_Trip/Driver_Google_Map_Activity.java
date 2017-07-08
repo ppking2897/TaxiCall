@@ -90,7 +90,7 @@ public class Driver_Google_Map_Activity extends AppCompatActivity {
                         public void onSuccess(CheckOutData data) {
                             timer.cancel();
                             timer = null;
-                            
+
                             //todo checkdata 內的資料內容
                             Log.v("ppking" , " CheckOutData getMisscatchprice   :  " + data.getMisscatchprice());
                             Log.v("ppking" , " CheckOutData getTime  :  " + data.getTime());

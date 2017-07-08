@@ -38,8 +38,6 @@ public class Sent_Car_01_Record_Fragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sent_car_01 , container , false);
 
-        //-----Todo 地址紀錄預備位置-----
-
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("passenger" , MODE_PRIVATE);
         phoneNumber = sharedPreferences.getString("phoneNumber" , null);
         passengerApiKey = sharedPreferences.getString("passengerApiKey" , null);

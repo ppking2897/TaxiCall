@@ -52,8 +52,6 @@ public class Driver_Arrived_Activity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_driver_arrived);
         navigationView.setNavigationItemSelectedListener(this);
 
-
-        //todo 倒數10分鐘
         if (mycountDown == null){
             mycountDown = new MyCountDown(600000 , 60000);
             mycountDown.start();
