@@ -98,7 +98,7 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
                 if (timer == null){
 
                     timer = new Timer();
-                    timer.schedule(new TaskAndGetDriverData() ,  1000 , 4000);
+                    timer.schedule(new TaskAndGetDriverData() ,  0 , 4000);
                     isStartMatch = true;
                 }
             }

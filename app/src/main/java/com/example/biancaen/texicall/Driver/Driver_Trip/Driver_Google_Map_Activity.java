@@ -90,9 +90,18 @@ public class Driver_Google_Map_Activity extends AppCompatActivity {
                         public void onSuccess(CheckOutData data) {
                             timer.cancel();
                             timer = null;
+                            
+                            //todo checkdata 內的資料內容
+                            Log.v("ppking" , " CheckOutData getMisscatchprice   :  " + data.getMisscatchprice());
+                            Log.v("ppking" , " CheckOutData getTime  :  " + data.getTime());
+                            Log.v("ppking" , " CheckOutData getRemain_point  :  " + data.getRemain_point());
+                            Log.v("ppking" , " CheckOutData getDate  :  " + data.getDate());
+                            Log.v("ppking" , " CheckOutData getDistance  :  " + data.getDistance());
+                            Log.v("ppking" , " CheckOutData getError  :  " + data.getError());
+                            Log.v("ppking" , " CheckOutData getPrice  :  " + data.getPrice());
+
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("CheckOutData" , data);
-                            Log.v("ppking" , "CheckOutData  :" +  data.getMisscatchprice());
                             Intent it = new Intent(Driver_Google_Map_Activity.this , Driver_Trip_Done_Activity.class);
                             it.putExtras(bundle);
                             startActivity(it);
@@ -112,10 +121,11 @@ public class Driver_Google_Map_Activity extends AppCompatActivity {
             isLogout = true;
 
         }else if (isLogout){
-            timer.cancel();
-            timer = null;
-            Logout();
-
+            if (timer!=null){
+                timer.cancel();
+                timer = null;
+                Logout();
+            }
         }
     }
     public void Logout(){
@@ -146,20 +156,21 @@ public class Driver_Google_Map_Activity extends AppCompatActivity {
 
     public class RealPriceTask extends TimerTask {
 
+        //todo 異常
         @Override
         public void run() {
             Connect_API.realprice(Driver_Google_Map_Activity.this, taskNumber, driverApiKey, new Connect_API.OnRealPriceListener() {
                 @Override
                 public void onFail(Exception e, String jsonError) {
-                    Log.v("ppking" , "Exception  :  " +e);
-                    Log.v("ppking" , "jsonError  :  " +jsonError);
+                    Log.v("ppking" , "realprice Exception  :  " +e);
+                    Log.v("ppking" , "realprice jsonError  :  " +jsonError);
                 }
 
                 @Override
                 public void onSuccess(String isError, String message, String distance) {
-                    Log.v("ppking" , "isError  :  " +isError);
-                    Log.v("ppking" , "message  :  " +message);
-                    Log.v("ppking" , "distance  :  " +distance);
+                    Log.v("ppking" , "realprice isError  :  " +isError);
+                    Log.v("ppking" , "realprice message  :  " +message);
+                    Log.v("ppking" , "realprice distance  :  " +distance);
                 }
             });
         }
