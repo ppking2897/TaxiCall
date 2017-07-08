@@ -322,14 +322,14 @@
             android:background="#F5F4F6"
             />
 
-        <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:layout_width="320dp"
+            android:layout_height="60dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="25dp"
             android:layout_gravity="center"
             android:onClick="rates"
-            android:background="@drawable/btn_estimated_fare"
+            android:src="@drawable/btn_estimated_fare"
             />
 
 

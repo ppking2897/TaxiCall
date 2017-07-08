@@ -69,12 +69,10 @@ public class Shuttle_Fragment_02 extends Fragment {
                     @Override
                     public void onLoginFail(String isFail, String msg) {
 
-
                      }
 
                     @Override
                     public void onFail(Exception e, String jsonError) {
-
 
                     }
                 });
