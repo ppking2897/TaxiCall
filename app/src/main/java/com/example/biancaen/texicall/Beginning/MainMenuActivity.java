@@ -1,21 +1,16 @@
 package com.example.biancaen.texicall.Beginning;
 
-import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.transition.ChangeTransform;
-import android.util.Log;
 import android.view.View;
 import android.view.Window;
 
 import com.example.biancaen.texicall.Driver.Driver_Sign_Menu.DriverActivity;
+import com.example.biancaen.texicall.Support_Class.MyService;
 import com.example.biancaen.texicall.Passenger.Passenger_Sign_Menu.PassengerActivity;
 import com.example.biancaen.texicall.R;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 
 public class MainMenuActivity extends AppCompatActivity {
@@ -28,7 +23,9 @@ public class MainMenuActivity extends AppCompatActivity {
         getWindow().setExitTransition(new ChangeTransform());
         setContentView(R.layout.activity_mainmenu);
 
-
+        //當強制關閉此App時，進入Service做登出動作
+        Intent it = new Intent(this , MyService.class);
+        startService(it);
         //推播測試階段
 //        Log.i("get token   ", FirebaseInstanceId.getInstance().getToken());
     }

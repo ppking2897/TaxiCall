@@ -32,6 +32,11 @@ public class Driver_Login_Activity extends AppCompatActivity {
 
                     if (driverData.getType().equals("driver")){
 
+                        SharedPreferences sharedPreferences = getSharedPreferences("type" , MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putBoolean("isDriver" , true);
+                        editor.apply();
+
                         Bundle bundle = new Bundle();
                         bundle.putSerializable("driverData" , driverData);
                         bundle.putString("phone" , phone.getText().toString());

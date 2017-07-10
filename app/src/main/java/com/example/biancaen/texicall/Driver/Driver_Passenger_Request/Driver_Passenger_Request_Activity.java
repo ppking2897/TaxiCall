@@ -68,6 +68,13 @@ public class Driver_Passenger_Request_Activity extends AppCompatActivity
         phone = sharedPreferences.getString("phone" , null);
         password = sharedPreferences.getString("password" , null);
 
+
+        //強制關閉APP  再次登入會依狀態到目前App位置
+        sharedPreferences = getSharedPreferences("type" , MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean("isDriver" , true);
+        editor.apply();
+
         GetTaskStatusAndDriverData();
         PassengerTerminateListener();
 
@@ -185,6 +192,7 @@ public class Driver_Passenger_Request_Activity extends AppCompatActivity
 
                     }
 
+                    /**判斷目前是什麼狀態 **/
                     @Override
                     public void onSuccess(TaskInfoFullData data) {
                         Log.v("ppking" , " TaskInfoFullData : " + data.getTask_status());

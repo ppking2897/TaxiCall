@@ -14,6 +14,7 @@ import com.example.biancaen.texicall.R;
 public class Driver_Main_Menu_Dialog {
     private Context context;
     private String remainPoint;
+    private AlertDialog alertDialog;
     public Driver_Main_Menu_Dialog(Context context , String remainPoint){
         this.context =context;
         this.remainPoint = remainPoint;
@@ -30,7 +31,7 @@ public class Driver_Main_Menu_Dialog {
         dialogMainMenu.setText(remainPoint);
         builder.setView(view);
 
-        final AlertDialog alertDialog = builder.create();
+        alertDialog = builder.create();
         alertDialog.show();
 
         knowButton.setOnClickListener(new View.OnClickListener() {

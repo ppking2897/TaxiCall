@@ -25,6 +25,7 @@ import com.example.biancaen.texicall.Driver.Driver_Passenger_Request.Driver_Pass
 import com.example.biancaen.texicall.Driver.Driver_Point_Record.Driver_Point_Record_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Travel_Record.Driver_Travel_Record_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Match.Driver_WaitMatch_Activity;
+import com.example.biancaen.texicall.Support_Class.MyService;
 import com.example.biancaen.texicall.R;
 import com.example.biancaen.texicall.connectapi.Connect_API;
 import com.example.biancaen.texicall.connectapi.DriverData;
@@ -56,45 +57,14 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
         onlineImg = (ImageView)findViewById(R.id.onlineImg);
         onlineText = (TextView)findViewById(R.id.onlineText);
 
-        Bundle bundle = getIntent().getExtras();
-        if (bundle!=null){
-            driverData = (DriverData)bundle.getSerializable("driverData");
-            phone = bundle.getString("phone");
-            password = bundle.getString("password");
-
-            SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString("phone" , phone);
-            editor.putString("password" , password);
-            editor.putString("driverApiKey" , driverData.getApiKey());
-            editor.putInt("driverStatus" , driverData.getStatus());
-            editor.apply();
-
-            //判斷目前driver狀態
-            if (driverData.getStatus()==1){
-                //1 下線狀態
-                driverOnline.setBackgroundResource(R.drawable.shape_online_driver);
-                onlineImg.setImageResource(R.drawable.ic_car_online_btn_homesreen);
-                onlineText.setText("上線載客");
-
-            }else if (driverData.getStatus()==2){
-                //2上線狀態
-                driverOnline.setBackgroundResource(R.drawable.shape_offline_driver);
-                onlineImg.setImageResource(R.drawable.ic_offline_btn_homescreen);
-                onlineText.setText("結束下線");
-
-            }else if (driverData.getStatus()==3){
-                Intent it = new Intent(this , Driver_Passenger_Request_Activity.class);
-                startActivity(it);
-            }
-        }else{
-            Log.v("ppking" , "Main menu No bundle !");
-            ReLogin();
-        }
+        InitData();
 
         GetRemainPoint();
         //建立GPS Provide
         UpdateLocation();
+
+        MyService service = new MyService();
+
     }
 
     public void driver_travel_record(View view){
@@ -320,6 +290,7 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
     }
 
     public void Logout(){
+
         Connect_API.loginOut(this, phone, driverData.getApiKey(), new Connect_API.OnLoginOutListener() {
             @Override
             public void onFail(Exception e, String jsonError) {
@@ -342,19 +313,60 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
         });
     }
     public void GetRemainPoint(){
-        Connect_API.getPointRecord(this, phone, driverData.getApiKey() , new Connect_API.OnPointRecordListener() {
-            @Override
-            public void onFail(Exception e, String jsonError) {
-                Log.v("ppking" , e.getMessage());
-                Log.v("ppking" , " jsonError :  "+jsonError);
-                Toast.makeText(Driver_Main_Menu_Activity.this , "連線出現異常" , Toast.LENGTH_SHORT).show();
-            }
+        if (driverData.getStatus()!=3){
+            Connect_API.getPointRecord(this, phone, driverData.getApiKey() , new Connect_API.OnPointRecordListener() {
+                @Override
+                public void onFail(Exception e, String jsonError) {
+                    Log.v("ppking" , e.getMessage());
+                    Log.v("ppking" , " jsonError :  "+jsonError);
+                    Toast.makeText(Driver_Main_Menu_Activity.this , "連線出現異常" , Toast.LENGTH_SHORT).show();
+                }
 
-            @Override
-            public void onSuccess(String isError, String message, String name, String savings, double sum, List<PointData> data) {
-                Driver_Main_Menu_Dialog driverMainMenuDialog = new Driver_Main_Menu_Dialog(Driver_Main_Menu_Activity.this , savings );
-                driverMainMenuDialog.CreatePointDialog();
+                @Override
+                public void onSuccess(String isError, String message, String name, String savings, double sum, List<PointData> data) {
+                    Driver_Main_Menu_Dialog driverMainMenuDialog = new Driver_Main_Menu_Dialog(Driver_Main_Menu_Activity.this , savings );
+                    driverMainMenuDialog.CreatePointDialog();
+                }
+            });
+        }
+    }
+
+    public void InitData(){
+        Bundle bundle = getIntent().getExtras();
+        if (bundle!=null){
+
+            driverData = (DriverData)bundle.getSerializable("driverData");
+            phone = bundle.getString("phone");
+            password = bundle.getString("password");
+
+            SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putString("phone" , phone);
+            editor.putString("password" , password);
+            editor.putString("driverApiKey" , driverData.getApiKey());
+            editor.putInt("driverStatus" , driverData.getStatus());
+            editor.apply();
+
+            //判斷目前driver狀態
+            if (driverData.getStatus()==1){
+                //1 下線狀態
+                driverOnline.setBackgroundResource(R.drawable.shape_online_driver);
+                onlineImg.setImageResource(R.drawable.ic_car_online_btn_homesreen);
+                onlineText.setText("上線載客");
+
+            }else if (driverData.getStatus()==2){
+                //2上線狀態
+                driverOnline.setBackgroundResource(R.drawable.shape_offline_driver);
+                onlineImg.setImageResource(R.drawable.ic_offline_btn_homescreen);
+                onlineText.setText("結束下線");
+
+            }else if (driverData.getStatus()==3){
+                Intent it = new Intent(this , Driver_Passenger_Request_Activity.class);
+                startActivity(it);
             }
-        });
+        }else{
+            Log.v("ppking" , "Main menu No bundle !");
+            ReLogin();
+        }
     }
 }

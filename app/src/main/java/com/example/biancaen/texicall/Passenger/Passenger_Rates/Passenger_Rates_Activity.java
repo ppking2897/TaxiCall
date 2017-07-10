@@ -83,14 +83,12 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
     //系統配對Task
     public void systemMatchEnd(){
 
-        Connect_API.starttask(Passenger_Rates_Activity.this,  startLng  , startLat , phoneNumber, taskNumber, userData.getApiKey(), new Connect_API.OnStartTaskListener() {
+        Connect_API.starttask(Passenger_Rates_Activity.this,  startLng  , startLat  , phoneNumber, taskNumber, userData.getApiKey(), new Connect_API.OnStartTaskListener() {
             @Override
             public void onFail(Exception e, String jsonError) {
                 Log.v("ppking" , " Exception : " + e.getMessage());
                 Log.v("ppking" , " jsonError : " + jsonError);
                 Toast.makeText(Passenger_Rates_Activity.this , "配對異常，請聯絡客服人員" , Toast.LENGTH_SHORT).show();
-                Intent it = new Intent(Passenger_Rates_Activity.this , Passenger_Car_Service_Activity.class);
-                startActivity(it);
 
             }
 
@@ -99,10 +97,12 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
                 Log.v("ppking", " isError : " + isError);
                 Log.v("ppking", " message : " + message);
 
-                if (timer == null){
+                if (timer == null && isError.equals("false")){
                     timer = new Timer();
                     timer.schedule(new TaskAndGetDriverData() ,  0 , 4000);
                     isStartMatch = true;
+                }else if (isError.equals("true")){
+                    Toast.makeText(Passenger_Rates_Activity.this , ""+message , Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -247,7 +247,6 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
                     Intent it = new Intent(Passenger_Rates_Activity.this , Passenger_Car_Service_Activity.class);
                     startActivity(it);
                 }
-
             }
         });
     }

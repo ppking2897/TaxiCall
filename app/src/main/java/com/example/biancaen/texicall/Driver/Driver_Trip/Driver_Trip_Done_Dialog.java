@@ -65,7 +65,7 @@ public class Driver_Trip_Done_Dialog {
             price.setText((int)Double.parseDouble(checkOutData.getPrice())+"點");
         }else {
             totalPrice.setText("金額 :\n(此趟包含 "+checkOutData.getMisscatchprice() +" 空趟費)");
-            price.setText((int)Double.parseDouble(checkOutData.getPrice())+(int)Double.parseDouble(checkOutData.getMisscatchprice())+"點");
+            price.setText((int)Double.parseDouble(checkOutData.getPrice())+"點");
         }
 
         builder.setView(view);

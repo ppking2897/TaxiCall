@@ -20,6 +20,7 @@ import android.widget.Toast;
 import com.example.biancaen.texicall.Beginning.MainMenuActivity;
 import com.example.biancaen.texicall.Driver.Driver_Info.Driver_Info_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Main_Menu.Driver_Main_Menu_Activity;
+import com.example.biancaen.texicall.Driver.Driver_Match.Driver_WaitMatch_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Point_Record.Driver_Point_Record_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Travel_Record.Driver_Travel_Record_Activity;
 import com.example.biancaen.texicall.R;
@@ -58,27 +59,46 @@ public class Driver_Arrived_Activity extends AppCompatActivity
         }
     }
     public void cancel(View view){
-        //if (!isOverTime){
+        if (isOverTime){
+            SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+            String tasknumber = sharedPreferences.getString("tasknumber" , null);
+            final String driverApiKey = sharedPreferences.getString("driverApiKey" , null);
+            final String phone = sharedPreferences.getString("phone" , null);
+            Connect_API.terminateByDriver(this, tasknumber, driverApiKey, new Connect_API.OnGetConnectStatusListener() {
+                @Override
+                public void onFail(Exception e, String jsonError) {
+                    Log.v("ppking" , "terminateByDriver Exception : " +  e);
+                    Log.v("ppking" , "terminateByDriver jsonError : " +  jsonError);
+                }
 
-        SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
-        String tasknumber = sharedPreferences.getString("tasknumber" , null);
-        String driverApiKey = sharedPreferences.getString("driverApiKey" , null);
-        Connect_API.terminateByDriver(this, tasknumber, driverApiKey, new Connect_API.OnGetConnectStatusListener() {
-            @Override
-            public void onFail(Exception e, String jsonError) {
-                Log.v("ppking" , "terminateByDriver Exception : " +  e);
-                Log.v("ppking" , "terminateByDriver jsonError : " +  jsonError);
-            }
+                @Override
+                public void onSuccess(String isError, String message) {
+                    Log.v("ppking", "terminateByDriver isError : " + isError);
+                    Log.v("ppking", "terminateByDriver message : " + message);
+                    Connect_API.putdriverstatus(Driver_Arrived_Activity.this, phone, "1", driverApiKey, new Connect_API.OnPutDriverStatusListener() {
+                        @Override
+                        public void onFail(Exception e, String jsonError) {
+                            Log.v("ppking", "" + e.getMessage());
+                            Log.v("ppking", "jsonError : " + jsonError);
+                            Toast.makeText(Driver_Arrived_Activity.this, "連線異常", Toast.LENGTH_SHORT).show();
+                        }
 
-            @Override
-            public void onSuccess(String isError, String message) {
-                Log.v("ppking" , "terminateByDriver isError : " +  isError);
-                Log.v("ppking" , "terminateByDriver message : " +  message);
-            }
-        });
-        //}else{
-        //    Toast.makeText(this , "請等候10分鐘後再取消此任務",Toast.LENGTH_SHORT).show();
-        //}
+                        @Override
+                        public void onSuccess(String isError, String result) {
+                            Log.v("ppking", "isError :  " + isError);
+                            Log.v("ppking", "result : " + result);
+                            if (isError.equals("false")) {
+                                Intent it = new Intent(Driver_Arrived_Activity.this, Driver_Main_Menu_Activity.class);
+                                startActivity(it);
+                            }
+                        }
+
+                    });
+                }
+            });
+        }else{
+            Toast.makeText(this , "請等候10分鐘後再取消此任務",Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void getIn(View view){
@@ -191,6 +211,7 @@ public class Driver_Arrived_Activity extends AppCompatActivity
         @Override
         public void onFinish() {
             countText.setText(""+0);
+            isOverTime = true;
             mycountDown.cancel();
             mycountDown = null;
         }

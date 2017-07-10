@@ -60,9 +60,10 @@ public class Driver_Info_Edit_Activity extends AppCompatActivity implements Navi
         getPassword = sharedPreferences.getString("password" , null);
         driverApiKey = sharedPreferences.getString("driverApiKey" , null);
 
-
+        //取得初始資訊
         GetStatus();
         ReLogin();
+        
         phone.setText(getPhone);
         password.setText(getPassword);
 
@@ -90,8 +91,6 @@ public class Driver_Info_Edit_Activity extends AppCompatActivity implements Navi
 
         if (id == R.id.infoEditOption){
             ChangeInfo();
-            Intent it = new Intent(this , Driver_Info_Activity.class);
-            startActivity(it);
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -137,6 +136,8 @@ public class Driver_Info_Edit_Activity extends AppCompatActivity implements Navi
                         Log.v("ppking" , " msg  : "+msg);
                         if (isFail.equals("false")){
                             Toast.makeText(Driver_Info_Edit_Activity.this , ""+msg , Toast.LENGTH_SHORT).show();
+                            Intent it = new Intent(Driver_Info_Edit_Activity.this , Driver_Info_Activity.class);
+                            startActivity(it);
                         }else{
                             Toast.makeText(Driver_Info_Edit_Activity.this , ""+msg , Toast.LENGTH_SHORT).show();
                         }
@@ -149,6 +150,8 @@ public class Driver_Info_Edit_Activity extends AppCompatActivity implements Navi
                     }
                 });
     }
+
+    //以下皆為取得初始資訊
 
     public void GetStatus(){
         Connect_API.getdriverstatus(this, getPhone, driverApiKey, new Connect_API.OnGetDriverStatusListener() {

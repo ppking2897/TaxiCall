@@ -47,12 +47,13 @@ import com.example.biancaen.texicall.notificaiton.HBMessageService;
 public class Driver_On_The_Way_Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    private static DriverData driverData;
+    private static String tasknumber;
     private static String phone;
-    private static String password;
+    private static String driverApiKey;
     private static TaskInfoData getTaskInfoData;
     private AlertDialog alertDialog;
     private boolean isLogout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,22 +71,19 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_driver_on_the_way);
         navigationView.setNavigationItemSelectedListener(this);
 
-        Bundle bundle = getIntent().getExtras();
-        if (bundle!=null){
-            driverData = (DriverData)bundle.getSerializable("driverData");
-            phone = bundle.getString("phone");
-            password = bundle.getString("password");
-            getTaskInfoData =(TaskInfoData)bundle.getSerializable("taskInfoData");
-        }
-        Log.v("ppking" , " getTaskInfoData  !!" + getTaskInfoData);
-        TextView arriveAddress = (TextView)findViewById(R.id.arriveAddress);
-        arriveAddress.setText(getTaskInfoData.getAddr_start_addr());
+        SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+        tasknumber = sharedPreferences.getString("tasknumber" , null);
+        driverApiKey = sharedPreferences.getString("driverApiKey" , null);
+        phone = sharedPreferences.getString("phone" , null);
+
+        GetTaskInfo();
+
         PassengerTerminateListener();
     }
 
     //跳轉google導航
     public void arriveAddress(View view){
-        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + getTaskInfoData.getAddr_end_addr());
+        Uri gmmIntentUri = Uri.parse("google.navigation:q=" + getTaskInfoData.getAddr_start_addr());
         Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
         mapIntent.setPackage("com.google.android.apps.maps");
         startActivity(mapIntent);
@@ -143,7 +141,7 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
     }
     public void arrived(View view){
 
-        Connect_API.getdriverstatus(this, phone, driverData.getApiKey(), new Connect_API.OnGetDriverStatusListener() {
+        Connect_API.getdriverstatus(this, phone, driverApiKey, new Connect_API.OnGetDriverStatusListener() {
             @Override
             public void onFail(Exception e, String jsonError) {
                 Toast.makeText(Driver_On_The_Way_Activity.this, "連線異常", Toast.LENGTH_SHORT).show();
@@ -154,7 +152,7 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
 
                 Log.v("ppking", "status :  " + status);
 
-                Connect_API.pickup(Driver_On_The_Way_Activity.this, tasknumber, driverData.getApiKey(), new Connect_API.OnGetConnectStatusListener() {
+                Connect_API.pickup(Driver_On_The_Way_Activity.this, tasknumber, driverApiKey, new Connect_API.OnGetConnectStatusListener() {
                     @Override
                     public void onFail(Exception e, String jsonError) {
                         Log.v("ppking" , " Exception : " + e);
@@ -178,15 +176,8 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
         AlertDialog.Builder builder = new AlertDialog.Builder(this , R.style.Contact_Dialog);
         View layout = LayoutInflater.from(this).inflate(R.layout.layout_contact_dialog , null);
 
-
-
         TextView textView = (TextView)layout.findViewById(R.id.numberPhone);
         textView.setText("乘客電話號碼為:\n"+ getTaskInfoData.getPassenger() + "\n是否要移動到撥號畫面?");
-
-        SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
-        SharedPreferences.Editor edit = sharedPreferences.edit();
-        edit.putString("passengerPhone" , getTaskInfoData.getPassenger());
-        edit.apply();
 
         LinearLayout knowButton = (LinearLayout)layout.findViewById(R.id.knowButton);
 
@@ -266,7 +257,7 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
         HBMessageService.setOnStartDriverTerminateListener(new HBMessageService.OnStartDriverTerminateListener() {
             @Override
             public void onGetDriverTerminate(String title, String body, int REQUEST_CODE, int INTENT_ID) {
-                Connect_API.putdriverstatus(Driver_On_The_Way_Activity.this, phone, "1", driverData.getApiKey(), new Connect_API.OnPutDriverStatusListener() {
+                Connect_API.putdriverstatus(Driver_On_The_Way_Activity.this, phone, "1", driverApiKey, new Connect_API.OnPutDriverStatusListener() {
                     @Override
                     public void onFail(Exception e, String jsonError) {
                         Log.v("ppking" , "Exception  :  "+ e);
@@ -306,6 +297,28 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
                         finish();
                     }
                 });
+            }
+        });
+    }
+
+    public void GetTaskInfo(){
+        Connect_API.taskinfo(this, tasknumber, driverApiKey, new Connect_API.OnTaskInfoListener() {
+            @Override
+            public void onFail(Exception e, String jsonError) {
+                Log.v("ppking" , " Exception  : " +e);
+                Log.v("ppking" , " jsonError  : " +jsonError);
+            }
+
+            @Override
+            public void onSuccess(TaskInfoData taskInfoData) {
+                getTaskInfoData = taskInfoData;
+                SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+                SharedPreferences.Editor edit = sharedPreferences.edit();
+                edit.putString("passengerPhone" , getTaskInfoData.getPassenger());
+                edit.apply();
+
+                TextView arriveAddress = (TextView)findViewById(R.id.arriveAddress);
+                arriveAddress.setText(getTaskInfoData.getAddr_start_addr());
             }
         });
     }

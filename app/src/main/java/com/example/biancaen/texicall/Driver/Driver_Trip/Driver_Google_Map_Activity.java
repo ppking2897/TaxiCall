@@ -46,7 +46,7 @@ public class Driver_Google_Map_Activity extends AppCompatActivity {
         passengerPhone = sharedPreferences.getString("passengerPhone" , null);
 
 
-        Log.v("ppking" , " taskNumber : " + taskNumber);
+        Log.v("ppking" , " passengerPhone : " + passengerPhone);
         Log.v("ppking" , " phone : " + phone);
 
         Connect_API.taskinfo(Driver_Google_Map_Activity.this, taskNumber, driverApiKey, new Connect_API.OnTaskInfoListener() {
@@ -98,7 +98,6 @@ public class Driver_Google_Map_Activity extends AppCompatActivity {
                                 timer = null;
                             }
 
-                            //todo checkdata 內的資料內容
                             Log.v("ppking" , " CheckOutData getMisscatchprice   :  " + data.getMisscatchprice());
                             Log.v("ppking" , " CheckOutData getTime  :  " + data.getTime());
                             Log.v("ppking" , " CheckOutData getRemain_point  :  " + data.getRemain_point());
@@ -107,6 +106,7 @@ public class Driver_Google_Map_Activity extends AppCompatActivity {
                             Log.v("ppking" , " CheckOutData getError  :  " + data.getError());
                             Log.v("ppking" , " CheckOutData getPrice  :  " + data.getPrice());
 
+                            start=false;
                             Bundle bundle = new Bundle();
                             bundle.putSerializable("CheckOutData" , data);
                             Intent it = new Intent(Driver_Google_Map_Activity.this , Driver_Trip_Done_Activity.class);
@@ -163,7 +163,6 @@ public class Driver_Google_Map_Activity extends AppCompatActivity {
 
     public class RealPriceTask extends TimerTask {
 
-        //todo 異常
         @Override
         public void run() {
             Connect_API.realprice(Driver_Google_Map_Activity.this, taskNumber, driverApiKey, new Connect_API.OnRealPriceListener() {
