@@ -1,6 +1,5 @@
 package com.example.biancaen.texicall.Driver.Driver_Trip;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
@@ -30,6 +29,9 @@ public class Driver_Trip_Done_Activity extends AppCompatActivity
 
     private boolean isLogout;
     private CheckOutData checkOutData;
+    private String phone;
+    private String driverApiKey;
+    private SharedPreferences sharedPreferences;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,6 +48,12 @@ public class Driver_Trip_Done_Activity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_driver_trip_done);
         navigationView.setNavigationItemSelectedListener(this);
+
+        sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+        phone =sharedPreferences.getString("phone", null);
+        driverApiKey = sharedPreferences.getString("driverApiKey" , null);
+
+        ChangeStatus();
     }
     @Override
     public void onBackPressed() {
@@ -94,29 +102,17 @@ public class Driver_Trip_Done_Activity extends AppCompatActivity
         return true;
     }
     public void settle(View view){
-        SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
-        String taskNumber =sharedPreferences.getString("tasknumber", null);
-        final String phone =sharedPreferences.getString("phone", null);
-        final String driverApiKey = sharedPreferences.getString("driverApiKey" , null);
+        sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
         final String destination =  sharedPreferences.getString("destination" , null);
         final String location =  sharedPreferences.getString("location" , null);
-        String password = sharedPreferences.getString("password" , null);
-
-        Log.v("ppking" , " phone  :  " + phone);
-        Log.v("ppking" , " password  :  " + password);
-        Log.v("ppking" , " driverApiKey  :  " + driverApiKey);
-
 
         Bundle bundle = getIntent().getExtras();
         checkOutData = (CheckOutData)bundle.getSerializable("CheckOutData");
-        Log.v("ppking" , " checkOutData  :  " + checkOutData);
 
         Driver_Trip_Done_Dialog driver_trip_done_dialog =
                 new Driver_Trip_Done_Dialog(Driver_Trip_Done_Activity.this , checkOutData , location , destination ,
                         phone , driverApiKey);
         driver_trip_done_dialog.CreateTripDoneDialog();
-
-
     }
 
     public void Logout(){
@@ -142,6 +138,20 @@ public class Driver_Trip_Done_Activity extends AppCompatActivity
                 }else {
                     Toast.makeText(Driver_Trip_Done_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
                 }
+            }
+        });
+    }
+    public void ChangeStatus(){
+        Connect_API.putdriverstatus(this, phone, "1", driverApiKey, new Connect_API.OnPutDriverStatusListener() {
+            @Override
+            public void onFail(Exception e, String jsonError) {
+                Log.v("ppking" , "putdriverstatus Exception  : " + e);
+                Log.v("ppking" , "putdriverstatus jsonError  : " + jsonError);
+            }
+
+            @Override
+            public void onSuccess(String isError, String result) {
+                Log.v("ppking" , "putdriverstatus result  : " + result);
             }
         });
     }

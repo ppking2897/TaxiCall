@@ -29,6 +29,7 @@ public class Driver_Google_Map_Activity extends AppCompatActivity {
     private boolean isLogout;
     private String taskNumber;
     private String phone;
+    private String passengerPhone;
     private String driverApiKey;
     private Timer timer;
 
@@ -42,6 +43,8 @@ public class Driver_Google_Map_Activity extends AppCompatActivity {
         taskNumber =sharedPreferences.getString("tasknumber", null);
         phone =sharedPreferences.getString("phone", null);
         driverApiKey = sharedPreferences.getString("driverApiKey" , null);
+        passengerPhone = sharedPreferences.getString("passengerPhone" , null);
+
 
         Log.v("ppking" , " taskNumber : " + taskNumber);
         Log.v("ppking" , " phone : " + phone);
@@ -80,16 +83,20 @@ public class Driver_Google_Map_Activity extends AppCompatActivity {
                     mapIntent.setPackage("com.google.android.apps.maps");
                     startActivity(mapIntent);
                 }else {
-                    Connect_API.checkOut(Driver_Google_Map_Activity.this, taskNumber, phone, driverApiKey, new Connect_API.OnCheckOutListener() {
+                    Connect_API.checkOut(Driver_Google_Map_Activity.this, taskNumber, passengerPhone, driverApiKey, new Connect_API.OnCheckOutListener() {
                         @Override
                         public void onFail(Exception e, String jsonError) {
+                            Log.v("ppking" , "checkOut Exception  : " +e );
+                            Log.v("ppking" , "checkOut jsonError  : " +jsonError );
                             Toast.makeText(Driver_Google_Map_Activity.this , "連線異常"  , Toast.LENGTH_SHORT).show();
                         }
 
                         @Override
                         public void onSuccess(CheckOutData data) {
-                            timer.cancel();
-                            timer = null;
+                            if (timer!= null){
+                                timer.cancel();
+                                timer = null;
+                            }
 
                             //todo checkdata 內的資料內容
                             Log.v("ppking" , " CheckOutData getMisscatchprice   :  " + data.getMisscatchprice());

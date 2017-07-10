@@ -171,7 +171,6 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
                 });
             }
         });
-
     }
 
     public void CreateDialog(){
@@ -179,8 +178,15 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
         AlertDialog.Builder builder = new AlertDialog.Builder(this , R.style.Contact_Dialog);
         View layout = LayoutInflater.from(this).inflate(R.layout.layout_contact_dialog , null);
 
+
+
         TextView textView = (TextView)layout.findViewById(R.id.numberPhone);
         textView.setText("乘客電話號碼為:\n"+ getTaskInfoData.getPassenger() + "\n是否要移動到撥號畫面?");
+
+        SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString("passengerPhone" , getTaskInfoData.getPassenger());
+        edit.apply();
 
         LinearLayout knowButton = (LinearLayout)layout.findViewById(R.id.knowButton);
 
@@ -229,7 +235,6 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
             }
         }
     }
-
 
     public void Logout(){
         SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);

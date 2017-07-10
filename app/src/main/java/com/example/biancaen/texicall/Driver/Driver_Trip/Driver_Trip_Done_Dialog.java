@@ -68,11 +68,9 @@ public class Driver_Trip_Done_Dialog {
             price.setText((int)Double.parseDouble(checkOutData.getPrice())+(int)Double.parseDouble(checkOutData.getMisscatchprice())+"點");
         }
 
-
         builder.setView(view);
         final AlertDialog alertDialog = builder.create();
         alertDialog.show();
-
 
         closeDialog.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -85,31 +83,23 @@ public class Driver_Trip_Done_Dialog {
             @Override
             public void onClick(View v) {
 
-                Connect_API.putstatus(activity, phone, "1", driverApiKey, new Connect_API.OnPutStatusListener() {
-                    @Override
-                    public void onFail(Exception e, String jsonError) {
+            alertDialog.dismiss();
+            Intent it = new Intent(context , Driver_Main_Menu_Activity.class);
+            context.startActivity(it);
+            ((Activity)context).finish();
 
-                    }
-
-                    @Override
-                    public void onSuccess(String isError, String result) {
-                        Log.v("ppking" , " result  : " + result);
-                        alertDialog.dismiss();
-                        Intent it = new Intent(context , Driver_Main_Menu_Activity.class);
-                        context.startActivity(it);
-                        ((Activity)context).finish();
-                    }
-                });
             }
         });
 
         continueCarService.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alertDialog.dismiss();
-                Intent it = new Intent(context , Driver_Main_Menu_Activity.class);
-                context.startActivity(it);
-                ((Activity)context).finish();
+
+            alertDialog.dismiss();
+            Intent it = new Intent(context , Driver_Main_Menu_Activity.class);
+            context.startActivity(it);
+            ((Activity)context).finish();
+
             }
         });
     }

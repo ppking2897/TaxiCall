@@ -88,6 +88,10 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
             public void onFail(Exception e, String jsonError) {
                 Log.v("ppking" , " Exception : " + e.getMessage());
                 Log.v("ppking" , " jsonError : " + jsonError);
+                Toast.makeText(Passenger_Rates_Activity.this , "配對異常，請聯絡客服人員" , Toast.LENGTH_SHORT).show();
+                Intent it = new Intent(Passenger_Rates_Activity.this , Passenger_Car_Service_Activity.class);
+                startActivity(it);
+
             }
 
             @Override
@@ -96,7 +100,6 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
                 Log.v("ppking", " message : " + message);
 
                 if (timer == null){
-
                     timer = new Timer();
                     timer.schedule(new TaskAndGetDriverData() ,  0 , 4000);
                     isStartMatch = true;

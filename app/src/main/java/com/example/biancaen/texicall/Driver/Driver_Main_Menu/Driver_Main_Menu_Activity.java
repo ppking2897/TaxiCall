@@ -25,9 +25,6 @@ import com.example.biancaen.texicall.Driver.Driver_Passenger_Request.Driver_Pass
 import com.example.biancaen.texicall.Driver.Driver_Point_Record.Driver_Point_Record_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Travel_Record.Driver_Travel_Record_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Match.Driver_WaitMatch_Activity;
-import com.example.biancaen.texicall.Driver.Driver_Trip.Driver_Trip_Done_Activity;
-import com.example.biancaen.texicall.Driver.Driver_Trip.Driver_Trip_Done_Dialog;
-import com.example.biancaen.texicall.Passenger.Passenger_Edit.Passenger_Info_Activity;
 import com.example.biancaen.texicall.R;
 import com.example.biancaen.texicall.connectapi.Connect_API;
 import com.example.biancaen.texicall.connectapi.DriverData;
@@ -91,6 +88,7 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
                 startActivity(it);
             }
         }else{
+            Log.v("ppking" , "Main menu No bundle !");
             ReLogin();
         }
 
@@ -175,6 +173,7 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
     }
 
     public void ReLogin(){
+
         Connect_API.driverLogin(this, phone, password, new Connect_API.OnDriverLoginListener() {
             @Override
             public void onLoginSuccess(DriverData newDriverData) {
