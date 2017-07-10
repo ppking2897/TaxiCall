@@ -29,7 +29,10 @@ public class Driver_Info_Edit_Activity extends AppCompatActivity implements Navi
     private static String getPhone;
     private static String getPassword;
     private static String driverApiKey;
-    private EditText name , carShowText , carNumberText , phone , password;
+    private EditText name;
+    private EditText carShowText;
+    private EditText carNumberText;
+    private EditText password;
     private DriverData getDriverData;
 
     @Override
@@ -52,7 +55,7 @@ public class Driver_Info_Edit_Activity extends AppCompatActivity implements Navi
         name = (EditText)findViewById(R.id.name);
         carShowText = (EditText)findViewById(R.id.carShow);
         carNumberText = (EditText)findViewById(R.id.carNumber);
-        phone = (EditText)findViewById(R.id.phone);
+        EditText phone = (EditText) findViewById(R.id.phone);
         password = (EditText)findViewById(R.id.password);
 
         SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
@@ -63,7 +66,7 @@ public class Driver_Info_Edit_Activity extends AppCompatActivity implements Navi
         //取得初始資訊
         GetStatus();
         ReLogin();
-        
+
         phone.setText(getPhone);
         password.setText(getPassword);
 
