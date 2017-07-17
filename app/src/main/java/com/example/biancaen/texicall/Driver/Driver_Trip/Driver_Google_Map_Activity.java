@@ -124,7 +124,7 @@ public class Driver_Google_Map_Activity extends AppCompatActivity {
     public void onBackPressed() {
         if (!isLogout){
 
-            Toast.makeText(this , "再按一次返回即可登出" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(this , "再按一次返回即可退出應用程式" , Toast.LENGTH_SHORT).show();
             isLogout = true;
 
         }else if (isLogout){
@@ -149,11 +149,9 @@ public class Driver_Google_Map_Activity extends AppCompatActivity {
             @Override
             public void onSuccess(boolean isError, String message) {
                 if (!isError){
-                    Toast.makeText(Driver_Google_Map_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
-                    //清除所有上一頁Activity
-                    Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                    Intent intent = new Intent();
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+                    finish();
                 }else {
                     Toast.makeText(Driver_Google_Map_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
                 }

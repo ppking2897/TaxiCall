@@ -18,7 +18,6 @@ public class Passenger_Edit_Mail_Activity extends AppCompatActivity {
     private EditText edit_Mail;
     private String phoneNumber;
     private String passWord;
-    private UserData userData;
     private String passengerApiKey;
     private String name;
     private String mail;

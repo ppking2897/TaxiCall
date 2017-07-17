@@ -19,12 +19,16 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.biancaen.texicall.Beginning.BeginningActivity;
 import com.example.biancaen.texicall.Beginning.MainMenuActivity;
 import com.example.biancaen.texicall.Driver.Driver_Info.Driver_Info_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Passenger_Request.Driver_Passenger_Request_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Point_Record.Driver_Point_Record_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Travel_Record.Driver_Travel_Record_Activity;
 import com.example.biancaen.texicall.Driver.Driver_Match.Driver_WaitMatch_Activity;
+import com.example.biancaen.texicall.Driver.Driver_Trip.Driver_Arrived_Activity;
+import com.example.biancaen.texicall.Driver.Driver_Trip.Driver_Google_Map_Activity;
+import com.example.biancaen.texicall.Driver.Driver_Trip.Driver_On_The_Way_Activity;
 import com.example.biancaen.texicall.Support_Class.MyService;
 import com.example.biancaen.texicall.R;
 import com.example.biancaen.texicall.connectapi.Connect_API;
@@ -47,6 +51,7 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
     private String latitude ;
     private String longitude ;
     private boolean isLogout;
+    private boolean isFirst;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,13 +62,11 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
         onlineImg = (ImageView)findViewById(R.id.onlineImg);
         onlineText = (TextView)findViewById(R.id.onlineText);
 
-        InitData();
+        CheckStatus();
 
-        GetRemainPoint();
+        InitData();
         //建立GPS Provide
         UpdateLocation();
-
-        MyService service = new MyService();
 
     }
 
@@ -129,7 +132,7 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
     public void onBackPressed() {
         if (!isLogout){
 
-            Toast.makeText(this , "再按一次返回即可登出" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(this , "再按一次返回即可退出應用程式" , Toast.LENGTH_SHORT).show();
             isLogout = true;
 
         }else if (isLogout){
@@ -139,7 +142,11 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
     }
 
     public void driver_logout(View view){
-        Logout();
+        SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.clear();
+        editor.apply();
+        LogoutAndClear();
     }
 
     public void ReLogin(){
@@ -154,6 +161,7 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
                 editor.putString("driverApiKey" , driverData.getApiKey());
                 editor.putInt("driverStatus" , driverData.getStatus());
                 editor.apply();
+                GetRemainPoint();
 
                 //判斷目前driver狀態
                 if (driverData.getStatus()==1){
@@ -272,6 +280,7 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
             locationManager.requestLocationUpdates(locationProvider, 3000, 1, locationListener);
         }
     }
+
     public void UpdateLocationNow(){
         Connect_API.updateLocation(this, longitude, latitude, phone, driverData.getApiKey(), new Connect_API.OnGetConnectStatusListener() {
             @Override
@@ -301,6 +310,28 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
             @Override
             public void onSuccess(boolean isError, String message) {
                 if (!isError){
+                    //清除所有上一頁Activity
+                    Intent intent = new Intent();
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    finish();
+                }else {
+                    Toast.makeText(Driver_Main_Menu_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void LogoutAndClear(){
+        Connect_API.loginOut(this, phone, driverData.getApiKey(), new Connect_API.OnLoginOutListener() {
+            @Override
+            public void onFail(Exception e, String jsonError) {
+                Log.v("ppking" , "Exception : " +e);
+                Log.v("ppking" , "jsonError : " +jsonError);
+            }
+
+            @Override
+            public void onSuccess(boolean isError, String message) {
+                if (!isError){
                     Toast.makeText(Driver_Main_Menu_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
                     //清除所有上一頁Activity
                     Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
@@ -312,8 +343,11 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
             }
         });
     }
+
+
     public void GetRemainPoint(){
-        if (driverData.getStatus()!=3){
+        if (driverData.getStatus()!=3 && !isFirst){
+            isFirst = true;
             Connect_API.getPointRecord(this, phone, driverData.getApiKey() , new Connect_API.OnPointRecordListener() {
                 @Override
                 public void onFail(Exception e, String jsonError) {
@@ -366,7 +400,57 @@ public class Driver_Main_Menu_Activity extends AppCompatActivity {
             }
         }else{
             Log.v("ppking" , "Main menu No bundle !");
+            SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+            phone = sharedPreferences.getString("phone" ,null);
+            password = sharedPreferences.getString("password" , null);
             ReLogin();
+        }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        isLogout = false;
+    }
+
+    public void CheckStatus(){
+        SharedPreferences driverPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+        String driverApiKey = driverPreferences.getString("driverApiKey" , null);
+        String driverTaskNumber =driverPreferences.getString("tasknumber", null);
+        if (driverApiKey !=null && driverTaskNumber != null){
+            Connect_API.waittime(this, driverTaskNumber, driverApiKey, new Connect_API.OnWaitTimeListener() {
+                @Override
+                public void onFail(Exception e, String jsonError) {
+
+                }
+
+                @Override
+                public void onSuccess(String isError, String task_status, String distance, int time) {
+                    switch (task_status) {
+                        case "2": {
+                            Intent it = new Intent(Driver_Main_Menu_Activity.this, Driver_On_The_Way_Activity.class);
+                            startActivity(it);
+                            finish();
+                            break;
+                        }
+                        case "3": {
+                            Intent it = new Intent(Driver_Main_Menu_Activity.this, Driver_Arrived_Activity.class);
+                            startActivity(it);
+                            finish();
+                            break;
+                        }
+                        case "4": {
+                            Intent it = new Intent(Driver_Main_Menu_Activity.this, Driver_Google_Map_Activity.class);
+                            startActivity(it);
+                            finish();
+                            break;
+                        }
+                        default: {
+                            break;
+                        }
+                    }
+                }
+            });
         }
     }
 }

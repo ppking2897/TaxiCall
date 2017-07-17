@@ -101,7 +101,7 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else if (!isLogout){
 
-            Toast.makeText(this , "再按一次返回即可登出" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(this , "再按一次返回即可退出應用程式" , Toast.LENGTH_SHORT).show();
             isLogout = true;
 
         }else if (isLogout){
@@ -132,7 +132,7 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
             startActivity(it);
 
         } else if (id == R.id.nav_logout) {
-            Logout();
+            LogoutAndClear();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_driver_on_the_way);
@@ -140,44 +140,34 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
         return true;
     }
     public void arrived(View view){
-
-        Connect_API.getdriverstatus(this, phone, driverApiKey, new Connect_API.OnGetDriverStatusListener() {
+        Connect_API.pickup(Driver_On_The_Way_Activity.this, tasknumber, driverApiKey, new Connect_API.OnGetConnectStatusListener() {
             @Override
             public void onFail(Exception e, String jsonError) {
-                Toast.makeText(Driver_On_The_Way_Activity.this, "連線異常", Toast.LENGTH_SHORT).show();
+                Log.v("ppking" , " Exception : " + e);
+                Log.v("ppking" , " jsonError : " + jsonError);
             }
 
             @Override
-            public void onSuccess(String isError, String result, String status, String tasknumber, String carshow, String carnumber) {
-
-                Log.v("ppking", "status :  " + status);
-
-                Connect_API.pickup(Driver_On_The_Way_Activity.this, tasknumber, driverApiKey, new Connect_API.OnGetConnectStatusListener() {
-                    @Override
-                    public void onFail(Exception e, String jsonError) {
-                        Log.v("ppking" , " Exception : " + e);
-                        Log.v("ppking" , " jsonError : " + jsonError);
-                    }
-
-                    @Override
-                    public void onSuccess(String isError, String message) {
-                        Log.v("ppking" , " isError : " + isError);
-                        Log.v("ppking" , " message : " + message);
-                        Intent it = new Intent(Driver_On_The_Way_Activity.this , Driver_Arrived_Activity.class);
-                        startActivity(it);
-                    }
-                });
+            public void onSuccess(String isError, String message) {
+                Log.v("ppking" , " isError : " + isError);
+                Log.v("ppking" , " message : " + message);
+                Intent it = new Intent(Driver_On_The_Way_Activity.this , Driver_Arrived_Activity.class);
+                startActivity(it);
             }
         });
+
     }
 
     public void CreateDialog(){
+
+        SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+        final String passengerPhone = sharedPreferences.getString("passengerPhone" , null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this , R.style.Contact_Dialog);
         View layout = LayoutInflater.from(this).inflate(R.layout.layout_contact_dialog , null);
 
         TextView textView = (TextView)layout.findViewById(R.id.numberPhone);
-        textView.setText("乘客電話號碼為:\n"+ getTaskInfoData.getPassenger() + "\n是否要移動到撥號畫面?");
+        textView.setText("乘客電話號碼為:\n"+ passengerPhone + "\n是否要移動到撥號畫面?");
 
         LinearLayout knowButton = (LinearLayout)layout.findViewById(R.id.knowButton);
 
@@ -199,7 +189,7 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
                             new String[]{Manifest.permission.CALL_PHONE},123);
                 }else {
                     Intent intent = new Intent(Intent.ACTION_DIAL);
-                    intent.setData(Uri.parse("tel:"+getTaskInfoData.getPassenger()));
+                    intent.setData(Uri.parse("tel:"+passengerPhone));
                     startActivity(intent);
                     alertDialog.dismiss();
                 }
@@ -219,8 +209,10 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         for (int grantResult : grantResults){
             if (grantResult == PackageManager.PERMISSION_GRANTED){
+                SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+                final String passengerPhone = sharedPreferences.getString("passengerPhone" , null);
                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:"+getTaskInfoData.getPassenger()));
+                intent.setData(Uri.parse("tel:"+passengerPhone));
                 startActivity(intent);
                 alertDialog.dismiss();
             }
@@ -242,6 +234,34 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
             @Override
             public void onSuccess(boolean isError, String message) {
                 if (!isError){
+                    Intent intent = new Intent();
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    finish();
+                }else {
+                    Toast.makeText(Driver_On_The_Way_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void LogoutAndClear(){
+        SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+        String newPhone =sharedPreferences.getString("phone", null);
+        String driverApiKey = sharedPreferences.getString("driverApiKey" , null);
+        Connect_API.loginOut(this, newPhone, driverApiKey, new Connect_API.OnLoginOutListener() {
+            @Override
+            public void onFail(Exception e, String jsonError) {
+                Log.v("ppking" , "Exception : " +e);
+                Log.v("ppking" , "jsonError : " +jsonError);
+            }
+
+            @Override
+            public void onSuccess(boolean isError, String message) {
+                if (!isError){
+                    SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.clear();
+                    editor.apply();
                     Toast.makeText(Driver_On_The_Way_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
                     //清除所有上一頁Activity
                     Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
@@ -253,6 +273,7 @@ public class Driver_On_The_Way_Activity extends AppCompatActivity
             }
         });
     }
+
     public void PassengerTerminateListener(){
         HBMessageService.setOnStartDriverTerminateListener(new HBMessageService.OnStartDriverTerminateListener() {
             @Override

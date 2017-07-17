@@ -23,7 +23,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.biancaen.texicall.Beginning.MainMenuActivity;
+import com.example.biancaen.texicall.Passenger.Passenger_Car_Service.Passenger_Car_Service_Activity;
 import com.example.biancaen.texicall.Passenger.Passenger_Customer_Activity;
 import com.example.biancaen.texicall.Passenger.Passenger_Edit.Passenger_Info_Activity;
 import com.example.biancaen.texicall.Passenger.Passenger_TakeRide_And_Arrived.Passenger_In_The_Shuttle_Activity;
@@ -43,6 +46,8 @@ public class Passenger_Driver_Arrived_Activity extends AppCompatActivity
     private AlertDialog alertDialog;
     private static PairInfoData pairInfoData;
     private Timer timer;
+    private boolean isLogout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,8 +84,14 @@ public class Passenger_Driver_Arrived_Activity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_driver_arrived_);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        } else if (!isLogout){
+
+            Toast.makeText(this , "再按一次返回即可退出應用程式" , Toast.LENGTH_SHORT).show();
+            isLogout = true;
+
+        }else if (isLogout){
+
+            logout();
         }
     }
 
@@ -114,14 +125,14 @@ public class Passenger_Driver_Arrived_Activity extends AppCompatActivity
 
     public void contactArrived(View view){
 
-        Bundle bundle = getIntent().getExtras();
-        pairInfoData = (PairInfoData)bundle.getSerializable("pairInfoData");
+        SharedPreferences sharedPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
+        final String driverPhone = sharedPreferences.getString("driverPhone" , null);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this , R.style.Contact_Dialog);
         View layout = LayoutInflater.from(this).inflate(R.layout.layout_contact_dialog , null);
 
         TextView textView = (TextView)layout.findViewById(R.id.numberPhone);
-        textView.setText("乘客電話號碼為:\n"+ pairInfoData.getDriver() + "\n是否要移動到撥號畫面?");
+        textView.setText("乘客電話號碼為:\n"+ driverPhone + "\n是否要移動到撥號畫面?");
 
         LinearLayout knowButton = (LinearLayout)layout.findViewById(R.id.knowButton);
 
@@ -143,7 +154,7 @@ public class Passenger_Driver_Arrived_Activity extends AppCompatActivity
                             new String[]{Manifest.permission.CALL_PHONE},123);
                 }else {
                     Intent intent = new Intent(Intent.ACTION_DIAL);
-                    intent.setData(Uri.parse("tel:"+pairInfoData.getDriver()));
+                    intent.setData(Uri.parse("tel:"+driverPhone));
                     startActivity(intent);
                     alertDialog.dismiss();
                 }
@@ -162,9 +173,11 @@ public class Passenger_Driver_Arrived_Activity extends AppCompatActivity
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         for (int grantResult : grantResults){
+            SharedPreferences sharedPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
+            String driverPhone = sharedPreferences.getString("driverPhone" , null);
             if (grantResult == PackageManager.PERMISSION_GRANTED){
                 Intent intent = new Intent(Intent.ACTION_DIAL);
-                intent.setData(Uri.parse("tel:"+pairInfoData.getDriver()));
+                intent.setData(Uri.parse("tel:"+driverPhone));
                 startActivity(intent);
                 alertDialog.dismiss();
             }
@@ -176,7 +189,7 @@ public class Passenger_Driver_Arrived_Activity extends AppCompatActivity
         @Override
         public void run() {
 
-            SharedPreferences sharedPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
+            final SharedPreferences sharedPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
             final String taskNumber =sharedPreferences.getString("taskNumber", null);
             String phoneNumber =sharedPreferences.getString("phoneNumber", null);
             String passWord =sharedPreferences.getString("passWord", null);
@@ -200,6 +213,7 @@ public class Passenger_Driver_Arrived_Activity extends AppCompatActivity
                             Log.v("ppking" , "task_status" + task_status);
                             Log.v("ppking" , "distance" + distance);
                             Log.v("ppking" , "time" + time);
+                            sharedPreferences.edit().putString("task_status" , task_status).apply();
 
                             if (task_status.equals("4")){
                                 if (timer!=null){
@@ -232,6 +246,34 @@ public class Passenger_Driver_Arrived_Activity extends AppCompatActivity
                 }
             });
         }
+    }
+
+    public void logout(){
+        SharedPreferences sharedPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
+        String phoneNumber = sharedPreferences.getString("phoneNumber" , null);
+        String passengerApiKey = sharedPreferences.getString("passengerApiKey", null);
+        Connect_API.loginOut(this, phoneNumber, passengerApiKey, new Connect_API.OnLoginOutListener() {
+            @Override
+            public void onFail(Exception e, String jsonError) {
+                Log.v("ppking" , " Exception : " + e.getMessage());
+                Log.v("ppking" , " jsonError : " + jsonError);
+                Toast.makeText(Passenger_Driver_Arrived_Activity.this ,"連線異常,登出失敗" , Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSuccess(boolean isError, String message) {
+                Log.v("ppking" , " isError : " + isError);
+                Log.v("ppking" , " message : " + message);
+                if (!isError){
+                    Intent intent = new Intent();
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    finish();
+                }else {
+                    Toast.makeText(Passenger_Driver_Arrived_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
     }
 
 }

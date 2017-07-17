@@ -28,8 +28,11 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.biancaen.texicall.Beginning.BeginningActivity;
 import com.example.biancaen.texicall.Beginning.MainMenuActivity;
+import com.example.biancaen.texicall.Passenger.Passenger_Driver_Arrived.Passenger_Driver_Arrived_Activity;
 import com.example.biancaen.texicall.Passenger.Passenger_On_The_Way.Passenger_On_The_Way_Activity;
+import com.example.biancaen.texicall.Passenger.Passenger_TakeRide_And_Arrived.Passenger_In_The_Shuttle_Activity;
 import com.example.biancaen.texicall.Support_Class.Get_Location;
 import com.example.biancaen.texicall.Passenger.Passenger_Customer_Activity;
 import com.example.biancaen.texicall.Passenger.Passenger_Rates.Passenger_Rates_Activity;
@@ -95,6 +98,8 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
         textView_emptyTripCount = (TextView) findViewById(R.id.null_Empty_Trip_Count);
         textView_emptyTripPay = (TextView) findViewById(R.id.null_Empty_Trip_ToPay);
 
+        CheckTaskStatus();
+
         InputOrSelect();
 
         InitialData();
@@ -118,7 +123,7 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else if (!isLogout){
 
-            Toast.makeText(this , "再按一次返回即可登出" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(this , "再按一次返回即可退出應用程式" , Toast.LENGTH_SHORT).show();
             isLogout = true;
 
         }else if (isLogout){
@@ -170,24 +175,24 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
 
     //開始試算金額丟入資料
     public void rates(View view){
-        //if (emptyTripCount >= 3){
-//            AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.Contact_Dialog);
-//            View dialogView = LayoutInflater.from(this).inflate(R.layout.layout_car_service_empty_stop_service , null);
-//
-//            LinearLayout knowButton = (LinearLayout)dialogView.findViewById(R.id.knowButton);
-//
-//            builder.setView(dialogView);
-//            final AlertDialog alertDialog = builder.create();
-//            alertDialog.show();
-//
-//            knowButton.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    alertDialog.dismiss();
-//                }
-//            });
+        if (emptyTripCount >= 3){
+            AlertDialog.Builder builder = new AlertDialog.Builder(this,R.style.Contact_Dialog);
+            View dialogView = LayoutInflater.from(this).inflate(R.layout.layout_car_service_empty_stop_service , null);
 
-        //}else {
+            LinearLayout knowButton = (LinearLayout)dialogView.findViewById(R.id.knowButton);
+
+            builder.setView(dialogView);
+            final AlertDialog alertDialog = builder.create();
+            alertDialog.show();
+
+            knowButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog.dismiss();
+                }
+            });
+
+        }else {
 
             location = "";
             destination = "";
@@ -284,7 +289,7 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
                 it.putExtras(bundle);
                 startActivity(it);
             }
-       // }
+        }
     }
 
     //選擇住址或者已記錄住址
@@ -375,18 +380,18 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
                 if (!isError){
                     Toast.makeText(Passenger_Car_Service_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
                     //清除所有上一頁Activity
-                    Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                    Intent intent = new Intent();
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    startActivity(intent);
+                    finish();
                 }else {
                     Toast.makeText(Passenger_Car_Service_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
     }
 
     public void InitialData(){
+
         Bundle getBundle = this.getIntent().getExtras();
         if (getBundle!=null) {
             userData = (UserData) getBundle.getSerializable("userData");
@@ -456,5 +461,48 @@ public class Passenger_Car_Service_Activity extends AppCompatActivity
             }
 
         });
+    }
+
+    public void CheckTaskStatus(){
+        SharedPreferences passengerPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
+        passengerApiKey = passengerPreferences.getString("passengerApiKey", null);
+        String passengerTaskNumber = passengerPreferences.getString("taskNumber" , null);
+
+        if (passengerApiKey !=null && passengerTaskNumber!=null){
+
+            Connect_API.waittime(this, passengerTaskNumber, passengerApiKey, new Connect_API.OnWaitTimeListener() {
+                @Override
+                public void onFail(Exception e, String jsonError) {
+
+                }
+
+                @Override
+                public void onSuccess(String isError, String task_status, String distance, int time) {
+                    switch (task_status) {
+                        case "2": {
+                            Intent it = new Intent(Passenger_Car_Service_Activity.this, Passenger_On_The_Way_Activity.class);
+                            startActivity(it);
+                            finish();
+                            break;
+                        }
+                        case "3": {
+                            Intent it = new Intent(Passenger_Car_Service_Activity.this, Passenger_Driver_Arrived_Activity.class);
+                            startActivity(it);
+                            finish();
+                            break;
+                        }
+                        case "4": {
+                            Intent it = new Intent(Passenger_Car_Service_Activity.this, Passenger_In_The_Shuttle_Activity.class);
+                            startActivity(it);
+                            finish();
+                            break;
+                        }
+                        default: {
+                            break;
+                        }
+                    }
+                }
+            });
+        }
     }
 }

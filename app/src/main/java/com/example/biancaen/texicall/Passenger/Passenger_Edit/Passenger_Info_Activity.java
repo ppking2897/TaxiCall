@@ -101,6 +101,9 @@ public class Passenger_Info_Activity extends AppCompatActivity
                 Log.v("ppking" , " isError : " + isError);
                 Log.v("ppking" , " message : " + message);
                 if (!isError){
+                    SharedPreferences passengerPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
+                    passengerPreferences.edit().clear().apply();
+
                     Toast.makeText(Passenger_Info_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
                     //清除所有上一頁Activity
                     Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);

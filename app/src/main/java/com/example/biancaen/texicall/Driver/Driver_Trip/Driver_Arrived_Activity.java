@@ -54,7 +54,9 @@ public class Driver_Arrived_Activity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         if (mycountDown == null){
-            mycountDown = new MyCountDown(600000 , 60000);
+            SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+            Long millisUntilFinished = sharedPreferences.getLong("millisUntilFinished" , 600000);
+            mycountDown = new MyCountDown(millisUntilFinished , 60000);
             mycountDown.start();
         }
     }
@@ -151,7 +153,7 @@ public class Driver_Arrived_Activity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else if (!isLogout){
 
-            Toast.makeText(this , "再按一次返回即可登出" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(this , "再按一次返回即可退出應用程式" , Toast.LENGTH_SHORT).show();
             isLogout = true;
 
         }else if (isLogout){
@@ -183,7 +185,7 @@ public class Driver_Arrived_Activity extends AppCompatActivity
             startActivity(it);
 
         } else if (id == R.id.nav_logout) {
-            Logout();
+            LogoutAndClear();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_driver_arrived_);
@@ -205,6 +207,10 @@ public class Driver_Arrived_Activity extends AppCompatActivity
 
         @Override
         public void onTick(long millisUntilFinished) {
+            SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putLong("millisUntilFinished" , millisUntilFinished);
+            editor.apply();
             countText.setText(""+millisUntilFinished/60000);
         }
 
@@ -214,6 +220,10 @@ public class Driver_Arrived_Activity extends AppCompatActivity
             isOverTime = true;
             mycountDown.cancel();
             mycountDown = null;
+            SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putLong("millisUntilFinished" , 600000);
+            editor.apply();
         }
     }
 
@@ -232,6 +242,34 @@ public class Driver_Arrived_Activity extends AppCompatActivity
             @Override
             public void onSuccess(boolean isError, String message) {
                 if (!isError){
+                    Intent intent = new Intent();
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    finish();
+                }else {
+                    Toast.makeText(Driver_Arrived_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void LogoutAndClear(){
+        SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+        String newPhone =sharedPreferences.getString("phone", null);
+        String driverApiKey = sharedPreferences.getString("driverApiKey" , null);
+        Connect_API.loginOut(this, newPhone, driverApiKey, new Connect_API.OnLoginOutListener() {
+            @Override
+            public void onFail(Exception e, String jsonError) {
+                Log.v("ppking" , "Exception : " +e);
+                Log.v("ppking" , "jsonError : " +jsonError);
+            }
+
+            @Override
+            public void onSuccess(boolean isError, String message) {
+                if (!isError){
+                    SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.clear();
+                    editor.apply();
                     Toast.makeText(Driver_Arrived_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
                     //清除所有上一頁Activity
                     Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);

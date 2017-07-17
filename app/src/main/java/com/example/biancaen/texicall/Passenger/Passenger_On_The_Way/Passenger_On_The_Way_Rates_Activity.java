@@ -1,6 +1,7 @@
 package com.example.biancaen.texicall.Passenger.Passenger_On_The_Way;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.biancaen.texicall.Passenger.Passenger_Car_Service.Passenger_Car_Service_Activity;
 import com.example.biancaen.texicall.Passenger.Passenger_Customer_Activity;
@@ -19,10 +21,13 @@ import com.example.biancaen.texicall.R;
 public class Passenger_On_The_Way_Rates_Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
+    private int emptyTripCount;
+    private int emptyTripPay;
+    private int payTheMoney;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_passenger__on__the__way__fares_);
+        setContentView(R.layout.activity_passenger__on__the__way__rates_);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_OnWayFares);
         setSupportActionBar(toolbar);
@@ -36,6 +41,20 @@ public class Passenger_On_The_Way_Rates_Activity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_on_the_way_fares);
         navigationView.setNavigationItemSelectedListener(this);
+
+        SharedPreferences sharedPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
+        emptyTripCount = sharedPreferences.getInt("emptyTripCount" , 0);
+        emptyTripPay = sharedPreferences.getInt("emptyTripPay" , 0);
+        payTheMoney = sharedPreferences.getInt("payTheMoney" , 0);
+
+        TextView emptyTripCountText = (TextView)findViewById(R.id.emptyTripCount);
+        TextView emptyTripPayText = (TextView)findViewById(R.id.emptyTripPay);
+        TextView priceText = (TextView)findViewById(R.id.price);
+
+        emptyTripCountText.setText(""+emptyTripCount);
+        emptyTripPayText.setText(""+emptyTripPay);
+        priceText.setText(""+payTheMoney);
+
     }
 
     @Override

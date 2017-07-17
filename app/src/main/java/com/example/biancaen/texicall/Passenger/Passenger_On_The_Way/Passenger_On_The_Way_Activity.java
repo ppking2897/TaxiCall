@@ -63,11 +63,14 @@ public class Passenger_On_The_Way_Activity extends AppCompatActivity {
 
     public void contactDriver(View view){
 
+        SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+        final String driverPhone = sharedPreferences.getString("driverPhone" , null);
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this , R.style.Contact_Dialog);
         View layout = LayoutInflater.from(this).inflate(R.layout.layout_contact_dialog , null);
 
         TextView textView = (TextView)layout.findViewById(R.id.numberPhone);
-        textView.setText("乘客電話號碼為:\n"+ pairInfoData.getDriver() + "\n是否要移動到撥號畫面?");
+        textView.setText("乘客電話號碼為:\n"+driverPhone + "\n是否要移動到撥號畫面?");
 
         LinearLayout knowButton = (LinearLayout)layout.findViewById(R.id.knowButton);
 
@@ -89,7 +92,7 @@ public class Passenger_On_The_Way_Activity extends AppCompatActivity {
                             new String[]{Manifest.permission.CALL_PHONE},123);
                 }else {
                     Intent intent = new Intent(Intent.ACTION_DIAL);
-                    intent.setData(Uri.parse("tel:"+pairInfoData.getDriver()));
+                    intent.setData(Uri.parse("tel:"+driverPhone));
                     startActivity(intent);
                     alertDialog.dismiss();
                 }
@@ -132,7 +135,7 @@ public class Passenger_On_The_Way_Activity extends AppCompatActivity {
         final TextView carIdNumber = (TextView)findViewById(R.id.carIdNumber);
         final TextView driverName = (TextView)findViewById(R.id.name);
 
-        SharedPreferences sharedPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
+        final SharedPreferences sharedPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
         final String location =sharedPreferences.getString("location", null);
 
         taskNumber =sharedPreferences.getString("taskNumber" , null);
@@ -144,7 +147,7 @@ public class Passenger_On_The_Way_Activity extends AppCompatActivity {
             public void onLoginSuccess(UserData newUserData) {
                 userData = newUserData;
                 timer = new Timer();
-                timer.schedule(new TaskWaitTime() , 0 , 3000);
+                timer.schedule(new TaskWaitTime() , 0 , 1000);
                 Connect_API.getpairinfo(Passenger_On_The_Way_Activity.this, taskNumber, userData.getApiKey(), new Connect_API.OnGetPairInfoListener() {
                     @Override
                     public void onFail(Exception e, String jsonError) {
@@ -158,6 +161,7 @@ public class Passenger_On_The_Way_Activity extends AppCompatActivity {
                         carType.setText(pairInfoData.getCarnshow());
                         carIdNumber.setText(pairInfoData.getCarnumber());
                         driverName.setText(pairInfoData.getName());
+                        sharedPreferences.edit().putString("driverPhone" , newPairInfoData.getDriver()).apply();
                     }
 
                     @Override
@@ -199,20 +203,24 @@ public class Passenger_On_The_Way_Activity extends AppCompatActivity {
                     Log.v("ppking" , "distance" + distance);
                     Log.v("ppking" , "time" + time);
 
-                    //task_status 2 還未上車  3 任務開始
+                    SharedPreferences sharedPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
+                    sharedPreferences.edit().putString("task_status" , task_status).apply();
+
+                    //task_status 2 配對成功  3 司機抵達
                     arriveTime.setText(""+time);
                     if (task_status.equals("3")){
-                        timer.cancel();
-                        timer = null ;
-                        Bundle bundle = new Bundle();
-                        bundle.putSerializable("pairInfoData" , pairInfoData);
+                        if (timer!=null){
+                            timer.cancel();
+                            timer = null ;
+                        }
                         Intent it = new Intent(Passenger_On_The_Way_Activity.this , Passenger_Driver_Arrived_Activity.class);
-                        it.putExtras(bundle);
                         startActivity(it);
                         finish();
                     }else if (task_status.equals("4")){
-                        timer.cancel();
-                        timer = null;
+                        if (timer!=null){
+                            timer.cancel();
+                            timer = null ;
+                        }
                         Intent it = new Intent(Passenger_On_The_Way_Activity.this , Passenger_In_The_Shuttle_Activity.class);
                         startActivity(it);
                         finish();
@@ -263,6 +271,13 @@ public class Passenger_On_The_Way_Activity extends AppCompatActivity {
             timer.cancel();
             timer = null;
         }
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        timer = new Timer();
+        timer.schedule(new TaskWaitTime() , 0 , 1000);
     }
 }
 

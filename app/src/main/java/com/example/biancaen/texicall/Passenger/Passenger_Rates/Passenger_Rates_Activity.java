@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,6 +53,36 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                SharedPreferences sharedPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
+                String passengerApiKey = sharedPreferences.getString("passengerApiKey" , null);
+                Connect_API.cancelTask(Passenger_Rates_Activity.this, taskNumber, passengerApiKey , new Connect_API.OnGetConnectStatusListener() {
+                    @Override
+                    public void onFail(Exception e, String jsonError) {
+                        Log.v("ppking" , "cancelTask Exception :  " + e);
+                        Log.v("ppking" , "cancelTask jsonError :  " + jsonError);
+                    }
+
+                    @Override
+                    public void onSuccess(String isError, String message) {
+                        Log.v("ppking" , "cancelTask isError :  " + isError);
+                        Log.v("ppking" , "cancelTask message :  " + message);
+                        if (isError.equals("false")){
+                            Toast.makeText(Passenger_Rates_Activity.this , ""+message , Toast.LENGTH_SHORT).show();
+                            Intent it = new Intent(Passenger_Rates_Activity.this , Passenger_Car_Service_Activity.class);
+                            startActivity(it);
+                        }else{
+                            Toast.makeText(Passenger_Rates_Activity.this , ""+message , Toast.LENGTH_SHORT).show();
+                            Intent it = new Intent(Passenger_Rates_Activity.this , Passenger_Car_Service_Activity.class);
+                            startActivity(it);
+                        }
+                    }
+                });
+            }
+        });
+
         TextView faresEmptyTripCount = (TextView)findViewById(R.id.fares_Empty_Trip_Count);
         TextView faresEmptyTripPay = (TextView)findViewById(R.id.fares_Empty_Trip_ToPay);
 
@@ -76,7 +107,6 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
                 .commit();
 
         GetDataAndNewTask();
-
     }
 
 
@@ -146,12 +176,17 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString("taskNumber" , taskNumber);
                 editor.apply();
+
             }
         });
     }
 
     public void MainGetPrice(int price){
         Passenger_Rates_Activity.price = price;
+        SharedPreferences sharedPreferences = getSharedPreferences("passenger" , price);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt("payTheMoney" , price);
+        editor.apply();
     }
 
     public void MainGetTime(int time){
@@ -178,9 +213,10 @@ public class Passenger_Rates_Activity extends AppCompatActivity {
                 public void onSuccessGetPairInfo(PairInfoData pairInfoData) {
 
                     if (pairInfoData.getMessage().equals("搜尋資訊成功")){
-                        timer.cancel();
-                        timer=null;
-
+                        if (timer!=null){
+                            timer.cancel();
+                            timer=null;
+                        }
                         Bundle bundle = new Bundle();
                         bundle.putInt("time" , time);
                         bundle.putString("location" , location);

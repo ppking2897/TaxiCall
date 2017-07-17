@@ -76,7 +76,6 @@ public class Passenger_Sign_in_Activity extends AppCompatActivity {
 
                     Toast.makeText(Passenger_Sign_in_Activity.this , "登入成功" , Toast.LENGTH_SHORT).show();
 
-
                     //將資料丟入SharedPreferences 共用
                     SharedPreferences sharedPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
                     SharedPreferences.Editor editor = sharedPreferences.edit();

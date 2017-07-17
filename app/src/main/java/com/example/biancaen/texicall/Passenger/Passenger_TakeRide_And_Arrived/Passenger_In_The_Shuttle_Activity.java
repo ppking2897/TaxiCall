@@ -13,7 +13,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import com.example.biancaen.texicall.Beginning.MainMenuActivity;
 import com.example.biancaen.texicall.Passenger.Passenger_Car_Service.Passenger_Car_Service_Activity;
 import com.example.biancaen.texicall.Passenger.Passenger_Customer_Activity;
 import com.example.biancaen.texicall.Passenger.Passenger_Edit.Passenger_Info_Activity;
@@ -26,8 +28,7 @@ import com.example.biancaen.texicall.notificaiton.HBMessageService;
 public class Passenger_In_The_Shuttle_Activity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     private FragmentManager fragmentManager;
-    private String getPrice;
-    private String destination;
+    private boolean isLogout;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -98,8 +99,14 @@ public class Passenger_In_The_Shuttle_Activity extends AppCompatActivity
         DrawerLayout drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout_in_the_shuttle);
         if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
             drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        } else if (!isLogout){
+
+            Toast.makeText(this , "再按一次返回即可退出應用程式" , Toast.LENGTH_SHORT).show();
+            isLogout = true;
+
+        }else if (isLogout){
+
+            logout();
         }
     }
 
@@ -111,6 +118,7 @@ public class Passenger_In_The_Shuttle_Activity extends AppCompatActivity
 
             Intent it = new Intent(this , Passenger_Car_Service_Activity.class);
             startActivity(it);
+            finish();
 
         } else if (id == R.id.nav_sent_car_record) {
 
@@ -152,6 +160,33 @@ public class Passenger_In_The_Shuttle_Activity extends AppCompatActivity
                             .replace(R.id.shuttle_Fragment , shuttle_fragment_02 , "shuttle02")
                             .commit();
                 }
+            }
+        });
+    }
+    public void logout(){
+        SharedPreferences sharedPreferences = getSharedPreferences("passenger" , MODE_PRIVATE);
+        String phone = sharedPreferences.getString("phoneNumber" , null);
+        String passengerApiKey = sharedPreferences.getString("passengerApiKey" , null);
+        Connect_API.loginOut(this, phone, passengerApiKey, new Connect_API.OnLoginOutListener() {
+            @Override
+            public void onFail(Exception e, String jsonError) {
+                Log.v("ppking" , " Exception : " + e.getMessage());
+                Log.v("ppking" , " jsonError : " + jsonError);
+                Toast.makeText(Passenger_In_The_Shuttle_Activity.this ,"連線異常,登出失敗" , Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onSuccess(boolean isError, String message) {
+                Log.v("ppking" , " isError : " + isError);
+                Log.v("ppking" , " message : " + message);
+                if (!isError){
+                    Intent intent = new Intent();
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    finish();
+                }else {
+                    Toast.makeText(Passenger_In_The_Shuttle_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
+                }
+
             }
         });
     }

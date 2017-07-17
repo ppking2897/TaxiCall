@@ -86,14 +86,8 @@ public class Driver_Point_Record_Activity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_driver_point__record);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
-        } else if (!isLogout){
-
-            Toast.makeText(this , "再按一次返回即可登出" , Toast.LENGTH_SHORT).show();
-            isLogout = true;
-
-        }else if (isLogout){
-
-            Logout();
+        } else{
+            super.onBackPressed();
         }
     }
 
@@ -193,6 +187,10 @@ public class Driver_Point_Record_Activity extends AppCompatActivity
             @Override
             public void onSuccess(boolean isError, String message) {
                 if (!isError){
+                    SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.clear();
+                    editor.apply();
                     Toast.makeText(Driver_Point_Record_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
                     //清除所有上一頁Activity
                     Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);

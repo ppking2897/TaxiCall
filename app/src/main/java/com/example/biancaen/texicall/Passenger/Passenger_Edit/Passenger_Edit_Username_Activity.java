@@ -23,7 +23,6 @@ public class Passenger_Edit_Username_Activity extends AppCompatActivity {
     private EditText edit_Username;
     private String phoneNumber;
     private String passWord;
-    private UserData userData;
     private String passengerApiKey;
     private String mail;
     private String name;

@@ -88,7 +88,7 @@ public class Driver_Passenger_Request_Activity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else if (!isLogout){
 
-            Toast.makeText(this , "再按一次返回即可登出" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(this , "再按一次返回即可退出應用程式" , Toast.LENGTH_SHORT).show();
             isLogout = true;
 
         }else if (isLogout){
@@ -143,7 +143,7 @@ public class Driver_Passenger_Request_Activity extends AppCompatActivity
 
 
         } else if (id == R.id.nav_logout) {
-            Logout();
+            LogoutAndClear();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout_driver_passenger_request);
@@ -250,6 +250,36 @@ public class Driver_Passenger_Request_Activity extends AppCompatActivity
             @Override
             public void onSuccess(boolean isError, String message) {
                 if (!isError){
+                    Toast.makeText(Driver_Passenger_Request_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
+                    //清除所有上一頁Activity
+                    Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                }else {
+                    Toast.makeText(Driver_Passenger_Request_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+    public void LogoutAndClear(){
+        SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+        String newPhone =sharedPreferences.getString("phone", null);
+        String driverApiKey = sharedPreferences.getString("driverApiKey" , null);
+        Connect_API.loginOut(this, newPhone, driverApiKey, new Connect_API.OnLoginOutListener() {
+            @Override
+            public void onFail(Exception e, String jsonError) {
+                Log.v("ppking" , "Exception : " +e);
+                Log.v("ppking" , "jsonError : " +jsonError);
+            }
+
+            @Override
+            public void onSuccess(boolean isError, String message) {
+                if (!isError){
+                    SharedPreferences sharedPreferences = getSharedPreferences("driver" , MODE_PRIVATE);
+                    SharedPreferences.Editor editor = sharedPreferences.edit();
+                    editor.clear();
+                    editor.apply();
                     Toast.makeText(Driver_Passenger_Request_Activity.this ,""+message , Toast.LENGTH_SHORT).show();
                     //清除所有上一頁Activity
                     Intent intent = new Intent(getApplicationContext(), MainMenuActivity.class);
