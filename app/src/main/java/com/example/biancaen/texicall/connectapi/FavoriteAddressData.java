@@ -11,6 +11,7 @@ public class FavoriteAddressData implements Serializable{
     private String favorite_lat;
     private String favorite_lon;
 
+    
     public String getFavorite() {
         return favorite;
     }
