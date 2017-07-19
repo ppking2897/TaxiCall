@@ -3,8 +3,6 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/HB_Android.iml" filepath="$PROJECT_DIR$/HB_Android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/HB_Android.iml" filepath="$PROJECT_DIR$/HB_Android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/TexiCall.iml" filepath="$PROJECT_DIR$/TexiCall.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
